@@ -94,45 +94,6 @@ public class Constants {
         public static final double LEAVE_ONLY_DISTANCE = 1.0;//10.0/DriveConstants.METERS_TO_INCHES; // inches
 
     }
-
-    public static final class CoralConstants {
-
-        public static final double ELEVATOR_TOLERANCE = 0.25; // TODO: Need to change when testing elevator
-
-        // Height in inches of coral node from default height (0 is L2).
-        public static final double L2_HEIGHT = 0; // 31.875 from floor
-        public static final double L3_HEIGHT = 15/2; //14.5 47.625 from floor //divided in half because of the elevator
-        public static final double L4_HEIGHT = 37/2; // 72 from floor; //divided in half because of the elevator
-
-        public static final int SHOOT_ID = 10;
-        public static final int ELEVATOR_ID = 14;
-
-        public static final double SHOOT_MOTOR_SPEED = 1.0;
-
-        public static final double SHOOT_TIME = 1.5; // TODO: change time
-        public static final double MAX_ELEVATOR_AUTO_TIME = 3;
-
-        public static final double AUX_DEADZONE = 0.1;
-
-        public static final double ELEVATOR_GEAR_RATIO = 20; // 20:1 gear ratio
-        public static final double ELEVATOR_DRUM_CIRCUMFERENCE = 0.959 * Math.PI; //0.942 * Math.PI; // inches per rev
-        public static final double ELEVATOR_INCHES_PER_ROTATION = ELEVATOR_DRUM_CIRCUMFERENCE / ELEVATOR_GEAR_RATIO; // inches per rev
-
-        public static final double ELEVATOR_SCALE_FACTOR = 0.316667; //1/12 + 0.05 so max at 12+ difference - need to ajust if we change the NORMAL ELEVATOR SPEED DIFFERENCE // TODO: test
-        public static final double MINIMUM_ELEVATOR_SPEED_NEEDED = 0.05; //5% power
-        public static final double NORMAL_ELEVATOR_SPEED_DIFFERENCE = 3; //inches //TODO: test and change, start with 12 inches
-
-        public static final int ELEVATOR_LIMIT_SWITCH_CHANNEL = 0;
-
-    }
-
-    public static final class ClimbConstants {
-
-        public static final int CLIMBER_ID = 15;
-
-        public static final double CLIMB_SPEED = 1.0;
-    }
-
     public static final class ControllerConstants {
 
         public static final XboxController DRIVE_CONTROLLER = new XboxController(0);
@@ -141,15 +102,5 @@ public class Constants {
         public static final int REVERSE_CLIMBER_AUX_PORT = 2;
 
         public static final double TRIGGER_DEADZONE = 0.1;
-    }
-
-    public static final class AlgaeConstants {
-
-        public static final int ALGAE_UPPER_ID = 12;
-        public static final int ALGAE_LOWER_ID = 13;
-
-        public static final double ALGAE_SPEED = 0.5;
-
-        public static final double ALGAE_TIME = 2;
     }
 }

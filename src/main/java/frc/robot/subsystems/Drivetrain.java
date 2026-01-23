@@ -19,7 +19,6 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import frc.robot.Constants;
-import frc.robot.Constants.CoralConstants;
 import frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.ControllerConstants.DRIVE_CONTROLLER;
 

@@ -19,16 +19,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.CoralSystem;
-import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   //private final Limelight limelightCage = new Limelight("limelight-cage"); //TODO: make this camera onyl show up with a button 
   private final Limelight limelightCoral = new Limelight("limelight-coral");
 
-  private final CoralSystem coralSystem = new CoralSystem(limelightCoral);
-  private final Climber climber = new Climber();
   private final Drivetrain swerve = new Drivetrain(limelightCoral);
 
   private final AutoPaths autoPaths = new AutoPaths();
@@ -51,8 +47,6 @@ public class Robot extends TimedRobot {
     // DriverStation.startDataLog(DataLogManager.getLog());
     swerve.driveInit();
     autoPaths.autoShuffleboardStartup();
-    coralSystem.resetElevatorEncoders();
-    coralSystem.setShootMotor();
   }
 
   @Override
@@ -61,7 +55,6 @@ public class Robot extends TimedRobot {
     swerve.updateOdometry();
     swerve.periodic();
     swerve.updateSmartDashboard();
-    SmartDashboard.putBoolean("limit swtich", coralSystem.isElevatorLimitReached());
 
 
     // if (AUX.getXButtonPressed()) {
@@ -104,12 +97,6 @@ public class Robot extends TimedRobot {
         break;
       case ALIGN:
         break;
-      case ELEVATOR:
-        coralSystem.startElevatorAutoTimer();
-        break;
-      case SHOOT:
-        coralSystem.autoShootStart();
-        break;
       case STOP:
         break;
       default:
@@ -119,9 +106,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    coralSystem.stopElevatorWithLimitSwitch();
-    coralSystem.resetEncodersWithLimitSwitch();
-
     AutoStep currentAction = new AutoStep(AutoAction.STOP);
     if (state < autoActions.size()) {
       currentAction = autoActions.get(state);
@@ -154,21 +138,6 @@ public class Robot extends TimedRobot {
           swerve.autoAlignLimelight(getPeriod());
         }
         break;
-      case ELEVATOR:
-        if (coralSystem.autoElevatorComplete(currentAction.getValue())) {
-          goToNextState();
-        } else {
-          coralSystem.elevator(0.85, -0.25, true, currentAction.getValue());
-        }
-        break;
-      case SHOOT:
-        if (coralSystem.autoShootComplete()) {
-          goToNextState();
-        } else {
-          coralSystem.autoShoot();
-          coralSystem.elevator(0.85, -0.25, true, currentAction.getValue());
-        }
-        break;
       case STOP:
         swerve.stop(getPeriod());
         break;
@@ -181,9 +150,6 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     swerve.setBrakeMode();
     swerve.resetTurnEncoders();
-    coralSystem.resetElevatorEncoders();
-    climber.setClimbZero();
-    climber.setCoast();
   }
 
   // public void isFieldRelative() {
@@ -198,10 +164,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveWithJoystick(false);
-    coralSystem.shoot();
     swerve.driverResetTurnEncoders();
-    climber.climb();
-    coralSystem.elevator(0.85, -0.25, false, 0);
     swerve.teleopAutoAlign(getPeriod());
     // isFieldRelative(); //TODO: fix
 
