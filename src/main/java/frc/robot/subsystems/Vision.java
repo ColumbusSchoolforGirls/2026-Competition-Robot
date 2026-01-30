@@ -28,7 +28,6 @@ public class Vision{
   public GenericEntry visionYDataEntry = tab.add("VisionPose Y", 0).getEntry();
   public GenericEntry visionRotDataEntry = tab.add("VisionPose Rotation", 0).getEntry();
 
-  // TODO- change values later!!!
   private Vision() { 
     botPose = new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)));
     tempPose = new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(0)));

@@ -22,7 +22,6 @@ import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
-  //private final Limelight limelightCage = new Limelight("limelight-cage"); //TODO: make this camera onyl show up with a button 
   private final Limelight limelightCoral = new Limelight("limelight-coral");
 
   private final Drivetrain swerve = new Drivetrain(limelightCoral);
@@ -40,8 +39,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    // // Starts recording to data log
-    // DataLogManager.start(); // TODO: maybe remove one, because logs double
 
     // // Record both DS control and joystick data
     // DriverStation.startDataLog(DataLogManager.getLog());
@@ -55,7 +52,6 @@ public class Robot extends TimedRobot {
     swerve.updateOdometry();
     swerve.periodic();
     swerve.updateSmartDashboard();
-
 
     // if (AUX.getXButtonPressed()) {
     //   fieldRelative = false;
@@ -166,7 +162,7 @@ public class Robot extends TimedRobot {
     driveWithJoystick(false);
     swerve.driverResetTurnEncoders();
     swerve.teleopAutoAlign(getPeriod());
-    // isFieldRelative(); //TODO: fix
+    // isFieldRelative(); //TODO: To implement
 
 
   }

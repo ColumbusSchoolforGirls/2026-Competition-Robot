@@ -275,13 +275,13 @@ public class Drivetrain {
       return true;
     }
 
-    // Prevents the robot from burning out driving continuously into a wall // TODO:
-    // check if this works
+    // Supposed to prevent robot from burning out driving continuously into a wall
+    // TODO: May not work, part of what was being worked on for limelight 2025
     if (gyro.getVelocityY() < 0.01) {
       if (stallStart != 0.0) {
         if (Timer.getFPGATimestamp() - stallStart > 0.5) {
-          // System.out.println("STALL");
-          // return true;
+          System.out.println("STALL");
+          return true;
         }
       } else {
         System.out.println("Start stall");
@@ -355,7 +355,7 @@ public class Drivetrain {
     // double tx = limelight.getTX();
     // double ty = limelight.getTY();
     double ta = limelight.getTA();
-    // TODO: tune these on robot
+    // TODO: test these on robot
     return (Math.abs(ta) > Constants.DriveConstants.TARGET_TA_VALUE);
   }
 

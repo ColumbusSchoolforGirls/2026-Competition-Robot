@@ -51,7 +51,7 @@ public class Limelight {
         double targetingAngularVelocity = getTX() * kP; // TODO: Add the limelight string back when we have the exact Apriltag ID
 
         // convert to radians per second for our drive method
-        targetingAngularVelocity *= DriveConstants.MAX_ANGULAR_SPEED*0.2; //TODO: make into constant
+        targetingAngularVelocity *= DriveConstants.MAX_ANGULAR_SPEED*0.2;
 
         // invert since tx is positive when the target is to the right of the crosshair
 
