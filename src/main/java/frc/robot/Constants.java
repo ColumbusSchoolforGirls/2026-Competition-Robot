@@ -70,8 +70,8 @@ public class Constants {
         public static final int BR_DIO = 6;
         public static final double BR_CHASSIS_ANGULAR_OFFSET = (177.4 * Math.PI / 180); //Past value: -178
 
-        public static final int TURN_TOLERANCE = 2; // TODO: test this tolerance
-        public static final double DISTANCE_TOLERANCE = 0.02; // TODO: test this tolerance
+        public static final int TURN_TOLERANCE = 2;
+        public static final double DISTANCE_TOLERANCE = 0.02;
 
         // Gyro
         public static final boolean GyroReversed = false; //Possibly always positive
@@ -102,5 +102,9 @@ public class Constants {
         public static final int REVERSE_CLIMBER_AUX_PORT = 2;
 
         public static final double TRIGGER_DEADZONE = 0.1;
+    }
+
+    public static final class ShooterConstants {
+        public static final int SHOOTER_MOTOR_ID = 10;
     }
 }

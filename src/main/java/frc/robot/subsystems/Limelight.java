@@ -48,7 +48,7 @@ public class Limelight {
 
         // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the
         // rightmost edge of your limelight 3 feed, tx should return roughly 31 degrees.
-        double targetingAngularVelocity = getTX() * kP; // TODO: Add the limelight string back when we have the exact Apriltag ID
+        double targetingAngularVelocity = getTX() * kP;
 
         // convert to radians per second for our drive method
         targetingAngularVelocity *= DriveConstants.MAX_ANGULAR_SPEED*0.2;
@@ -65,7 +65,7 @@ public class Limelight {
     // "ta" (area) for target ranging rather than "ty"
     public double limelight_range_proportional() {
         double kP = .09;
-        double targetingForwardSpeed = Math.max(Math.sqrt(Constants.DriveConstants.TARGET_TA_VALUE - getTA()), 0.1) * kP;// TODO: Add the limelight string back when we have the exact Apriltag ID
+        double targetingForwardSpeed = Math.max(Math.sqrt(Constants.DriveConstants.TARGET_TA_VALUE - getTA()), 0.1) * kP;
         targetingForwardSpeed *= DriveConstants.MAX_SPEED;
         targetingForwardSpeed *= 1.0;
         return targetingForwardSpeed;
