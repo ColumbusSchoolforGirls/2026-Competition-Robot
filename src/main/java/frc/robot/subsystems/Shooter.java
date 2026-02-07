@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import static frc.robot.Constants.ControllerConstants.AUX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ShooterSubsystem extends SubsystemBase {
+public class Shooter extends SubsystemBase {
 
     private final SparkMax ShooterMotor;
 
-    public ShooterSubsystem(int shooterMotorID) {
+    public Shooter(int shooterMotorID) {
         ShooterMotor = new SparkMax(shooterMotorID, MotorType.kBrushless);
     }
 

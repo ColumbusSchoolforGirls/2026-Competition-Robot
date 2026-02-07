@@ -72,8 +72,8 @@ public class SwerveModule implements SwerveModuleInterface {
     turnRelativeEncoder.setPosition(0);
   }
 
-  public double getAbsoluteEncoderAngle() {
-    return (turnAbsoluteEncoder.get() * 2 * Math.PI) + chassisAngularOffset;
+  public double getAbsoluteEncoderAngleRelativeToChassis() { // radians
+    return (turnAbsoluteEncoder.get() * 2 * Math.PI) - chassisAngularOffset;
   }
 
   public void updateModule() {
@@ -84,11 +84,20 @@ public class SwerveModule implements SwerveModuleInterface {
     }
   }
 
+  public double normalizeAngle(double angle) {
+    angle = angle % (2 * Math.PI);
+    if (angle < 0) {
+      angle += (2 * Math.PI);
+    }
+    return angle;
+  }
+
   public void resetRelativeTurnEncoder() {
-    double targetRelativeEncoder = getAbsoluteEncoderAngle(); // chassisAngularOffset
-    turnRelativeEncoder.setPosition(targetRelativeEncoder); //
+    // double currentAbsEncoderValue = (turnAbsoluteEncoder.get() * 2 * Math.PI);
+    double targetRelativeEncoder = getAbsoluteEncoderAngleRelativeToChassis(); // chassisAngularOffset
+    turnRelativeEncoder.setPosition(normalizeAngle(targetRelativeEncoder)); //
     SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
-    desiredState.angle = new Rotation2d(turnRelativeEncoder.getPosition());
+    // desiredState.angle = new Rotation2d(turnRelativeEncoder.getPosition());
     setDesiredState(desiredState);
   }
 
@@ -123,7 +132,7 @@ public class SwerveModule implements SwerveModuleInterface {
 
     SmartDashboard.putNumber("desiredState", correctedDesiredState.speedMetersPerSecond);
     SmartDashboard.putNumber("AbsEncoder", turnAbsoluteEncoder.get());
-    SmartDashboard.putNumber("target relative encoder", (getAbsoluteEncoderAngle()));
+    SmartDashboard.putNumber("target relative encoder", (getAbsoluteEncoderAngleRelativeToChassis()));
   }
 
   /**

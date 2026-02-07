@@ -77,6 +77,7 @@ public class Drivetrain {
 
   public void resetTurnEncoders() {
     frontLeft.resetRelativeTurnEncoder();
+    System.out.println("FRONT LEFT RESET TO: " + DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
     frontRight.resetRelativeTurnEncoder();
     backLeft.resetRelativeTurnEncoder();
     backRight.resetRelativeTurnEncoder();
@@ -206,10 +207,10 @@ public class Drivetrain {
     SmartDashboard.putNumber("BR AbsEncoder", backRight.turnAbsoluteEncoder.get() * 360);
     SmartDashboard.putNumber("FR AbsEncoder", frontRight.turnAbsoluteEncoder.get() * 360);
 
-    SmartDashboard.putNumber("BL TargetRel", backLeft.getAbsoluteEncoderAngle() * 180 / Math.PI);
-    SmartDashboard.putNumber("FL TargetRel", frontLeft.getAbsoluteEncoderAngle() * 180 / Math.PI);
-    SmartDashboard.putNumber("BR TargetRel", backRight.getAbsoluteEncoderAngle() * 180 / Math.PI);
-    SmartDashboard.putNumber("FR TargetRel", frontRight.getAbsoluteEncoderAngle() * 180 / Math.PI);
+    SmartDashboard.putNumber("BL TargetRel", backLeft.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
+    SmartDashboard.putNumber("FL TargetRel", frontLeft.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
+    SmartDashboard.putNumber("BR TargetRel", backRight.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
+    SmartDashboard.putNumber("FR TargetRel", frontRight.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
   }
 
   public void resetEncoders() {
