@@ -97,7 +97,7 @@ public class SwerveModule implements SwerveModuleInterface {
     double targetRelativeEncoder = getAbsoluteEncoderAngleRelativeToChassis(); // chassisAngularOffset
     turnRelativeEncoder.setPosition(normalizeAngle(targetRelativeEncoder)); //
     SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
-    // desiredState.angle = new Rotation2d(turnRelativeEncoder.getPosition());
+    desiredState.angle = new Rotation2d(turnRelativeEncoder.getPosition());
     setDesiredState(desiredState);
   }
 

@@ -53,7 +53,7 @@ public class Constants {
         public static final int FL_DRIVE_ID = 2;
         public static final int FL_TURN_ID = 3;
         public static final int FL_DIO = 8;
-        public static final double FL_CHASSIS_ANGULAR_OFFSET = (127.4 * Math.PI) / 180;  //Past value: 52.7
+        public static final double FL_CHASSIS_ANGULAR_OFFSET = (307.4 * Math.PI) / 180;  //Past value: 52.7
 
         public static final int FR_DRIVE_ID = 4;
         public static final int FR_TURN_ID = 5;
@@ -63,7 +63,7 @@ public class Constants {
         public static final int BL_DRIVE_ID = 6;
         public static final int BL_TURN_ID = 7;
         public static final int BL_DIO = 9;
-        public static final double BL_CHASSIS_ANGULAR_OFFSET = (98.1 * Math.PI) / 180; //Past value: 85
+        public static final double BL_CHASSIS_ANGULAR_OFFSET = (278.1 * Math.PI) / 180; //Past value: 85
 
         public static final int BR_DRIVE_ID = 8;
         public static final int BR_TURN_ID = 9;
