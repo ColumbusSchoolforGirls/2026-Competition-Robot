@@ -99,12 +99,13 @@ public class Constants {
         public static final XboxController DRIVE_CONTROLLER = new XboxController(0);
         public static final XboxController AUX = new XboxController(1);
 
-        public static final int REVERSE_CLIMBER_AUX_PORT = 2;
-
         public static final double TRIGGER_DEADZONE = 0.1;
     }
 
     public static final class ShooterConstants {
-        public static final int SHOOTER_MOTOR_ID = 10;
+        public static final int SHOOTER_ID = -1; // TODO: Set ID to true ID when implementing
+        public static final int FEEDER_ID = -1; // TODO: Set ID to true ID when implementing
+
+        public static final double SHOOT_SPEED = 0; // TODO: Change value when implementing
     }
 }
