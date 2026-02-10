@@ -163,8 +163,6 @@ public class Robot extends TimedRobot {
     swerve.driverResetTurnEncoders();
     swerve.teleopAutoAlign(getPeriod());
     // isFieldRelative(); //TODO: To implement
-
-
   }
 
   private void driveWithJoystick(boolean fieldRelative) {
@@ -191,6 +189,20 @@ public class Robot extends TimedRobot {
       ySpeed *= Constants.DriveConstants.CRAWL_SPEED; 
       rot *= Constants.DriveConstants.CRAWL_SPEED; 
     }
+  
+    // while the A-button is pressed, overwrite some of the driving values with the output of our limelight methods
+    if(DRIVE_CONTROLLER.getAButton())
+    {
+        final var rot_limelight = this.limelightCoral.limelight_aim_proportional();
+        rot = rot_limelight;
+
+        final var forward_limelight = this.limelightCoral.limelight_range_proportional();
+        xSpeed = forward_limelight;
+
+        //while using Limelight, turn off field-relative driving.
+        fieldRelative = false;
+    }
+
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
 
