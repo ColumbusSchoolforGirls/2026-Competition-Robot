@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     limelight.updateShuffleboardLimelightValues();
+    swerve.updateSmartDashboard();
     swerve.periodic();
   }
 
