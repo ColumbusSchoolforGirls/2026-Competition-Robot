@@ -4,33 +4,32 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-// import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Configs;
 import frc.robot.Constants.SwerveConstants;
 
-public class SwerveModule implements SwerveModuleInterface {
+public class SwerveModule {
   public SparkMax driveMotor;
   public SparkMax turnMotor;
 
   public RelativeEncoder driveEncoder;
   public RelativeEncoder turnRelativeEncoder;
-  public DutyCycleEncoder turnAbsoluteEncoder; // CTRE SRX Mag Encoder using pulses, used only at RobotInit to reset relative encoder
+  // CTRE SRX Mag Encoder using pulses, used at RobotInit + buttonpressed to reset
+  // relative encoder
+  public DutyCycleEncoder turnAbsoluteEncoder;
 
   private SparkClosedLoopController driveClosedLoopController;
   private SparkClosedLoopController turnClosedLoopController;
@@ -39,12 +38,9 @@ public class SwerveModule implements SwerveModuleInterface {
 
   private double chassisAngularOffset; // This comes from constants
 
-  // TODO: add later for precision
-  // private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(1, 3);
-  // private final SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
-
   /**
-   * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
+   * Constructs a SwerveModule with a drive motor, turning motor, drive encoder
+   * and turning encoder.
    */
   public SwerveModule(int driveMotorID, int turnMotorID, int turnDIOPin, double chassisAngularOffset) {
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
@@ -59,20 +55,19 @@ public class SwerveModule implements SwerveModuleInterface {
     // Apply the respective configurations to the SPARKS. Reset parameters before
     // applying the configuration to bring the SPARK to a known good state. Persist
     // the settings to the SPARK to avoid losing them on a power cycle.
+
     driveMotor.configure(Configs.MAXSwerveModule.drivingConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
     turnMotor.configure(Configs.MAXSwerveModule.turningConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
     turnAbsoluteEncoder.setInverted(true);
-    // setBrakeMode();
 
     this.chassisAngularOffset = chassisAngularOffset;
-    System.out.println("chassis angular offset " + chassisAngularOffset);
     driveEncoder.setPosition(0);
     turnRelativeEncoder.setPosition(0);
   }
 
-  public double getAbsoluteEncoderAngleRelativeToChassis() { // radians
+  public double getAbsoluteEncoderAngleRelativeToChassis() { // in radians
     return (turnAbsoluteEncoder.get() * 2 * Math.PI) - chassisAngularOffset;
   }
 
@@ -84,6 +79,7 @@ public class SwerveModule implements SwerveModuleInterface {
     }
   }
 
+  // Gets an angle in radians and normalizes it to be between 0 and 2pi
   public double normalizeAngle(double angle) {
     angle = angle % (2 * Math.PI);
     if (angle < 0) {
@@ -93,18 +89,15 @@ public class SwerveModule implements SwerveModuleInterface {
   }
 
   public void resetRelativeTurnEncoder() {
-    // double currentAbsEncoderValue = (turnAbsoluteEncoder.get() * 2 * Math.PI);
-    double targetRelativeEncoder = getAbsoluteEncoderAngleRelativeToChassis(); // chassisAngularOffset
-    turnRelativeEncoder.setPosition(normalizeAngle(targetRelativeEncoder)); //
+    double targetRelativeEncoder = getAbsoluteEncoderAngleRelativeToChassis();
+    turnRelativeEncoder.setPosition(normalizeAngle(targetRelativeEncoder));
     SwerveModuleState desiredState = new SwerveModuleState(0.0, new Rotation2d());
     desiredState.angle = new Rotation2d(turnRelativeEncoder.getPosition());
     setDesiredState(desiredState);
   }
 
-  /** Returns the current state of the module. */
+  // Returns the current state of the module.
   public SwerveModuleState getState() {
-    // Apply chassis angular offset to the encoder position to get the position
-    // relative to the chassis.
     return new SwerveModuleState(
         driveEncoder.getVelocity(), new Rotation2d(turnRelativeEncoder.getPosition()));
   }
@@ -119,20 +112,8 @@ public class SwerveModule implements SwerveModuleInterface {
     return driveEncoder.getPosition();
   }
 
-  public double getVelocityMetersPerSecond() {
-    return driveEncoder.getVelocity() * SwerveConstants.drivingFactor / 60;
-  }
-
-  public double getVelocityRPM() {
+  public double getVelocity() {
     return driveEncoder.getVelocity();
-  }
-
-  public void updateSmartDashboard() {
-    SwerveModuleState correctedDesiredState = new SwerveModuleState();
-
-    SmartDashboard.putNumber("desiredState", correctedDesiredState.speedMetersPerSecond);
-    SmartDashboard.putNumber("AbsEncoder", turnAbsoluteEncoder.get());
-    SmartDashboard.putNumber("target relative encoder", (getAbsoluteEncoderAngleRelativeToChassis()));
   }
 
   /**
@@ -141,47 +122,22 @@ public class SwerveModule implements SwerveModuleInterface {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    // Apply chassis angular offset to the desired state.
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
-    correctedDesiredState.angle = desiredState.angle;// .plus(Rotation2d.fromRadians(chassisAngularOffset));
-
-    SmartDashboard.putNumber("desiredState", correctedDesiredState.speedMetersPerSecond);
+    correctedDesiredState.angle = desiredState.angle;
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
-    Rotation2d encoderRotation = new Rotation2d(turnRelativeEncoder.getPosition() % (2 * Math.PI));
+    Rotation2d encoderRotation = new Rotation2d(normalizeAngle(turnRelativeEncoder.getPosition()));
     correctedDesiredState.optimize(encoderRotation);
 
     // Scale speed by cosine of angle error. This scales down movement perpendicular
-    // to the desired direction of travel that can occur when modules change directions.
+    // to the desired direction of travel that can occur when modules change
+    // directions.
     // This results in smoother driving.
     correctedDesiredState.cosineScale(encoderRotation);
 
-    driveClosedLoopController.setReference(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
-    turnClosedLoopController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
-    // turnClosedLoopController.setReference(1.5, ControlType.kPosition);
-  
-
-    // TODO: add later with feedforward control
-    // // Calculate the drive output from the drive PID controller.
-    // final double driveOutput =cdrivePIDController.calculate(driveEncoder.getRate(), desiredState.speedMetersPerSecond);
-
-    // final double finalDriveFeedforward = driveFeedforward.calculate(desiredState.speedMetersPerSecond);
-
-    // // Calculate the turning motor output from the turning PID controller.
-    // final double turnOutput = turningPIDController.calculate(turningEncoder.getDistance(), desiredState.angle.getRadians());
-
-    // final double finalTurnFeedforward = turnFeedforward.calculate(turningPIDController.getSetpoint().velocity);
-
-    // driveMotor.setVoltage(driveOutput + finalDriveFeedforward);
-    // turningMotor.setVoltage(turnOutput + finalTurnFeedforward);
-  }
-
-  public void setCurrentLimit() {
-    config.smartCurrentLimit(30, 40, 1); // TODO: test and maybe decrease the stall limits
-    driveMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    config.smartCurrentLimit(20, 20, 1);
-    turnMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    driveClosedLoopController.setSetpoint(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
+    turnClosedLoopController.setSetpoint(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
   }
 
   /** Zeroes all the SwerveModule drive encoders. */
@@ -191,13 +147,13 @@ public class SwerveModule implements SwerveModuleInterface {
 
   public void setBrakeMode() { // Should only run on init
     config.idleMode(SparkBaseConfig.IdleMode.kBrake);
-    driveMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-    turnMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+    driveMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    turnMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   public void setCoastMode() { // Should only run on disable
     config.idleMode(SparkBaseConfig.IdleMode.kCoast);
-    driveMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-    turnMotor.configure(config, SparkBase.ResetMode.kNoResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+    driveMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    turnMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 }

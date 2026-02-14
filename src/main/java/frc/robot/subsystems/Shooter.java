@@ -2,32 +2,28 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import static frc.robot.Constants.ControllerConstants.AUX;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Shooter extends SubsystemBase {
+public class Shooter {
 
-    private final SparkMax ShooterMotor;
+    private final SparkMax shooterMotor;
 
-    public Shooter(int shooterMotorID) {
-        ShooterMotor = new SparkMax(shooterMotorID, MotorType.kBrushless);
+    public Shooter(int shooterMotorID) { // TODO: Make constant when implemented(?)
+        shooterMotor = new SparkMax(shooterMotorID, MotorType.kBrushless);
     }
 
     public void setShooterSpeed(double speed) {
-        ShooterMotor.set(speed);
+        shooterMotor.set(speed);
     }
 
     public void stopShooter() {
-        ShooterMotor.set(0);
+        shooterMotor.set(0);
     }
 
-    public void update() {
-        if (AUX.getAButton()) {
-            setShooterSpeed(0.75);
-            System.out.println("test");
-        } else {
-            stopShooter();
-        }
-    }
-
+    // public void update() { //TODO: Move to joystick controls when implemented
+    // if (AUX.getAButton()) {
+    // setShooterSpeed(ShooterConstants.SHOOTER_SPEED);
+    // } else {
+    // stopShooter();
+    // }
+    // }
 }

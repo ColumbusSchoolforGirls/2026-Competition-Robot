@@ -20,16 +20,14 @@ import com.studica.frc.AHRS.NavXComType;
 
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-import static frc.robot.Constants.ControllerConstants.DRIVE_CONTROLLER;
 
 public class Drivetrain {
-  private Limelight limelight;
 
   private double gyroDifference;
   private double targetAngle;
   private double driveDifference;
   private double targetDistance;
-  double startDriveTime;
+  private double startDriveTime;
 
   private final Translation2d frontLeftLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
       -DriveConstants.TRANSLATION_2D_OFFSET);
@@ -64,51 +62,24 @@ public class Drivetrain {
           backRight.getPosition()
       });
 
-  public Drivetrain(Limelight limelight) {
-    this.limelight = limelight;
+  public Drivetrain() {
   }
 
-  public void getDriveEncoders() {
-    frontLeft.getDrivePositionMeters();
-    frontRight.getDrivePositionMeters();
-    backLeft.getDrivePositionMeters();
-    backRight.getDrivePositionMeters();
-  }
-
-  public void resetTurnEncoders() {
+  public void resetRelativeTurnEncoders() {
     frontLeft.resetRelativeTurnEncoder();
-    System.out.println("FRONT LEFT RESET TO: " + DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
     frontRight.resetRelativeTurnEncoder();
     backLeft.resetRelativeTurnEncoder();
     backRight.resetRelativeTurnEncoder();
   }
 
-  public void driverResetTurnEncoders() {
-    if (DRIVE_CONTROLLER.getBButtonPressed()) {
-      resetTurnEncoders();
-    }
-  }
-
-  public void setZero() {
-    if (DRIVE_CONTROLLER.getAButtonPressed()) {
-      frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-      frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-      backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-      backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-
-    }
-
-    frontLeft.updateModule();
-    frontRight.updateModule();
-    backLeft.updateModule();
-    backRight.updateModule();
-  }
-
   /**
    * Method to drive the robot using joystick info.
    *
+   * Using airplane coordinate system
+   * 
    * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the y direction (sideways).
+   * @param ySpeed        Speed of the robot in the y direction (sideways) --
+   *                      Positive y to the left.
    * @param rot           Angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
@@ -125,14 +96,6 @@ public class Drivetrain {
     setModuleStates(swerveModuleStates);
   }
 
-  /** Sets the wheels into an X formation to prevent movement. */
-  public void setX() {
-    frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-    frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-  }
-
   /**
    * Sets the swerve ModuleStates.
    *
@@ -145,23 +108,6 @@ public class Drivetrain {
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
     backRight.setDesiredState(desiredStates[3]);
-  }
-
-  /** Updates the field relative position of the robot. */
-  public void updateOdometry() {
-    odometry.update(
-        gyro.getRotation2d(),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            backLeft.getPosition(),
-            backRight.getPosition()
-        });
-  }
-
-  /* Updates the front left swerve module on dashboard FOR TESTING. */
-  public void updateSmartDashboard() {
-    frontLeft.updateSmartDashboard();
   }
 
   /** Returns the currently-estimated pose of the robot. */
@@ -196,21 +142,6 @@ public class Drivetrain {
             backLeft.getPosition(),
             backRight.getPosition()
         });
-
-    SmartDashboard.putNumber("BL Encoder", (backLeft.turnRelativeEncoder.getPosition() * 180) / 3.14159);
-    SmartDashboard.putNumber("FL Encoder", (frontLeft.turnRelativeEncoder.getPosition() * 180) / 3.14159);
-    SmartDashboard.putNumber("BR Encoder", (backRight.turnRelativeEncoder.getPosition() * 180) / 3.14159);
-    SmartDashboard.putNumber("FR Encoder", (frontRight.turnRelativeEncoder.getPosition() * 180) / 3.14159);
-
-    SmartDashboard.putNumber("BL AbsEncoder", backLeft.turnAbsoluteEncoder.get() * 360);
-    SmartDashboard.putNumber("FL AbsEncoder", frontLeft.turnAbsoluteEncoder.get() * 360);
-    SmartDashboard.putNumber("BR AbsEncoder", backRight.turnAbsoluteEncoder.get() * 360);
-    SmartDashboard.putNumber("FR AbsEncoder", frontRight.turnAbsoluteEncoder.get() * 360);
-
-    SmartDashboard.putNumber("BL TargetRel", backLeft.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
-    SmartDashboard.putNumber("FL TargetRel", frontLeft.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
-    SmartDashboard.putNumber("BR TargetRel", backRight.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
-    SmartDashboard.putNumber("FR TargetRel", frontRight.getAbsoluteEncoderAngleRelativeToChassis() * 180 / Math.PI);
   }
 
   public void resetEncoders() {
@@ -240,18 +171,18 @@ public class Drivetrain {
 
   /** Returns the heading of the robot in degrees from -180 to 180. */
   public double getHeading() {
-    return gyro.getYaw();//gyro.getRotation2d().getDegrees();
+    return gyro.getYaw();// gyro.getRotation2d().getDegrees();
   }
 
   /** Returns the turn rate of the robot in degrees per second. */
   public double getTurnRate() {
-    return gyro.getRate() * (DriveConstants.GyroReversed ? -1.0 : 1.0);
+    return gyro.getRate() * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
   public void driveInit() {
     zeroHeading();
     resetEncoders();
-    resetTurnEncoders();
+    resetRelativeTurnEncoders();
     setBrakeMode();
   }
 
@@ -270,14 +201,15 @@ public class Drivetrain {
 
   public boolean driveComplete() {
     driveDifference = targetDistance - Math.abs(frontLeft.getDrivePositionMeters());
-    if ((Math.abs(driveDifference) < Constants.DriveConstants.DISTANCE_TOLERANCE) || (Timer.getFPGATimestamp() - startDriveTime > DriveConstants.MAX_DRIVE_AUTO_TIME))  {
+    if ((Math.abs(driveDifference) < Constants.DriveConstants.DISTANCE_TOLERANCE)
+        || (Timer.getFPGATimestamp() - startDriveTime > DriveConstants.MAX_DRIVE_AUTO_TIME)) {
       stallStart = 0.0;
       System.out.println("Reached drive target");
       return true;
     }
 
     // Supposed to prevent robot from burning out driving continuously into a wall
-    // TODO: May not work, part of what was being worked on for limelight 2025
+    // TODO: Make better stall detection/might not even need
     if (gyro.getVelocityY() < 0.01) {
       if (stallStart != 0.0) {
         if (Timer.getFPGATimestamp() - stallStart > 0.5) {
@@ -295,21 +227,16 @@ public class Drivetrain {
   }
 
   public void autoDrive(double periodSeconds) {
-    
+
     driveDifference = targetDistance - Math.abs(frontLeft.getDrivePositionMeters());
     if (Math.abs(driveDifference) > Constants.DriveConstants.DISTANCE_TOLERANCE) {
       drive(0.8, 0, 0, false, periodSeconds);
-    } 
+    }
   }
 
   public void startTurn(double angle) {
     zeroHeading();
     this.targetAngle = (angle + getHeading());
-  }
-
-  public void updateDistanceAndAngleValues() {
-    SmartDashboard.putNumber("gyro angle", getHeading());
-    SmartDashboard.putNumber("distance", frontLeft.getDrivePositionMeters());
   }
 
   public void resetGyro() {
@@ -334,33 +261,23 @@ public class Drivetrain {
     }
   }
 
-  public void autoAlignLimelight(double periodSeconds) {
-    final var rot_limelight = limelight.limelight_aim_proportional();
-    final var forward_limelight = limelight.limelight_range_proportional();
-    // while using Limelight, turn off field-relative driving.
-    boolean fieldRelative = false;
+  public void updateSmartDashboard() {
 
-    if (!isLimelightAligned()) {
-      this.drive(forward_limelight, 0.0, rot_limelight, fieldRelative, periodSeconds);
-    }
-  }
+    SmartDashboard.putNumber("FL DriveEncoder", (frontLeft.driveEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("FR DriveEncoder", (frontRight.driveEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("BL DriveEncoder", (backLeft.driveEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("BR DriveEncoder", (backRight.driveEncoder.getPosition() * 180) / Math.PI);
 
-  public void teleopAutoAlign(double periodSeconds) {
-    if (DRIVE_CONTROLLER.getXButton()) {
-      autoAlignLimelight(periodSeconds);
+    SmartDashboard.putNumber("FL AbsEncoder", frontLeft.turnAbsoluteEncoder.get() * 360);
+    SmartDashboard.putNumber("FR AbsEncoder", frontRight.turnAbsoluteEncoder.get() * 360);
+    SmartDashboard.putNumber("BL AbsEncoder", backLeft.turnAbsoluteEncoder.get() * 360);
+    SmartDashboard.putNumber("BR AbsEncoder", backRight.turnAbsoluteEncoder.get() * 360);
 
-    }
-  }
+    SmartDashboard.putNumber("FL RelEncoder", (frontLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("FR RelEncoder", (frontRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("BL RelEncoder", (backLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("BR RelEncoder", (backRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
 
-  public boolean isLimelightAligned() {
-    // double tx = limelight.getTX();
-    // double ty = limelight.getTY();
-    double ta = limelight.getTA();
-    // TODO: test these on robot
-    return (Math.abs(ta) > Constants.DriveConstants.TARGET_TA_VALUE);
-  }
-
-  public void stop(double periodSeconds) {
-    drive(0, 0, 0, false, periodSeconds);
+    SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
   }
 }
