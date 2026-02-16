@@ -10,27 +10,27 @@ import frc.robot.subsystems.Limelight;
 
 public class Robot extends TimedRobot {
   private final Limelight limelight = new Limelight("limelight-coral");
-  private final Drivetrain swerve = new Drivetrain();
-  private final JoystickControls joystickControls = new JoystickControls(swerve);
+  private final Drivetrain drivetrain = new Drivetrain();
+  private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelight);
 
   @Override
   public void robotInit() {
 
     // Record both DS control and joystick data
-    swerve.driveInit();
+    drivetrain.driveInit();
   }
 
   @Override
   public void robotPeriodic() {
     limelight.updateShuffleboardLimelightValues();
-    swerve.updateSmartDashboard();
-    swerve.periodic();
+    drivetrain.updateSmartDashboard();
+    drivetrain.periodic();
   }
 
   @Override
   public void autonomousInit() {
-    swerve.setBrakeMode();
-    swerve.resetRelativeTurnEncoders();
+    drivetrain.setBrakeMode();
+    drivetrain.resetRelativeTurnEncoders();
   }
 
   @Override
@@ -39,8 +39,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    swerve.setBrakeMode();
-    swerve.resetRelativeTurnEncoders();
+    drivetrain.setBrakeMode();
+    drivetrain.resetRelativeTurnEncoders();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    swerve.setCoastMode();
+    drivetrain.setCoastMode();
   }
 
   /** This function is called periodically when disabled. */

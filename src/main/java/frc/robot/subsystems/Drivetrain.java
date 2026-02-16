@@ -226,14 +226,6 @@ public class Drivetrain {
     return false;
   }
 
-  public void autoDrive(double periodSeconds) {
-
-    driveDifference = targetDistance - Math.abs(frontLeft.getDrivePositionMeters());
-    if (Math.abs(driveDifference) > Constants.DriveConstants.DISTANCE_TOLERANCE) {
-      drive(0.8, 0, 0, false, periodSeconds);
-    }
-  }
-
   public void startTurn(double angle) {
     zeroHeading();
     this.targetAngle = (angle + getHeading());
@@ -241,12 +233,6 @@ public class Drivetrain {
 
   public void resetGyro() {
     gyro.reset();
-  }
-
-  public void startDrive(double distanceMeters) {
-    resetEncoders();
-    targetDistance = distanceMeters;
-    startDriveTime = Timer.getFPGATimestamp();
   }
 
   public void gyroTurn(double periodSeconds) {

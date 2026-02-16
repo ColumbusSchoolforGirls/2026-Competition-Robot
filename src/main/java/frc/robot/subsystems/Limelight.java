@@ -52,8 +52,12 @@ public class Limelight {
         // convert to radians per second for our drive method
         targetingAngularVelocity *= DriveConstants.MAX_ANGULAR_SPEED;
 
+        // tx value positive instead of negative because the limelight is upsidedown
+        // on the robot currently
         // invert since tx is positive when the target is to the right of the crosshair
-        targetingAngularVelocity *= -1.0;
+
+        targetingAngularVelocity *= 1.0;
+        // targetingAngularVelocity *= -1.0;
 
         return targetingAngularVelocity;
     }

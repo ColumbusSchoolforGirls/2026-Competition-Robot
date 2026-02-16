@@ -5,9 +5,14 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 
 public class JoystickControls {
     Drivetrain drivetrain;
+    Limelight limelight;
+
+    private boolean fieldRelative = false;
+
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
     private static final XboxController AUX = new XboxController(1);
 
@@ -15,11 +20,10 @@ public class JoystickControls {
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
-    public JoystickControls(Drivetrain swerve) {
-        this.drivetrain = swerve;
+    public JoystickControls(Drivetrain drivetrain, Limelight limelight) {
+        this.drivetrain = drivetrain;
+        this.limelight = limelight;
     }
-
-    private boolean fieldRelative = false;
 
     public void driveWithJoystick(double periodSeconds) {
 
@@ -50,22 +54,27 @@ public class JoystickControls {
 
         // while the A-button is pressed, overwrite some of the driving values with the
         // output of our limelight methods
-        // if (DRIVE_CONTROLLER.getAButton()) {
-        // final var rot_limelight = this.limelightCoral.limelight_aim_proportional();
-        // rot = rot_limelight;
+        if (DRIVE_CONTROLLER.getAButton()) {
+            final var rot_limelight = this.limelight.limelight_aim_proportional();
+            rot = rot_limelight;
 
-        // final var forward_limelight =
-        // this.limelightCoral.limelight_range_proportional();
-        // xSpeed = forward_limelight;
+            final var forward_limelight = this.limelight.limelight_range_proportional();
+            xSpeed = forward_limelight;
 
-        // // while using Limelight, turn off field-relative driving.
-        // fieldRelative = false;
-        // }
+            // while using Limelight, turn off field-relative driving.
+            fieldRelative = false;
+
+            // TODO: this may not work... -Llama and Grace unsupervised
+            // Gets to proper forward position, then stats spinning until apriltag out of
+            // sight
+            drivetrain.drive(xSpeed, 0, rot, fieldRelative, periodSeconds);
+            System.out.println("CODE HAS BEEN REACHED, IT IS RUNNING");
+        } else {
+            drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
+        }
 
         // // Get the x speed. We are inverting this because Xbox controllers return
         // // negative values when we push forward.
-
-        drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
     }
 
     public void driverResetTurnEncoders() {
@@ -73,6 +82,7 @@ public class JoystickControls {
             drivetrain.resetRelativeTurnEncoders();
         }
     }
+
     // public void isFieldRelative() {
 
     // if (DRIVE_CONTROLLER.getYButtonPressed()) {
