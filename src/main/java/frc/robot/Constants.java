@@ -104,7 +104,18 @@ public class Constants {
     }
 
     public static final class ShooterConstants {
-        public static final int SHOOTER_MOTOR_ID = 10;
-        public static final double SHOOTER_SPEED = 0.75;
+        // The lead motor is the inverted motor (right of the shooter module).
+        public static final int LEFT_LEAD_ID = 100; // TODO: Update motor IDs
+        public static final int LEFT_FOLLOWER_ID = 101;
+        public static final int RIGHT_LEAD_ID = 102;
+        public static final int RIGHT_FOLLOWER_ID = 103;
+
+        public static final int RIGHT_FEEDER_ID = 104;
+        public static final int LEFT_FEEDER_ID = 105;
+
+        public static final int ROLLERS_ID = 106;
+
+        public static final int SHOOT_SPEED = 1000;
+        public static final double FEEDER_SPEED = 0.5;
     }
 }
