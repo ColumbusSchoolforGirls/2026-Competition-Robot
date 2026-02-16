@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 
@@ -29,6 +30,10 @@ public class Shooter {
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         this.leadPidController = this.leadMotor.getClosedLoopController();
+    }
+
+    public RelativeEncoder getEncoder() {
+        return this.leadMotor.getEncoder();
     }
 
     public void setShooterSpeed(double speed) {
