@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.subsystems.ShooterSystem;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -46,7 +48,7 @@ public class JoystickControls {
                 * Constants.DriveConstants.MAX_ANGULAR_SPEED;
 
         if (DRIVE_CONTROLLER.getLeftBumperButton()) {
-            xSpeed *= Constants.DriveConstants.CRAWL_SPEED; // if you click the left bumper you go at a slow scaled
+            xSpeed *= Constants.DriveConstants.CRAWL_SPEED; // if you hold the left bumper you go at a slow scaled
                                                             // speed
             ySpeed *= Constants.DriveConstants.CRAWL_SPEED;
             rot *= Constants.DriveConstants.CRAWL_SPEED;
@@ -93,5 +95,34 @@ public class JoystickControls {
     // }
     // if (AUX.getXButtonPressed()) {
     // fieldRelative = false;
+    // }
+
+    // public void shooterControls() {
+    //     shooterState = ShooterSystem.getShooterState().toString();
+
+    //     if (AUX.getYButtonPressed()) {
+    //         this.state = ShooterAction.STOP;
+    //     }
+
+    //     switch (this.state) {
+    //         case STOP: {
+    //             setMotors();
+    //             if (AUX.getRightBumperButtonPressed()) {
+    //                 this.state = ShooterAction.REV;
+    //             }
+    //         }
+    //         case REV: {
+    //             setMotors();
+    //             if (AUX.getRightTriggerAxis() > 0.5) {
+    //                 this.state = ShooterAction.SHOOT;
+    //             }
+    //         }
+    //         case SHOOT: {
+    //             setMotors();
+    //         }
+    //         default: {
+    //             setMotors();
+    //         }
+    //     }
     // }
 }
