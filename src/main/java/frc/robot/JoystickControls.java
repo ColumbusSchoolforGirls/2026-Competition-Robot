@@ -64,11 +64,7 @@ public class JoystickControls {
             // while using Limelight, turn off field-relative driving.
             fieldRelative = false;
 
-            // TODO: this may not work... -Llama and Grace unsupervised
-            // Gets to proper forward position, then stats spinning until apriltag out of
-            // sight
-            drivetrain.drive(xSpeed, 0, rot, fieldRelative, periodSeconds);
-            System.out.println("CODE HAS BEEN REACHED, IT IS RUNNING");
+            drivetrain.drive(xSpeed, ySpeed, rot_limelight, fieldRelative, periodSeconds);
         } else {
             drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
         }

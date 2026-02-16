@@ -89,6 +89,10 @@ public class Constants {
 
         public static final double MAX_DRIVE_AUTO_TIME = 3.0;
 
+        // Limelight
+        public static final double NO_TX = 0;
+        public static final double NO_TY = 0;
+
     }
 
     public static final class ControllerConstants {

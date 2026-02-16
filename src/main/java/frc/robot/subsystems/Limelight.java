@@ -16,6 +16,9 @@ public class Limelight {
     NetworkTableEntry pos1;
     NetworkTableEntry pos2;
 
+    private double lastTX = DriveConstants.NO_TX;
+    private double lastTY = DriveConstants.NO_TY;
+
     public Limelight(String limelightName) {
         NetworkTable table = NetworkTableInstance.getDefault().getTable(limelightName);
         tx = table.getEntry("tx"); // x axis position
@@ -47,7 +50,7 @@ public class Limelight {
         // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the
         // rightmost edge of
         // your limelight 3 feed, tx should return roughly 31 degrees.
-        double targetingAngularVelocity = getTX() * kP;
+        double targetingAngularVelocity = getBestTX() * kP;
 
         // convert to radians per second for our drive method
         targetingAngularVelocity *= DriveConstants.MAX_ANGULAR_SPEED;
@@ -57,9 +60,28 @@ public class Limelight {
         // invert since tx is positive when the target is to the right of the crosshair
 
         targetingAngularVelocity *= 1.0;
-        // targetingAngularVelocity *= -1.0;
 
         return targetingAngularVelocity;
+    }
+
+    public double getBestTX() {
+        double currentTX = getTX();
+        if (currentTX == DriveConstants.NO_TX) {
+            return lastTX;
+        } else {
+            lastTX = currentTX;
+            return currentTX;
+        }
+    }
+
+    public double getBestTY() {
+        double currentTY = getTY();
+        if (currentTY == DriveConstants.NO_TY) {
+            return lastTY;
+        } else {
+            lastTY = currentTY;
+            return currentTY;
+        }
     }
 
     // simple proportional ranging control with Limelight's "ty" value
@@ -68,8 +90,8 @@ public class Limelight {
     // if your limelight and target are mounted at the same or similar heights, use
     // "ta" (area) for target ranging rather than "ty"
     public double limelight_range_proportional() {
-        double kP = .06;
-        double targetingForwardSpeed = getTY() * kP;
+        double kP = .25;
+        double targetingForwardSpeed = getBestTY() * kP;
         targetingForwardSpeed *= DriveConstants.MAX_SPEED;
         targetingForwardSpeed *= -1.0;
         return targetingForwardSpeed;
