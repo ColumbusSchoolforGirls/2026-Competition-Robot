@@ -1,29 +1,41 @@
 package frc.robot.subsystems;
 
+import frc.robot.Configs.ShooterSystem;
+
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 
 public class Shooter {
 
-    private final SparkMax shooterMotor;
+    private final SparkMax leadMotor;
+    private final SparkMax followerMotor;
 
-    public Shooter(int shooterMotorID) { // TODO: Make constant when implemented(?)
-        shooterMotor = new SparkMax(shooterMotorID, MotorType.kBrushless);
+    private SparkClosedLoopController leadPidController;
+
+    public Shooter(int leadMotorID, int followerMotorID) {
+        this.leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
+        this.followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
+
+        this.leadMotor.configure(
+                ShooterSystem.shooterConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
+        this.followerMotor.configure(
+                ShooterSystem.shooterFollowerConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
+        this.leadPidController = this.leadMotor.getClosedLoopController();
     }
 
     public void setShooterSpeed(double speed) {
-        shooterMotor.set(speed);
+        this.leadPidController.setSetpoint(speed, ControlType.kDutyCycle);
     }
 
     public void stopShooter() {
-        shooterMotor.set(0);
+        this.leadMotor.set(0);
     }
-
-    // public void update() { //TODO: Move to joystick controls when implemented
-    // if (AUX.getAButton()) {
-    // setShooterSpeed(ShooterConstants.SHOOTER_SPEED);
-    // } else {
-    // stopShooter();
-    // }
-    // }
 }
