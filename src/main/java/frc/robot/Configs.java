@@ -67,9 +67,6 @@ public class Configs {
                     .maxAcceleration(10000)
                     .allowedProfileError(1);
 
-            shooterFollowerConfig.apply(shooterConfig)
-                    .follow(Constants.ShooterConstants.SHOOTER_MOTOR_ID, true);
-
             feederConfig
                     .inverted(true) // TODO: Update depending on direction of feeder motors
                     .idleMode(IdleMode.kBrake)

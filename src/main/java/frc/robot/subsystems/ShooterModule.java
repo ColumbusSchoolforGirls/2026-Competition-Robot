@@ -10,16 +10,21 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 
-public class Shooter {
+public class ShooterModule {
 
     private final SparkMax leadMotor;
     private final SparkMax followerMotor;
-
+    private final SparkMax feedMotor;
     private SparkClosedLoopController leadPidController;
 
-    public Shooter(int leadMotorID, int followerMotorID) {
+    public ShooterModule(int leadMotorID, int followerMotorID, int feedMotorID) {
         this.leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
         this.followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
+        this.feedMotor = new SparkMax(feedMotorID, MotorType.kBrushless);
+
+        ShooterSystem.shooterFollowerConfig
+                .apply(ShooterSystem.shooterConfig)
+                .follow(leadMotorID, true);
 
         this.leadMotor.configure(
                 ShooterSystem.shooterConfig,
@@ -29,6 +34,11 @@ public class Shooter {
                 ShooterSystem.shooterFollowerConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
+        this.feedMotor.configure(
+                ShooterSystem.feederConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
+
         this.leadPidController = this.leadMotor.getClosedLoopController();
     }
 
@@ -36,11 +46,15 @@ public class Shooter {
         return this.leadMotor.getEncoder();
     }
 
-    public void setShooterSpeed(double speed) {
-        this.leadPidController.setSetpoint(speed, ControlType.kDutyCycle);
+    public double getShooterRPM() {
+        return this.leadMotor.getEncoder().getVelocity();
     }
 
-    public void stopShooter() {
-        this.leadMotor.set(0);
+    public void setShooterRPM(double speed) {
+        this.leadPidController.setSetpoint(speed, ControlType.kVelocity);
+    }
+
+    public void setFeed(double percentageOutput) {
+        this.feedMotor.set(percentageOutput);
     }
 }
