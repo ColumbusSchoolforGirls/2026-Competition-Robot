@@ -18,43 +18,43 @@ public class ShooterModule {
     private SparkClosedLoopController leadPidController;
 
     public ShooterModule(int leadMotorID, int followerMotorID, int feedMotorID) {
-        this.leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
-        this.followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
-        this.feedMotor = new SparkMax(feedMotorID, MotorType.kBrushless);
+        leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
+        followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
+        feedMotor = new SparkMax(feedMotorID, MotorType.kBrushless);
 
         ShooterSystem.shooterFollowerConfig
                 .apply(ShooterSystem.shooterConfig)
                 .follow(leadMotorID, true);
 
-        this.leadMotor.configure(
+        leadMotor.configure(
                 ShooterSystem.shooterConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        this.followerMotor.configure(
+        followerMotor.configure(
                 ShooterSystem.shooterFollowerConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        this.feedMotor.configure(
+        feedMotor.configure(
                 ShooterSystem.feederConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
-        this.leadPidController = this.leadMotor.getClosedLoopController();
+        leadPidController = leadMotor.getClosedLoopController();
     }
 
     public RelativeEncoder getEncoder() {
-        return this.leadMotor.getEncoder();
+        return leadMotor.getEncoder();
     }
 
     public double getShooterRPM() {
-        return this.leadMotor.getEncoder().getVelocity();
+        return leadMotor.getEncoder().getVelocity();
     }
 
     public void setShooterRPM(double speed) {
-        this.leadPidController.setSetpoint(speed, ControlType.kVelocity);
+        leadPidController.setSetpoint(speed, ControlType.kVelocity);
     }
 
     public void setFeed(double percentageOutput) {
-        this.feedMotor.set(percentageOutput);
+        feedMotor.set(percentageOutput);
     }
 }
