@@ -62,7 +62,7 @@ public class Configs {
                     // TODO: Adjust PID values for our robot
                     .pid(0.04, 0, 0)
                     .outputRange(-1, 1);
-            shooterConfig.closedLoop.maxMotion
+            shooterConfig.closedLoop.maxMotion // TODO: Test if MaxMotion is needed
                     .cruiseVelocity(5000)
                     .maxAcceleration(10000)
                     .allowedProfileError(1);
@@ -71,13 +71,13 @@ public class Configs {
                     .inverted(true) // TODO: Update depending on direction of feeder motors
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(1.0)
-                    .smartCurrentLimit(60);
+                    .smartCurrentLimit(20);
 
             rollersConfig
                     .inverted(true) // TODO: Update depending on direction of roller motors
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(0.5)
-                    .smartCurrentLimit(40);
+                    .smartCurrentLimit(20);
         }
     }
 }
