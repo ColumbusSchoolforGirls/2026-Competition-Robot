@@ -111,7 +111,8 @@ public class Constants {
 
         public static final int ROLLERS_ID = 106;
 
-        public static final int SHOOT_SPEED = 1000;
-        public static final double FEEDER_SPEED = 0.5;
+        public static final int SHOOT_RPM = 1000;
+        public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
+        public static final double ROLLERS_PERCENTAGE_OUTPUT = 0.15;
     }
 }
