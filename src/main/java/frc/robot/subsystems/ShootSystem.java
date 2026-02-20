@@ -1,88 +1,80 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
+import frc.robot.Configs.ShooterSystem;
 import frc.robot.Constants.ShooterConstants;
 
-public class ShooterSystem {
+import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+
+public class ShootSystem {
 
     public enum ShooterAction {
-        STOP, REV, SHOOT
+        STOPPED, REV, SHOOT
     }
 
-    ShooterAction state = ShooterAction.STOP;
-    String shooterState = "STOP";
+    private ShooterAction state;
 
-    private final Shooter leftShooter = new Shooter(
+    private final ShooterModule leftShooter = new ShooterModule(
             ShooterConstants.LEFT_LEAD_ID,
-            ShooterConstants.LEFT_FOLLOWER_ID);
-    private final Shooter rightShooter = new Shooter(
+            ShooterConstants.LEFT_FOLLOWER_ID,
+            ShooterConstants.LEFT_FEEDER_ID);
+    private final ShooterModule rightShooter = new ShooterModule(
             ShooterConstants.RIGHT_LEAD_ID,
-            ShooterConstants.RIGHT_FOLLOWER_ID);
-    private final SparkMax leftFeederMotor = new SparkMax(ShooterConstants.LEFT_FEEDER_ID, MotorType.kBrushless);
-    private final SparkMax rightFeederMotor = new SparkMax(ShooterConstants.RIGHT_FEEDER_ID, MotorType.kBrushless);
+            ShooterConstants.RIGHT_FOLLOWER_ID,
+            ShooterConstants.RIGHT_FEEDER_ID);
+    private final SparkMax rollersMotor = new SparkMax(ShooterConstants.ROLLERS_ID, MotorType.kBrushless);
 
-    private RelativeEncoder leftShooterEncoder = leftShooter.getEncoder();
-    private RelativeEncoder rightShooterEncoder = rightShooter.getEncoder();
-    private RelativeEncoder leftFeederEncoder = leftFeederMotor.getEncoder();
-    private RelativeEncoder rightFeederEncoder = rightFeederMotor.getEncoder();
+    public ShootSystem() {
+        state = ShooterAction.STOPPED;
 
-    public ShooterSystem() {
-        this.state = ShooterAction.STOP;
+        rollersMotor.configure(
+                ShooterSystem.rollersConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
     }
 
-    public void update() {
-        shoot();
+    public void setShooterState(ShooterAction state) {
+        this.state = state;
+        setMotors();
+        updateDashboard();
     }
 
-    public void shoot() {
-        // TODO: Implement with JoystickControls class
-        // shooterState = this.state.toString();
-
-        // if (AUX.getYButtonPressed()) {
-        // this.state = ShooterAction.STOP;
-        // }
-
-        // switch (this.state) {
-        // case STOP: {
-        // setMotors();
-        // if (AUX.getRightBumperButtonPressed()) {
-        // this.state = ShooterAction.REV;
-        // }
-        // }
-        // case REV: {
-        // setMotors();
-        // if (AUX.getRightTriggerAxis() > 0.5) {
-        // this.state = ShooterAction.SHOOT;
-        // }
-        // }
-        // case SHOOT: {
-        // setMotors();
-        // }
-        // default: {
-        // setMotors();
-        // }
-        // }
+    private void updateDashboard() {
+        SmartDashboard.putString("ShooterState", state.toString());
+        SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getShooterRPM());
+        SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getShooterRPM());
     }
 
-    // private void setMotors() {
-    // feederMotor.set(getFeederSpeed());
-    // shooterPidController.setReference(getShooterSpeed(),
-    // SparkMax.ControlType.kVelocity);
-    // }
+    private void setMotors() {
+        leftShooter.setShooterRPM(determineShooterRPM());
+        rightShooter.setShooterRPM(determineShooterRPM());
+        leftShooter.setFeeder(determineFeederPercentageOutput());
+        rightShooter.setFeeder(determineFeederPercentageOutput());
+        rollersMotor.set(determineRollersPercentageOutput());
+    }
 
-    private double getShooterSpeed() {
+    private double determineShooterRPM() {
         if (this.state == ShooterAction.SHOOT || this.state == ShooterAction.REV) {
-            return ShooterConstants.SHOOT_SPEED;
+            return ShooterConstants.SHOOT_RPM;
         }
         return 0.0;
     }
 
-    private double getFeederSpeed() {
+    private double determineFeederPercentageOutput() {
         if (this.state == ShooterAction.SHOOT) {
-            return ShooterConstants.SHOOT_SPEED;
+            return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
+        }
+        return 0.0;
+    }
+
+    private double determineRollersPercentageOutput() {
+        if (this.state == ShooterAction.SHOOT) {
+            return ShooterConstants.ROLLERS_PERCENTAGE_OUTPUT;
         }
         return 0.0;
     }

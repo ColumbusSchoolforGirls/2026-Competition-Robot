@@ -1,18 +1,19 @@
 package frc.robot;
 
-import frc.robot.subsystems.ShooterSystem;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.ShootSystem;
+import frc.robot.subsystems.ShootSystem.ShooterAction;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.XboxController;
+
 public class JoystickControls {
     Drivetrain drivetrain;
     Limelight limelight;
-
+    ShootSystem shootSystem;
     private boolean fieldRelative = false;
 
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
@@ -22,13 +23,13 @@ public class JoystickControls {
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
-    public JoystickControls(Drivetrain drivetrain, Limelight limelight) {
+    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
+        this.shootSystem = shootSystem;
     }
 
     public void driveWithJoystick(double periodSeconds) {
-
         double xSpeed = -xspeedLimiter.calculate(MathUtil.applyDeadband(DRIVE_CONTROLLER.getLeftY(), 0.1))
                 * Constants.DriveConstants.MAX_SPEED;
 
@@ -81,44 +82,35 @@ public class JoystickControls {
         }
     }
 
-    // public void isFieldRelative() {
+    // TODO: Implement shoot() method with JoystickControls class
+    // public void shoot() {
+    // // TODO: Implement with JoystickControls class
+    // shooterState = this.state.toString();
 
-    // if (DRIVE_CONTROLLER.getYButtonPressed()) {
-    // fieldRelative = !fieldRelative;
-    // SmartDashboard.putBoolean("Field Relative?", false);
+    // if (AUX.getYButtonPressed()) {
+    // this.state = ShooterAction.STOPPED;
     // }
 
+    // switch (this.state) {
+    // case STOPPED: {
+    // setMotors();
+    // if (AUX.getRightBumperButtonPressed()) {
+    // this.state = ShooterAction.REV;
     // }
-    // if (AUX.getXButtonPressed()) {
-    // fieldRelative = false;
+    // }
+    // case REV: {
+    // setMotors();
+    // if (AUX.getRightTriggerAxis() > 0.5) {
+    // this.state = ShooterAction.SHOOT;
+    // }
+    // }
+    // case SHOOT: {
+    // setMotors();
+    // }
+    // default: {
+    // state = ShooterAction.STOPPED;
+    // }
+    // }
     // }
 
-    // public void shooterControls() {
-    //     shooterState = ShooterSystem.getShooterState().toString();
-
-    //     if (AUX.getYButtonPressed()) {
-    //         this.state = ShooterAction.STOP;
-    //     }
-
-    //     switch (this.state) {
-    //         case STOP: {
-    //             setMotors();
-    //             if (AUX.getRightBumperButtonPressed()) {
-    //                 this.state = ShooterAction.REV;
-    //             }
-    //         }
-    //         case REV: {
-    //             setMotors();
-    //             if (AUX.getRightTriggerAxis() > 0.5) {
-    //                 this.state = ShooterAction.SHOOT;
-    //             }
-    //         }
-    //         case SHOOT: {
-    //             setMotors();
-    //         }
-    //         default: {
-    //             setMotors();
-    //         }
-    //     }
-    // }
 }

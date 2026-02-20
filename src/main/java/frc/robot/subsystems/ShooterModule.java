@@ -54,7 +54,7 @@ public class ShooterModule {
         leadPidController.setSetpoint(speed, ControlType.kVelocity);
     }
 
-    public void setFeed(double percentageOutput) {
+    public void setFeeder(double percentageOutput) {
         feedMotor.set(percentageOutput);
     }
 }
