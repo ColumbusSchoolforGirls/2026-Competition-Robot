@@ -1,7 +1,6 @@
 package frc.robot;
 
 import frc.robot.subsystems.ShootSystem;
-import frc.robot.subsystems.ShootSystem.ShooterAction;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -86,35 +85,38 @@ public class JoystickControls {
         }
     }
 
-    // TODO: Implement shoot() method with JoystickControls class
-    // public void shoot() {
-    // // TODO: Implement with JoystickControls class
-    // shooterState = this.state.toString();
+    private ShootSystem.ShooterAction state = ShootSystem.ShooterAction.STOPPED;
 
-    // if (AUX.getYButtonPressed()) {
-    // this.state = ShooterAction.STOPPED;
-    // }
+    public void shoot() {
+        shootSystem.setShooterState(state);
 
-    // switch (this.state) {
-    // case STOPPED: {
-    // setMotors();
-    // if (AUX.getRightBumperButtonPressed()) {
-    // this.state = ShooterAction.REV;
-    // }
-    // }
-    // case REV: {
-    // setMotors();
-    // if (AUX.getRightTriggerAxis() > 0.5) {
-    // this.state = ShooterAction.SHOOT;
-    // }
-    // }
-    // case SHOOT: {
-    // setMotors();
-    // }
-    // default: {
-    // state = ShooterAction.STOPPED;
-    // }
-    // }
-    // }
+        if (AUX.getYButtonPressed()) {
+            shootSystem.setShooterState(ShootSystem.ShooterAction.STOPPED);
+        }
+
+        switch (state) {
+            case STOPPED: {
+                if (AUX.getRightBumperButtonPressed()) {
+                    state = ShootSystem.ShooterAction.REV;
+                }
+            }
+            case REV: {
+                if (AUX.getLeftBumperButtonPressed()) {
+                    state = ShootSystem.ShooterAction.STOPPED;
+                }
+
+                if (AUX.getRightTriggerAxis() > 0.5) {
+                    state = ShootSystem.ShooterAction.SHOOT;
+                } else {
+                    state = ShootSystem.ShooterAction.REV;
+                }
+            }
+            case SHOOT: {
+            }
+            default: {
+                state = ShootSystem.ShooterAction.STOPPED;
+            }
+        }
+    }
 
 }
