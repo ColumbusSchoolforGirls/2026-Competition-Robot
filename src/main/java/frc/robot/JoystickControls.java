@@ -1,18 +1,18 @@
 package frc.robot;
 
 import frc.robot.subsystems.ShootSystem;
-import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.Constants.ControllerConstants;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class JoystickControls {
-    Drivetrain drivetrain;
-    Limelight limelight;
-    ShootSystem shootSystem;
+    private final Drivetrain drivetrain;
+    private final Limelight limelight;
+    private final ShootSystem shootSystem;
     private boolean fieldRelative = false;
 
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
@@ -88,35 +88,35 @@ public class JoystickControls {
     private ShootSystem.ShooterAction state = ShootSystem.ShooterAction.STOPPED;
 
     public void shoot() {
-        shootSystem.setShooterState(state);
-
-        if (AUX.getYButtonPressed()) {
-            shootSystem.setShooterState(ShootSystem.ShooterAction.STOPPED);
-        }
-
         switch (state) {
             case STOPPED: {
                 if (AUX.getRightBumperButtonPressed()) {
                     state = ShootSystem.ShooterAction.REV;
                 }
+                break;
             }
-            case REV: {
+            case REV: // Fall through intended
+            case SHOOT: {
                 if (AUX.getLeftBumperButtonPressed()) {
                     state = ShootSystem.ShooterAction.STOPPED;
                 }
 
-                if (AUX.getRightTriggerAxis() > 0.5) {
+                if (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE) {
                     state = ShootSystem.ShooterAction.SHOOT;
-                } else {
+                }
+
+                if (AUX.getRightTriggerAxis() < ControllerConstants.TRIGGER_DEADZONE) {
                     state = ShootSystem.ShooterAction.REV;
                 }
-            }
-            case SHOOT: {
+                break;
             }
             default: {
                 state = ShootSystem.ShooterAction.STOPPED;
+                break;
             }
         }
+
+        shootSystem.setShooterState(state);
     }
 
 }
