@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.robot.Configs.ShooterSystem;
+import frc.robot.Configs;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -22,20 +22,20 @@ public class ShooterModule {
         followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
         feedMotor = new SparkMax(feedMotorID, MotorType.kBrushless);
 
-        ShooterSystem.shooterFollowerConfig
-                .apply(ShooterSystem.shooterConfig)
+        Configs.Shooter.shooterFollowerConfig
+                .apply(Configs.Shooter.shooterConfig)
                 .follow(leadMotorID, true);
 
         leadMotor.configure(
-                ShooterSystem.shooterConfig,
+                Configs.Shooter.shooterConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         followerMotor.configure(
-                ShooterSystem.shooterFollowerConfig,
+                Configs.Shooter.shooterFollowerConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
         feedMotor.configure(
-                ShooterSystem.feederConfig,
+                Configs.Shooter.feederConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
