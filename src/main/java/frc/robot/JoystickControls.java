@@ -9,6 +9,25 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 
+/*
+ * List all controls in this docstring.
+ * DRIVER:
+ *     - Left Joystick: Linear driving movement (omnidirectional)
+ *     - Right Joystick: Rotational movement
+ *     - Left Bumper (Hold): Crawl mode (reduce driving speed)
+ *     - A Button (Press): Align with limelight
+ *     - B Button (Press): Reset turn encoders
+ * 
+ * AUXILIARY:
+ *     * Shooter
+ *         - Right Trigger (Hold): Shoot
+ *         - Left Bumper (Press): Stop Shooter
+ *         - Right Bumper (Press): Rev Shooter
+ *     * Intake
+ *         - Left Trigger (Hold): Intake
+ *         - X Button (Press): Deploy Intake
+ *         - B Button (Press): Retract Intake
+ */
 public class JoystickControls {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
@@ -81,32 +100,32 @@ public class JoystickControls {
         }
     }
 
-    private ShootSystem.ShooterAction state = ShootSystem.ShooterAction.STOPPED;
+    private ShootSystem.ShooterState state = ShootSystem.ShooterState.STOPPED;
 
     public void shoot() {
         switch (state) {
             case STOPPED: {
                 if (AUX.getRightBumperButtonPressed()) {
-                    state = ShootSystem.ShooterAction.REV;
+                    state = ShootSystem.ShooterState.REV;
                 }
                 break;
             }
             case REV: // Fall through intended
             case SHOOT: {
                 if (AUX.getLeftBumperButtonPressed()) {
-                    state = ShootSystem.ShooterAction.STOPPED;
+                    state = ShootSystem.ShooterState.STOPPED;
                 }
 
                 if (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE) {
-                    state = ShootSystem.ShooterAction.SHOOT;
+                    state = ShootSystem.ShooterState.SHOOT;
                 } else {
-                    state = ShootSystem.ShooterAction.REV;
+                    state = ShootSystem.ShooterState.REV;
                 }
 
                 break;
             }
             default: {
-                state = ShootSystem.ShooterAction.STOPPED;
+                state = ShootSystem.ShooterState.STOPPED;
                 break;
             }
         }

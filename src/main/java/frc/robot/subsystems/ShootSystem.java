@@ -12,7 +12,7 @@ import com.revrobotics.ResetMode;
 
 public class ShootSystem {
 
-    public enum ShooterAction {
+    public enum ShooterState {
         STOPPED, REV, SHOOT
     }
 
@@ -27,18 +27,22 @@ public class ShootSystem {
     private final SparkMax rollersMotor = new SparkMax(ShooterConstants.ROLLERS_ID, MotorType.kBrushless);
     private final SparkMax ventMotor = new SparkMax(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
-    private ShooterAction state;
+    private ShooterState state;
 
     public ShootSystem() {
-        state = ShooterAction.STOPPED;
+        state = ShooterState.STOPPED;
 
+        ventMotor.configure(
+                Configs.Shooter.ventConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
         rollersMotor.configure(
                 Configs.Shooter.rollersConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
     }
 
-    public void setShooterState(ShooterAction state) {
+    public void setShooterState(ShooterState state) {
         this.state = state;
         setMotors();
         updateDashboard();
@@ -62,28 +66,28 @@ public class ShootSystem {
     }
 
     private double determineShooterRPM() {
-        if (this.state == ShooterAction.SHOOT || this.state == ShooterAction.REV) {
+        if (this.state == ShooterState.SHOOT || this.state == ShooterState.REV) {
             return ShooterConstants.SHOOT_RPM;
         }
         return 0.0;
     }
 
     private double determineFeederPercentageOutput(ShooterModule shooter) {
-        if (this.state == ShooterAction.SHOOT && isAtSpeed(shooter)) {
+        if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         }
         return 0.0;
     }
 
     private double determineVentPercentageOutput() {
-        if (this.state == ShooterAction.SHOOT) {
+        if (this.state == ShooterState.SHOOT) {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         }
         return 0.0;
     }
 
     private double determineRollersPercentageOutput() {
-        if (this.state == ShooterAction.SHOOT) {
+        if (this.state == ShooterState.SHOOT) {
             return ShooterConstants.ROLLERS_PERCENTAGE_OUTPUT;
         }
         return 0.0;

@@ -92,34 +92,30 @@ public class Constants {
         // Limelight
         public static final double NO_TX = 0;
         public static final double NO_TY = 0;
-
     }
 
     public static final class ControllerConstants {
-
-        public static final int REVERSE_CLIMBER_AUX_PORT = 2;
-
         public static final double TRIGGER_DEADZONE = 0.1;
         public static final double JOYSTICK_DEADZONE = 0.1;
     }
 
     public static final class ShooterConstants {
         // The lead motor is the inverted motor (right of the shooter module).
-        public static final int LEFT_LEAD_ID = 100; // TODO: Update motor IDs
-        public static final int LEFT_FOLLOWER_ID = 101;
-        public static final int RIGHT_LEAD_ID = 102;
-        public static final int RIGHT_FOLLOWER_ID = 103;
+        public static final int LEFT_LEAD_ID = 12;
+        public static final int LEFT_FOLLOWER_ID = 13;
+        public static final int RIGHT_LEAD_ID = 14;
+        public static final int RIGHT_FOLLOWER_ID = 15;
 
-        public static final int RIGHT_FEEDER_ID = 104;
-        public static final int LEFT_FEEDER_ID = 105;
+        public static final int RIGHT_FEEDER_ID = 100; // TODO: Update with IDs - PWM
+        public static final int LEFT_FEEDER_ID = 101;
 
         public static final int VENT_ID = 11;
-        public static final int ROLLERS_ID = 106;
+        public static final int ROLLERS_ID = 102; // PWM
 
-        public static final int SHOOT_RPM = 1000;
+        public static final int SHOOT_RPM = 3700;
         public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
         public static final double VENT_PERCENTAGE_OUTPUT = 0.5;
-        public static final double ROLLERS_PERCENTAGE_OUTPUT = 0.15;
+        public static final double ROLLERS_PERCENTAGE_OUTPUT = 0.2;
 
         public static final int RPM_TOLERANCE = 100; // TODO: Update, hopefully lower, after tuning the PID
     }
