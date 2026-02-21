@@ -3,10 +3,9 @@ package frc.robot.subsystems;
 import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
 
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -17,8 +16,6 @@ public class ShootSystem {
         STOPPED, REV, SHOOT
     }
 
-    private ShooterAction state;
-
     private final ShooterModule leftShooter = new ShooterModule(
             ShooterConstants.LEFT_LEAD_ID,
             ShooterConstants.LEFT_FOLLOWER_ID,
@@ -28,6 +25,8 @@ public class ShootSystem {
             ShooterConstants.RIGHT_FOLLOWER_ID,
             ShooterConstants.RIGHT_FEEDER_ID);
     private final SparkMax rollersMotor = new SparkMax(ShooterConstants.ROLLERS_ID, MotorType.kBrushless);
+
+    private ShooterAction state;
 
     public ShootSystem() {
         state = ShooterAction.STOPPED;
@@ -48,13 +47,15 @@ public class ShootSystem {
         SmartDashboard.putString("ShooterState", state.toString());
         SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getShooterRPM());
         SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getShooterRPM());
+        SmartDashboard.putBoolean("Left Shooter At Speed", isAtSpeed(leftShooter));
+        SmartDashboard.putBoolean("Right Shooter At Speed", isAtSpeed(rightShooter));
     }
 
     private void setMotors() {
         leftShooter.setShooterRPM(determineShooterRPM());
         rightShooter.setShooterRPM(determineShooterRPM());
-        leftShooter.setFeeder(determineFeederPercentageOutput());
-        rightShooter.setFeeder(determineFeederPercentageOutput());
+        leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
+        rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
         rollersMotor.set(determineRollersPercentageOutput());
     }
 
@@ -65,8 +66,8 @@ public class ShootSystem {
         return 0.0;
     }
 
-    private double determineFeederPercentageOutput() {
-        if (this.state == ShooterAction.SHOOT) {
+    private double determineFeederPercentageOutput(ShooterModule shooter) {
+        if (this.state == ShooterAction.SHOOT && isAtSpeed(shooter)) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         }
         return 0.0;
@@ -77,5 +78,10 @@ public class ShootSystem {
             return ShooterConstants.ROLLERS_PERCENTAGE_OUTPUT;
         }
         return 0.0;
+    }
+
+    private boolean isAtSpeed(ShooterModule shooter) {
+        return shooter.getShooterRPM() >= ShooterConstants.SHOOT_RPM - ShooterConstants.RPM_TOLERANCE
+                && shooter.getShooterRPM() <= ShooterConstants.SHOOT_RPM + ShooterConstants.RPM_TOLERANCE;
     }
 }

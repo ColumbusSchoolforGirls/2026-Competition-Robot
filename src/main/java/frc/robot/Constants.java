@@ -114,5 +114,7 @@ public class Constants {
         public static final int SHOOT_RPM = 1000;
         public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
         public static final double ROLLERS_PERCENTAGE_OUTPUT = 0.15;
+
+        public static final int RPM_TOLERANCE = 100; // TODO: Update, hopefully lower, after tuning the PID
     }
 }
