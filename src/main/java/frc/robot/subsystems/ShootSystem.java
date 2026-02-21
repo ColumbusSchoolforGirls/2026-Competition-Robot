@@ -25,6 +25,7 @@ public class ShootSystem {
             ShooterConstants.RIGHT_FOLLOWER_ID,
             ShooterConstants.RIGHT_FEEDER_ID);
     private final SparkMax rollersMotor = new SparkMax(ShooterConstants.ROLLERS_ID, MotorType.kBrushless);
+    private final SparkMax ventMotor = new SparkMax(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
     private ShooterAction state;
 
@@ -56,6 +57,7 @@ public class ShootSystem {
         rightShooter.setShooterRPM(determineShooterRPM());
         leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
         rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
+        ventMotor.set(determineVentPercentageOutput());
         rollersMotor.set(determineRollersPercentageOutput());
     }
 
@@ -69,6 +71,13 @@ public class ShootSystem {
     private double determineFeederPercentageOutput(ShooterModule shooter) {
         if (this.state == ShooterAction.SHOOT && isAtSpeed(shooter)) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
+        }
+        return 0.0;
+    }
+
+    private double determineVentPercentageOutput() {
+        if (this.state == ShooterAction.SHOOT) {
+            return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         }
         return 0.0;
     }
