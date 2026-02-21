@@ -119,4 +119,17 @@ public class Constants {
 
         public static final int RPM_TOLERANCE = 100; // TODO: Update, hopefully lower, after tuning the PID
     }
+
+    public static final class IntakeConstants {
+        public static final int DEPLOY_ID = 10;
+        public static final int ROLLER_ID = 103; // PWM
+        public static final int LIMIT_SWITCH_CHANNEL = 104; // TODO: Update with channel
+
+        public static final double DEPLOY_SPEED = 0.5;
+        public static final double ROLLER_SPEED = 0.5;
+    }
+
+    public static final class ClimberConstants {
+        public static final int CILMBER_ID = 105;
+    }
 }

@@ -88,4 +88,16 @@ public class Configs {
                     .smartCurrentLimit(20);
         }
     }
+
+    public static final class Intake {
+        public static final SparkMaxConfig deployConfig = new SparkMaxConfig();
+
+        static {
+            deployConfig
+                    .inverted(true) // TODO: Update depending on direction of intake motor
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(0.5)
+                    .smartCurrentLimit(20);
+        }
+    }
 }
