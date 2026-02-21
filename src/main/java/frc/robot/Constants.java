@@ -109,10 +109,12 @@ public class Constants {
         public static final int RIGHT_FEEDER_ID = 104;
         public static final int LEFT_FEEDER_ID = 105;
 
+        public static final int VENT_ID = 11;
         public static final int ROLLERS_ID = 106;
 
         public static final int SHOOT_RPM = 1000;
         public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
+        public static final double VENT_PERCENTAGE_OUTPUT = 0.5;
         public static final double ROLLERS_PERCENTAGE_OUTPUT = 0.15;
 
         public static final int RPM_TOLERANCE = 100; // TODO: Update, hopefully lower, after tuning the PID
