@@ -99,11 +99,10 @@ public class JoystickControls {
 
                 if (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE) {
                     state = ShootSystem.ShooterAction.SHOOT;
-                }
-
-                if (AUX.getRightTriggerAxis() < ControllerConstants.TRIGGER_DEADZONE) {
+                } else {
                     state = ShootSystem.ShooterAction.REV;
                 }
+
                 break;
             }
             default: {
