@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.robot.Configs.ShooterSystem;
+import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
 
 import com.revrobotics.spark.SparkMax;
@@ -33,7 +33,7 @@ public class ShootSystem {
         state = ShooterAction.STOPPED;
 
         rollersMotor.configure(
-                ShooterSystem.rollersConfig,
+                Configs.Shooter.rollersConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
     }

@@ -46,7 +46,7 @@ public class Configs {
         }
     }
 
-    public static final class ShooterSystem {
+    public static final class Shooter {
         public static final SparkMaxConfig shooterConfig = new SparkMaxConfig();
         public static final SparkMaxConfig shooterFollowerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig feederConfig = new SparkMaxConfig();
