@@ -8,12 +8,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShootSystem;
+import frc.robot.subsystems.Intake;
 
 public class Robot extends TimedRobot {
     private final Limelight limelight = new Limelight("limelight-coral");
     private final Drivetrain drivetrain = new Drivetrain();
     private final ShootSystem shootSystem = new ShootSystem();
-    private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelight, shootSystem);
+    private final Intake intake = new Intake();
+    private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelight, shootSystem, intake);
 
     @Override
     public void robotInit() {

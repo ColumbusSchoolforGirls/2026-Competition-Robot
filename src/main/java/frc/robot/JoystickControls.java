@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.ShootSystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.Constants.ControllerConstants;
@@ -32,6 +33,7 @@ public class JoystickControls {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
     private final ShootSystem shootSystem;
+    private final Intake intake;
     private boolean fieldRelative = false;
 
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
@@ -41,10 +43,11 @@ public class JoystickControls {
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
-    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem) {
+    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.shootSystem = shootSystem;
+        this.intake = intake;
     }
 
     public void driveWithJoystick(double periodSeconds) {
@@ -100,37 +103,51 @@ public class JoystickControls {
         }
     }
 
-    private ShootSystem.ShooterState state = ShootSystem.ShooterState.STOPPED;
+    private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
 
     public void shoot() {
-        switch (state) {
+        switch (shootState) {
             case STOPPED: {
                 if (AUX.getRightBumperButtonPressed()) {
-                    state = ShootSystem.ShooterState.REV;
+                    shootState = ShootSystem.ShooterState.REV;
                 }
                 break;
             }
             case REV: // Fall through intended
             case SHOOT: {
                 if (AUX.getLeftBumperButtonPressed()) {
-                    state = ShootSystem.ShooterState.STOPPED;
+                    shootState = ShootSystem.ShooterState.STOPPED;
                 }
 
                 if (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE) {
-                    state = ShootSystem.ShooterState.SHOOT;
+                    shootState = ShootSystem.ShooterState.SHOOT;
                 } else {
-                    state = ShootSystem.ShooterState.REV;
+                    shootState = ShootSystem.ShooterState.REV;
                 }
 
                 break;
             }
             default: {
-                state = ShootSystem.ShooterState.STOPPED;
+                shootState = ShootSystem.ShooterState.STOPPED;
                 break;
             }
         }
 
-        shootSystem.setShooterState(state);
+        shootSystem.setShooterState(shootState);
+    }
+
+    private Intake.IntakeState intakeState = Intake.IntakeState.IN;
+
+    public void intake() {
+        switch (intakeState) {
+            case IN: {
+                if (AUX.getXButtonPressed()) {
+                    intakeState = Intake.IntakeState.DEPLOYING;
+                }
+            }
+        }
+
+        intake.setIntakeState(intakeState);
     }
 
 }

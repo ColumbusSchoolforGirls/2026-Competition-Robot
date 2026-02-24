@@ -4,6 +4,7 @@ import frc.robot.Configs;
 import frc.robot.Constants.IntakeConstants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -11,12 +12,10 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.spark.SparkMax;
-
 public class Intake {
-
+    
     public enum IntakeState {
-        IN, DEPLOY, OUT, RETRACT
+        IN, DEPLOYING, OUT, RETRACTING
     }
 
     private final SparkMax deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
@@ -50,7 +49,7 @@ public class Intake {
     }
 
     private double determineDeploySpeed() {
-        if (state == IntakeState.DEPLOY && !isDeployed()) {
+        if (state == IntakeState.DEPLOYING && !isDeployed()) {
             return IntakeConstants.DEPLOY_SPEED;
         } else {
             return -IntakeConstants.DEPLOY_SPEED; // retracting at the same speed as deploying
@@ -58,7 +57,7 @@ public class Intake {
     }
 
     private double determineRollerSpeed() {
-        if (state == IntakeState.DEPLOY) {
+        if (state == IntakeState.DEPLOYING) {
             return IntakeConstants.ROLLER_SPEED;
         } else {
             return 0.0;
