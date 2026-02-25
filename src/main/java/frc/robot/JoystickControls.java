@@ -1,11 +1,11 @@
 package frc.robot;
 
 import frc.robot.subsystems.ShootSystem;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.Constants.ControllerConstants;
-
+import frc.robot.Intake.Intake;
+import frc.robot.Intake.IntakeState;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -136,18 +136,46 @@ public class JoystickControls {
         shootSystem.setShooterState(shootState);
     }
 
-    private Intake.IntakeState intakeState = Intake.IntakeState.IN;
+    private IntakeState intakeState = IntakeState.IN;
+    private boolean runRoller = false;
 
     public void intake() {
+        runRoller = false;
+
         switch (intakeState) {
             case IN: {
                 if (AUX.getXButtonPressed()) {
-                    intakeState = Intake.IntakeState.DEPLOYING;
+                    intakeState = IntakeState.DEPLOYING;
                 }
+                break;
+            }
+            case OUT: {
+                if (AUX.getBButtonPressed()) {
+                    intakeState = IntakeState.RETRACTING;
+                    break;
+                }
+                if (AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE) {
+                    runRoller = true;
+                } else {
+                    runRoller = false;
+                }
+                break;
+            }
+            case DEPLOYING:
+                if (intake.isDeployed()) {
+                    intakeState = IntakeState.OUT;
+                }
+                break;
+            case RETRACTING:
+                if (intake.isRetracted()) {
+                    intakeState = IntakeState.IN;
+                }
+                break;
+            default: {
             }
         }
 
-        intake.setIntakeState(intakeState);
+        intake.setIntakeState(intakeState, runRoller);
     }
 
 }

@@ -123,10 +123,11 @@ public class Constants {
     public static final class IntakeConstants {
         public static final int DEPLOY_ID = 10;
         public static final int ROLLER_ID = 103; // PWM
-        public static final int LIMIT_SWITCH_CHANNEL = 104; // TODO: Update with channel
+        public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 104; // TODO: Update with channel
+        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 1040;
 
-        public static final double DEPLOY_SPEED = 0.5;
-        public static final double ROLLER_SPEED = 0.5;
+        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.5;
+        public static final double ROLLER_PERCENTAGE_OUTPUT = 0.5;
     }
 
     public static final class ClimberConstants {

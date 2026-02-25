@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.Intake;
 
 import frc.robot.Configs;
 import frc.robot.Constants.IntakeConstants;
@@ -13,17 +13,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
-    
-    public enum IntakeState {
-        IN, DEPLOYING, OUT, RETRACTING
-    }
-
     private final SparkMax deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
     private final WPI_TalonSRX rollerMotor = new WPI_TalonSRX(IntakeConstants.ROLLER_ID);
 
-    private static DigitalInput limitSwitch = new DigitalInput(IntakeConstants.LIMIT_SWITCH_CHANNEL);
+    private static DigitalInput deployedLimitSwitch = new DigitalInput(IntakeConstants.DEPLOYED_LIMIT_SWITCH_CHANNEL);
+    private static DigitalInput retractedLimitSwitch = new DigitalInput(IntakeConstants.RETRACTED_LIMIT_SWITCH_CHANNEL);
 
     private IntakeState state;
+    private boolean runRoller;
 
     public Intake() {
         deployMotor.configure(
@@ -32,10 +29,20 @@ public class Intake {
                 PersistMode.kPersistParameters);
     }
 
-    public void setIntakeState(IntakeState state) {
+    public void setIntakeState(IntakeState state, boolean runRoller) {
         this.state = state;
+        this.runRoller = runRoller;
         setMotors();
         updateDashboard();
+    }
+
+    // TODO: Implement the isDeployed() and isRetracted() using encoder ticks.
+    public boolean isDeployed() {
+        return deployedLimitSwitch.get();
+    }
+
+    public boolean isRetracted() {
+        return retractedLimitSwitch.get();
     }
 
     private void updateDashboard() {
@@ -44,27 +51,24 @@ public class Intake {
     }
 
     private void setMotors() {
-        deployMotor.set(determineDeploySpeed());
-        rollerMotor.set(determineRollerSpeed());
+        deployMotor.set(determineDeployPercentageOutput());
+        rollerMotor.set(determineRollerPercentageOutput());
     }
 
-    private double determineDeploySpeed() {
+    private double determineDeployPercentageOutput() {
         if (state == IntakeState.DEPLOYING && !isDeployed()) {
-            return IntakeConstants.DEPLOY_SPEED;
-        } else {
-            return -IntakeConstants.DEPLOY_SPEED; // retracting at the same speed as deploying
+            return IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT;
+        } else if (state == IntakeState.RETRACTING) {
+            return -IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT;
         }
+        return 0;
     }
 
-    private double determineRollerSpeed() {
-        if (state == IntakeState.DEPLOYING) {
-            return IntakeConstants.ROLLER_SPEED;
+    private double determineRollerPercentageOutput() {
+        if (state == IntakeState.OUT && runRoller == true) {
+            return IntakeConstants.ROLLER_PERCENTAGE_OUTPUT;
         } else {
             return 0.0;
         }
-    }
-
-    private boolean isDeployed() {
-        return limitSwitch.get();
     }
 }
