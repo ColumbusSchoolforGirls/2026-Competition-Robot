@@ -4,8 +4,8 @@ import frc.robot.subsystems.ShootSystem;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Intake.Intake;
-import frc.robot.Intake.IntakeState;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeState;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -140,7 +140,11 @@ public class JoystickControls {
     private boolean runRoller = false;
 
     public void intake() {
-        runRoller = false;
+        if (AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE) {
+            runRoller = true;
+        } else {
+            runRoller = false;
+        }
 
         switch (intakeState) {
             case IN: {
@@ -153,11 +157,6 @@ public class JoystickControls {
                 if (AUX.getBButtonPressed()) {
                     intakeState = IntakeState.RETRACTING;
                     break;
-                }
-                if (AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE) {
-                    runRoller = true;
-                } else {
-                    runRoller = false;
                 }
                 break;
             }

@@ -128,6 +128,8 @@ public class Constants {
 
         public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.5;
         public static final double ROLLER_PERCENTAGE_OUTPUT = 0.5;
+
+        public static final double DEPLOYED_TICK_DISTANCE = 50;
     }
 
     public static final class ClimberConstants {
