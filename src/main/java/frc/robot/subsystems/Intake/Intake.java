@@ -1,4 +1,4 @@
-package frc.robot.Intake;
+package frc.robot.subsystems.Intake;
 
 import frc.robot.Configs;
 import frc.robot.Constants.IntakeConstants;
@@ -6,6 +6,7 @@ import frc.robot.Constants.IntakeConstants;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -16,7 +17,8 @@ public class Intake {
     private final SparkMax deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
     private final WPI_TalonSRX rollerMotor = new WPI_TalonSRX(IntakeConstants.ROLLER_ID);
 
-    private static DigitalInput deployedLimitSwitch = new DigitalInput(IntakeConstants.DEPLOYED_LIMIT_SWITCH_CHANNEL);
+    private final RelativeEncoder deployEncoder = deployMotor.getEncoder();
+
     private static DigitalInput retractedLimitSwitch = new DigitalInput(IntakeConstants.RETRACTED_LIMIT_SWITCH_CHANNEL);
 
     private IntakeState state;
@@ -37,17 +39,28 @@ public class Intake {
     }
 
     // TODO: Implement the isDeployed() and isRetracted() using encoder ticks.
-    public boolean isDeployed() {
-        return deployedLimitSwitch.get();
-    }
-
     public boolean isRetracted() {
         return retractedLimitSwitch.get();
     }
 
+    public boolean isDeployed() {
+        return deployEncoder.getPosition() >= IntakeConstants.DEPLOYED_TICK_DISTANCE;
+    }
+
+    // TODO: Move the arm
+    private void deployIntake() {
+        
+    }
+
+    private void resetIntakeEncoder() {
+        if (isRetracted()) {
+            deployEncoder.setPosition(0);
+        }
+    }
+
     private void updateDashboard() {
         SmartDashboard.putString("IntakeState", state.toString());
-        SmartDashboard.putBoolean("IntakeDeployed", isDeployed());
+        SmartDashboard.putBoolean("IntakeRetracted", isRetracted());
     }
 
     private void setMotors() {
@@ -56,7 +69,7 @@ public class Intake {
     }
 
     private double determineDeployPercentageOutput() {
-        if (state == IntakeState.DEPLOYING && !isDeployed()) {
+        if (state == IntakeState.DEPLOYING) {
             return IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT;
         } else if (state == IntakeState.RETRACTING) {
             return -IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT;
