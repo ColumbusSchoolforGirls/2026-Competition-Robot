@@ -5,8 +5,9 @@ import frc.robot.Constants.IntakeConstants;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -15,7 +16,7 @@ import com.revrobotics.spark.SparkMax;
 
 public class Intake {
     private final SparkMax deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
-    private final WPI_TalonSRX rollerMotor = new WPI_TalonSRX(IntakeConstants.ROLLER_ID);
+    private final PWMMotorController rollerMotor = new Talon(IntakeConstants.ROLLER_CHANNEL); // TODO: Update with specific motor controller type
 
     private final RelativeEncoder deployEncoder = deployMotor.getEncoder();
 
@@ -23,7 +24,6 @@ public class Intake {
 
     private IntakeState state;
     private boolean runRoller;
-    private double positionDifference;
 
     public Intake() {
         deployMotor.configure(
@@ -48,7 +48,7 @@ public class Intake {
     }
 
     public boolean isDeployed() {
-        positionDifference = IntakeConstants.DEPLOYED_TICK_DISTANCE - deployEncoder.getPosition();
+        double positionDifference = IntakeConstants.DEPLOYED_TICK_DISTANCE - deployEncoder.getPosition();
         return positionDifference <= 0;
     }
 
