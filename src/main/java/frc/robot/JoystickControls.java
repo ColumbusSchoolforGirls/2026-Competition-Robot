@@ -75,20 +75,12 @@ public class JoystickControls {
 
         // while the A-button is pressed, overwrite some of the driving values with the
         // output of our limelight methods
+
         if (DRIVE_CONTROLLER.getAButton()) {
-            final var rot_limelight = this.limelight.limelight_aim_proportional();
-            rot = rot_limelight;
-
-            final var forward_limelight = this.limelight.limelight_range_proportional();
-            xSpeed = forward_limelight;
-
-            // while using Limelight, turn off field-relative driving.
-            fieldRelative = false;
-
-            drivetrain.drive(xSpeed, ySpeed, rot_limelight, fieldRelative, periodSeconds);
-        } else {
-            drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
+            drivetrain.autoAlign(periodSeconds);
         }
+
+        drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
 
         // // Get the x speed. We are inverting this because Xbox controllers return
         // // negative values when we push forward.

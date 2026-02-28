@@ -1,23 +1,39 @@
 package frc.robot.auto;
 
 public class AutoStep {
-    private AutoAction action;
-    private int value;
-
-    public AutoStep(AutoAction action, int value) {
-        this.action = action;
-        this.value = value;
-    }
+    AutoAction action;
+    double value;
+    double elevatorHeight;
 
     public AutoStep(AutoAction action) {
         this.action = action;
     }
 
-    public int getValue() {
-        return value;
+    public AutoStep(AutoAction action, double value) {
+        this.action = action;
+        this.value = value;
+    }
+
+    public AutoStep(AutoAction action, double value, double elevatorHeight) {
+        this.action = action;
+        this.value = value;
+        this.elevatorHeight = elevatorHeight;
     }
 
     public AutoAction getAction() {
         return action;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public double getElevatorHeight() {
+        return elevatorHeight;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("AutoAction(%s)", action.name());
     }
 }
