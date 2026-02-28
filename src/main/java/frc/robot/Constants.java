@@ -122,7 +122,7 @@ public class Constants {
 
     public static final class IntakeConstants {
         public static final int DEPLOY_ID = 10;
-        public static final int ROLLER_ID = 103; // PWM
+        public static final int ROLLER_CHANNEL = 103; // PWM
         public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 104; // TODO: Update with channel
         public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 1040;
 

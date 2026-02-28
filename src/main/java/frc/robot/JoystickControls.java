@@ -3,11 +3,10 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
-
-import frc.robot.subsystems.ShootSystem;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.Constants.ControllerConstants;
+import frc.robot.subsystems.ShootSystem;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
 
@@ -31,18 +30,21 @@ import frc.robot.subsystems.Intake.IntakeState;
  *         - B Button (Press): Retract Intake
  */
 public class JoystickControls {
+    private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
+    private static final XboxController AUX = new XboxController(1);
+
     private final Drivetrain drivetrain;
     private final Limelight limelight;
     private final ShootSystem shootSystem;
     private final Intake intake;
-    private boolean fieldRelative = false;
-
-    private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
-    private static final XboxController AUX = new XboxController(1);
 
     private final SlewRateLimiter xspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+
+    private boolean fieldRelative = false;
+    private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
+    private IntakeState intakeState = IntakeState.IN;
 
     public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake) {
         this.drivetrain = drivetrain;
@@ -104,8 +106,6 @@ public class JoystickControls {
         }
     }
 
-    private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
-
     public void shoot() {
         switch (shootState) {
             case STOPPED: {
@@ -137,15 +137,8 @@ public class JoystickControls {
         shootSystem.setShooterState(shootState);
     }
 
-    private IntakeState intakeState = IntakeState.IN;
-    private boolean runRoller = false;
-
     public void intake() {
-        if (AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE) {
-            runRoller = true;
-        } else {
-            runRoller = false;
-        }
+        boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
 
         switch (intakeState) {
             case IN: {
@@ -161,20 +154,20 @@ public class JoystickControls {
                 }
                 break;
             }
-            case DEPLOYING:
+            case DEPLOYING: {
                 if (intake.isDeployed()) {
                     intakeState = IntakeState.OUT;
                 }
                 break;
-            case RETRACTING:
+            }
+            case RETRACTING: {
                 if (intake.isRetracted()) {
                     intakeState = IntakeState.IN;
                 }
                 break;
-            default: {
             }
+            default: {}
         }
-
         intake.setIntakeState(intakeState, runRoller);
     }
 
