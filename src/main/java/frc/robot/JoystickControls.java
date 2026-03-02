@@ -21,9 +21,9 @@ import frc.robot.subsystems.Intake.IntakeState;
  * 
  * AUXILIARY:
  *     * Shooter
- *         - Right Trigger (Hold): Shoot
  *         - Left Bumper (Press): Stop Shooter
  *         - Right Bumper (Press): Rev Shooter
+ *         - Right Trigger (Hold): Shoot
  *     * Intake
  *         - Left Trigger (Hold): Intake
  *         - X Button (Press): Deploy Intake
@@ -81,18 +81,20 @@ public class JoystickControls {
 
         // while the A-button is pressed, overwrite some of the driving values with the
         // output of our limelight methods
-        if (DRIVE_CONTROLLER.getAButton()) {
+        if (DRIVE_CONTROLLER.getXButton()) {
+            // while using Limelight, turn off field-relative driving.
+            fieldRelative = false;
+
             final var rot_limelight = this.limelight.limelight_aim_proportional();
             rot = rot_limelight;
 
             final var forward_limelight = this.limelight.limelight_range_proportional();
             xSpeed = forward_limelight;
 
-            // while using Limelight, turn off field-relative driving.
-            fieldRelative = false;
-
             drivetrain.drive(xSpeed, ySpeed, rot_limelight, fieldRelative, periodSeconds);
         } else {
+            fieldRelative = true;
+
             drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
         }
 
@@ -101,10 +103,17 @@ public class JoystickControls {
     }
 
     public void driverResetTurnEncoders() {
-        if (DRIVE_CONTROLLER.getBButtonPressed()) {
+        if (DRIVE_CONTROLLER.getAButtonPressed()) {
             drivetrain.resetRelativeTurnEncoders();
         }
     }
+
+    public void driverResetGyro() {
+        if (DRIVE_CONTROLLER.getBButton())
+            drivetrain.resetGyro();
+    }
+
+    private ShootSystem.ShooterState state = ShootSystem.ShooterState.STOPPED;
 
     public void shoot() {
         switch (shootState) {
@@ -166,7 +175,8 @@ public class JoystickControls {
                 }
                 break;
             }
-            default: {}
+            default: {
+            }
         }
         intake.setIntakeState(intakeState, runRoller);
     }

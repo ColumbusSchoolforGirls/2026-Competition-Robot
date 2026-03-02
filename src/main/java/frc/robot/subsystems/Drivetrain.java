@@ -54,7 +54,7 @@ public class Drivetrain {
 
   private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       kinematics,
-      gyro.getRotation2d(),
+      getRotation2d(),
       new SwerveModulePosition[] {
           frontLeft.getPosition(),
           frontRight.getPosition(),
@@ -90,7 +90,7 @@ public class Drivetrain {
         ChassisSpeeds.discretize(
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    xSpeed, ySpeed, rot, gyro.getRotation2d())
+                    xSpeed, ySpeed, rot, getRotation2d())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot),
             periodSeconds));
     setModuleStates(swerveModuleStates);
@@ -122,7 +122,7 @@ public class Drivetrain {
    */
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(
-        Rotation2d.fromDegrees(gyro.getAngle()),
+        getRotation2d(),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -135,7 +135,7 @@ public class Drivetrain {
   /** Update the odometry in the periodic block. */
   public void periodic() {
     odometry.update(
-        Rotation2d.fromDegrees(gyro.getAngle()),
+        getRotation2d(),
         new SwerveModulePosition[] {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -171,12 +171,20 @@ public class Drivetrain {
 
   /** Returns the heading of the robot in degrees from -180 to 180. */
   public double getHeading() {
-    return gyro.getYaw();// gyro.getRotation2d().getDegrees();
+    return gyro.getYaw() * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
   /** Returns the turn rate of the robot in degrees per second. */
   public double getTurnRate() {
     return gyro.getRate() * (DriveConstants.GYRO_REVERSED ? -1.0 : 1.0);
+  }
+
+  public Rotation2d getRotation2d() {
+    double deg = gyro.getAngle();
+    if (DriveConstants.GYRO_REVERSED) {
+      deg = -deg;
+    }
+    return Rotation2d.fromDegrees(deg);
   }
 
   public void driveInit() {
@@ -239,11 +247,11 @@ public class Drivetrain {
     gyroDifference = (getHeading() - targetAngle);
 
     if (Math.abs(gyroDifference) < Constants.DriveConstants.TURN_TOLERANCE) {
-      drive(0, 0, 0, false, periodSeconds);
+      drive(0, 0, 0, true, periodSeconds);
     } else if (gyroDifference < 0) {
-      drive(0, 0, 0.05 * Math.abs(gyroDifference) + 0.2, false, periodSeconds);
+      drive(0, 0, 0.05 * Math.abs(gyroDifference) + 0.2, true, periodSeconds);
     } else if (gyroDifference > 0) {
-      drive(0, 0, -0.05 * gyroDifference - 0.2, false, periodSeconds);
+      drive(0, 0, -0.05 * gyroDifference - 0.2, true, periodSeconds);
     }
   }
 
@@ -264,6 +272,7 @@ public class Drivetrain {
     SmartDashboard.putNumber("BL RelEncoder", (backLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
     SmartDashboard.putNumber("BR RelEncoder", (backRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
 
-    SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
+    SmartDashboard.putNumber("Gyro Angle", getHeading());
+    SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
   }
 }
