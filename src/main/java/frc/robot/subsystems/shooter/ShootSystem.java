@@ -1,8 +1,7 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkMax;

@@ -52,8 +52,9 @@ public class JoystickControls {
     private IntakeState intakeState = IntakeState.IN;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
-    
-    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake, Hopper hopper) {
+
+    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake,
+            Hopper hopper) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.shootSystem = shootSystem;
@@ -89,22 +90,12 @@ public class JoystickControls {
 
         // while the A-button is pressed, overwrite some of the driving values with the
         // output of our limelight methods
-        if (DRIVE_CONTROLLER.getXButton()) {
-            // while using Limelight, turn off field-relative driving.
-            fieldRelative = false;
 
-            final var rot_limelight = this.limelight.limelight_aim_proportional();
-            rot = rot_limelight;
-
-            final var forward_limelight = this.limelight.limelight_range_proportional();
-            xSpeed = forward_limelight;
-
-            drivetrain.drive(xSpeed, ySpeed, rot_limelight, fieldRelative, periodSeconds);
-        } else {
-            fieldRelative = true;
-
-            drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
+        if (DRIVE_CONTROLLER.getAButton()) {
+            drivetrain.autoAlign(periodSeconds);
         }
+
+        drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
 
         // // Get the x speed. We are inverting this because Xbox controllers return
         // // negative values when we push forward.
@@ -191,4 +182,5 @@ public class JoystickControls {
     public void hopper() {
         hopper.runHopper(runHopperForIntaking || runHopperForShooting);
     }
-}
+
+    

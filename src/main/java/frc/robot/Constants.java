@@ -92,6 +92,8 @@ public class Constants {
         // Limelight
         public static final double NO_TX = 0;
         public static final double NO_TY = 0;
+
+        public static final double ALIGN_TOLERANCE = 0.5; // TODO: TUNE, MADE UP VALUE
     }
 
     public static final class ControllerConstants {
@@ -137,5 +139,9 @@ public class Constants {
 
     public static final class ClimberConstants {
         public static final int CILMBER_ID = 105;
+    }
+
+    public static final class AutoConstants {
+        public static final double LEAVE_ONLY_DISTANCE = 0.0;
     }
 }
