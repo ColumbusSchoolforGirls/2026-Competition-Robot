@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.ShootSystem;
-import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.Intake.IntakeState;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeState;
+import frc.robot.subsystems.shooter.ShootSystem;
 
 /*
  * List all controls in this docstring.
@@ -81,22 +81,12 @@ public class JoystickControls {
 
         // while the A-button is pressed, overwrite some of the driving values with the
         // output of our limelight methods
-        if (DRIVE_CONTROLLER.getXButton()) {
-            // while using Limelight, turn off field-relative driving.
-            fieldRelative = false;
 
-            final var rot_limelight = this.limelight.limelight_aim_proportional();
-            rot = rot_limelight;
-
-            final var forward_limelight = this.limelight.limelight_range_proportional();
-            xSpeed = forward_limelight;
-
-            drivetrain.drive(xSpeed, ySpeed, rot_limelight, fieldRelative, periodSeconds);
-        } else {
-            fieldRelative = true;
-
-            drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
+        if (DRIVE_CONTROLLER.getAButton()) {
+            drivetrain.autoAlign(periodSeconds);
         }
+
+        drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
 
         // // Get the x speed. We are inverting this because Xbox controllers return
         // // negative values when we push forward.

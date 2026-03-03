@@ -7,8 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.ShootSystem;
-import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.shooter.ShootSystem;
 
 public class Robot extends TimedRobot {
   private final Limelight limelight = new Limelight("limelight-coral");

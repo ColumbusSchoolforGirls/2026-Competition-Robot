@@ -21,8 +21,11 @@ import com.studica.frc.AHRS.NavXComType;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 
+import frc.robot.subsystems.Limelight;
+
 public class Drivetrain {
 
+  private Limelight limelight;
   private double gyroDifference;
   private double targetAngle;
   private double driveDifference;
@@ -38,7 +41,8 @@ public class Drivetrain {
   private final Translation2d backRightLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
       DriveConstants.TRANSLATION_2D_OFFSET);
 
-  private final SwerveModule frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
+  // TODO: proper encapsulation
+  public final SwerveModule frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
       DriveConstants.FL_DIO, DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
       DriveConstants.BL_DIO, DriveConstants.BL_CHASSIS_ANGULAR_OFFSET);
@@ -234,9 +238,43 @@ public class Drivetrain {
     return false;
   }
 
+  public void autoDrive(double periodSeconds) {
+
+    driveDifference = targetDistance - Math.abs(frontLeft.getDrivePositionMeters());
+    if (Math.abs(driveDifference) > Constants.DriveConstants.DISTANCE_TOLERANCE) {
+      drive(0.8, 0, 0, false, periodSeconds);
+    }
+  }
+
+  public void autoAlign(double periodSeconds) {
+    final var rot_limelight = limelight.limelight_aim_proportional();
+    final var forward_limelight = limelight.limelight_range_proportional();
+
+    // while using Limelight, turn off field-relative driving.
+    boolean fieldRelative = false;
+
+    drive(forward_limelight, 0.0, rot_limelight, fieldRelative, periodSeconds);
+  }
+
+  public boolean alignComplete() { // TODO: THIS IS A PLACEHOLDER, UPDATE!!
+    gyroDifference = (getHeading() - targetAngle);
+
+    return Math.abs(gyroDifference) < Constants.DriveConstants.ALIGN_TOLERANCE;
+  }
+
+  public void startDrive(double distanceMeters) {
+    resetEncoders();
+    targetDistance = distanceMeters;
+    startDriveTime = Timer.getFPGATimestamp();
+  }
+
   public void startTurn(double angle) {
     zeroHeading();
     this.targetAngle = (angle + getHeading());
+  }
+
+  public void stop(double periodSeconds) {
+    drive(0, 0, 0, false, periodSeconds);
   }
 
   public void resetGyro() {
