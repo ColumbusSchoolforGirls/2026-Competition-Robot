@@ -110,12 +110,10 @@ public class Constants {
         public static final int LEFT_FEEDER_ID = 101;
 
         public static final int VENT_ID = 11;
-        public static final int ROLLERS_ID = 102; // PWM
 
         public static final int SHOOT_RPM = 3700;
         public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
         public static final double VENT_PERCENTAGE_OUTPUT = 0.5;
-        public static final double ROLLERS_PERCENTAGE_OUTPUT = 0.2;
 
         public static final int RPM_TOLERANCE = 100; // TODO: Update, hopefully lower, after tuning the PID
     }
@@ -130,6 +128,11 @@ public class Constants {
         public static final double ROLLER_PERCENTAGE_OUTPUT = 0.5;
 
         public static final double DEPLOYED_TICK_DISTANCE = 50;
+    }
+
+    public static final class HopperConstants {
+        public static final int HOPPER_ID = 102; // TODO: PWM
+        public static final double HOPPER_PERCENTAGE_OUTPUT = 0.2;
     }
 
     public static final class ClimberConstants {

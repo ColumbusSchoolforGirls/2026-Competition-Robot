@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.hopper.Hopper;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,20 +25,17 @@ public class ShootSystem {
             ShooterConstants.RIGHT_LEAD_ID,
             ShooterConstants.RIGHT_FOLLOWER_ID,
             ShooterConstants.RIGHT_FEEDER_ID);
-    private final SparkMax rollersMotor = new SparkMax(ShooterConstants.ROLLERS_ID, MotorType.kBrushless);
     private final SparkMax ventMotor = new SparkMax(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
     private ShooterState state;
+    private Hopper hopper;
 
-    public ShootSystem() {
+    public ShootSystem(Hopper hopper) {
+        this.hopper = hopper;
         state = ShooterState.STOPPED;
 
         ventMotor.configure(
                 Configs.Shooter.ventConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-        rollersMotor.configure(
-                Configs.Shooter.rollersConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
     }
@@ -62,7 +60,7 @@ public class ShootSystem {
         leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
         rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
         ventMotor.set(determineVentPercentageOutput());
-        rollersMotor.set(determineRollersPercentageOutput());
+        setHopperState();
     }
 
     private double determineShooterRPM() {
@@ -86,11 +84,9 @@ public class ShootSystem {
         return 0.0;
     }
 
-    private double determineRollersPercentageOutput() {
-        if (this.state == ShooterState.SHOOT) {
-            return ShooterConstants.ROLLERS_PERCENTAGE_OUTPUT;
-        }
-        return 0.0;
+    private void setHopperState() {
+        boolean run = (this.state == ShooterState.SHOOT);
+        hopper.setHopper(run, false);
     }
 
     private boolean isAtSpeed(ShooterModule shooter) {

@@ -52,7 +52,6 @@ public class Configs {
         public static final SparkMaxConfig shooterFollowerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig feederConfig = new SparkMaxConfig();
         public static final SparkMaxConfig ventConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig rollersConfig = new SparkMaxConfig();
 
         static {
             shooterConfig
@@ -80,12 +79,6 @@ public class Configs {
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(1.0)
                     .smartCurrentLimit(20);
-
-            rollersConfig
-                    .inverted(true) // TODO: Update depending on direction of roller motors
-                    .idleMode(IdleMode.kBrake)
-                    .openLoopRampRate(0.5)
-                    .smartCurrentLimit(20);
         }
     }
 
@@ -95,6 +88,18 @@ public class Configs {
         static {
             deployConfig
                     .inverted(true) // TODO: Update depending on direction of intake motor
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(0.5)
+                    .smartCurrentLimit(20);
+        }
+    }
+
+    public static final class Hopper {
+        public static final SparkMaxConfig hopperConfig = new SparkMaxConfig();
+
+        static {
+            hopperConfig
+                    .inverted(true) // TODO: Update depending on direction of roller motors
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(0.5)
                     .smartCurrentLimit(20);
