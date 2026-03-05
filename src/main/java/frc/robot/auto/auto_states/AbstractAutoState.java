@@ -1,23 +1,22 @@
 package frc.robot.auto.auto_states;
 
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 public abstract class AbstractAutoState {
 
-    private ArrayList<Predicate<AbstractAutoState>> transitions = new ArrayList<>();
+    private ArrayList<AutoTransition> transitions = new ArrayList<>();
 
-    public boolean shouldTransition() {
+    public AbstractAutoState getNextState() {
         for (int i = 0; i < transitions.size(); i++) {
-            if (transitions.get(i).test(this)) {
-                return true;
+            if (transitions.get(i).shouldTransition()) {
+                return transitions.get(i).getTargetState();
             }
         }
-        return false;
+        return null;
     }
 
-    public void addTransition(Predicate<AbstractAutoState> predicate) {
-        transitions.add(predicate);
+    public void addTransition(AutoTransition transition) {
+        transitions.add(transition);
     }
 
     abstract public void action(double periodSeconds);
