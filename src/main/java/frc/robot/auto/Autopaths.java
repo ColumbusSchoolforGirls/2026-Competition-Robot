@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.auto.auto_states.AbstractAutoState;
+import frc.robot.auto.auto_states.AutoStateAlign;
 import frc.robot.auto.auto_states.AutoStateDrive;
 import frc.robot.auto.auto_states.AutoStateStop;
 import frc.robot.auto.auto_states.AutoTransition;
 import frc.robot.subsystems.Drivetrain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.function.Predicate;
 
@@ -20,16 +20,18 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class AutoPaths {
     private Drivetrain drivetrain;
+    public AbstractAutoState currentAutoState;
+
 
     public AutoPaths(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
+        this.currentAutoState = null;
     }
 
     public enum StartingPosition {
         LEFT, MIDDLE, RIGHT // from drive station persepctive
     }
 
-    public AbstractAutoState currentAutoState;
 
     // Shuffleboard
     ShuffleboardTab tab = Shuffleboard.getTab("Auto");
@@ -56,18 +58,45 @@ public class AutoPaths {
         leaveOnly = tab.add("LEAVE ONLY", false).withWidget("Toggle Button").withSize(2, 1).withPosition(2, 0)
                 .getEntry();
 
-        this.currentAutoState = null;
     }
 
-    public AbstractAutoState buildDrivePath() {
-        HashMap<AbstractAutoState, AutoTransition> stateTransitionMap = new HashMap<>();
+    public AbstractAutoState buildPath() {
+        // Set up all your States
+        AutoStateStop start = new AutoStateStop();
+
+        // TODO: THESE ARE PLACEHOLDERS
+        AutoStateDrive driveTurnRight = new AutoStateDrive(0, 0, 0, drivetrain, 0);
+        AutoStateDrive driveTurnLeft = new AutoStateDrive(0, 0, 0, drivetrain, 0);
 
         AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
+        AutoStateAlign align = new AutoStateAlign();
+    
         AutoStateStop stop = new AutoStateStop();
 
-        // Make our transition
+        // Set up all your transitions
+        start.addTransition(new AutoTransition(
+            driveTurnLeft, state -> positionChooser.getSelected() == StartingPosition.RIGHT));
+        start.addTransition(new AutoTransition(
+            driveTurnRight, state -> positionChooser.getSelected() == StartingPosition.LEFT));
+
+        driveTurnRight.addTransition(new AutoTransition(
+            align, driveTurnRight::atDistance));
+        driveTurnLeft.addTransition(new AutoTransition(
+            align, driveTurnLeft::atDistance));
+
+        align.addTransition(new AutoTransition(stop, align::isAligned));
 
         return driveForward1Meter;
+    }
+
+    // Check for transitions first, otherwise run the action function.
+    public void runStateMachine(AbstractAutoState startState, double periodSeconds) {
+        AbstractAutoState nextState = currentAutoState.getNextState();
+        if (nextState != null) {
+            currentAutoState = nextState;
+            return;
+        }
+        currentAutoState.action(periodSeconds);
     }
 
 }

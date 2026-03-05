@@ -21,12 +21,16 @@ public class AutoStateDrive extends AbstractAutoState {
 
     @Override
     public void action(double periodSeconds) {
+        // TODO: the rotation rate is not correct, we'd probably rotate at a fixed speed, and we should
+        // either include this check in atDistance or make another check which is atAngle. 
         drivetrain.drive(velocity * Math.sin(travelAngle), velocity * Math.cos(travelAngle),
                 (robotEndAngle - drivetrain.getHeading()), false,
                 periodSeconds);
     }
 
     public boolean atDistance(AbstractAutoState state) {
+        // TODO: we made frontLeft public to get around encapsulation. Please make a getDrivePosition in drivetrain which 
+        // averages all the drive motor positions. 
         return this.distance
                 - drivetrain.frontLeft.getDrivePositionMeters() < Constants.DriveConstants.DISTANCE_TOLERANCE;
     }
