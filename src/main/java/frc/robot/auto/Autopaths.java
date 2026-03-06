@@ -3,7 +3,6 @@ package frc.robot.auto;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-import frc.robot.Constants.AutoConstants;
 import frc.robot.auto.states.AbstractAutoState;
 import frc.robot.auto.states.AutoStateAlign;
 import frc.robot.auto.states.AutoStateDrive;
@@ -11,9 +10,6 @@ import frc.robot.auto.states.AutoStateStop;
 import frc.robot.auto.states.AutoTransition;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-
-import java.util.HashMap;
-import java.util.function.Predicate;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -69,7 +65,7 @@ public class AutoPaths {
         AutoStateDrive driveTurnLeft = new AutoStateDrive(0, 0, 0, drivetrain, 0);
 
         AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
-        AutoStateAlign align = new AutoStateAlign(null, drivetrain);
+        AutoStateAlign align = new AutoStateAlign(limelight, drivetrain);
 
         AutoStateStop stop = new AutoStateStop();
 
