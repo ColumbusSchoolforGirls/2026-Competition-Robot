@@ -10,6 +10,7 @@ import frc.robot.auto.states.AutoStateDrive;
 import frc.robot.auto.states.AutoStateStop;
 import frc.robot.auto.states.AutoTransition;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 
 import java.util.HashMap;
 import java.util.function.Predicate;
@@ -20,10 +21,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class AutoPaths {
     private Drivetrain drivetrain;
     public AbstractAutoState currentAutoState;
+    private Limelight limelight;
 
-    public AutoPaths(Drivetrain drivetrain) {
+    public AutoPaths(Drivetrain drivetrain, Limelight limelight) {
         this.drivetrain = drivetrain;
         this.currentAutoState = null;
+        this.limelight = limelight;
     }
 
     public enum StartingPosition {
@@ -66,7 +69,7 @@ public class AutoPaths {
         AutoStateDrive driveTurnLeft = new AutoStateDrive(0, 0, 0, drivetrain, 0);
 
         AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
-        AutoStateAlign align = new AutoStateAlign();
+        AutoStateAlign align = new AutoStateAlign(null, drivetrain);
 
         AutoStateStop stop = new AutoStateStop();
 
