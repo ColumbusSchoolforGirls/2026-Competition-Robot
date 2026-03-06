@@ -1,4 +1,4 @@
-package frc.robot.auto.auto_states;
+package frc.robot.auto.states;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -20,19 +20,25 @@ public class AutoStateDrive extends AbstractAutoState {
     }
 
     @Override
+    public void startState() {
+        drivetrain.resetDistance();
+    }
+
+    @Override
     public void action(double periodSeconds) {
-        // TODO: the rotation rate is not correct, we'd probably rotate at a fixed speed, and we should
-        // either include this check in atDistance or make another check which is atAngle. 
+        // TODO: the rotation rate limelight.getTV() == 1is not correct, we'd probably
+        // rotate at a fixed
+        // speed, and we should
+        // either include this check in atDistance or make another check which is
+        // atAngle.
         drivetrain.drive(velocity * Math.sin(travelAngle), velocity * Math.cos(travelAngle),
                 (robotEndAngle - drivetrain.getHeading()), false,
                 periodSeconds);
     }
 
     public boolean atDistance(AbstractAutoState state) {
-        // TODO: we made frontLeft public to get around encapsulation. Please make a getDrivePosition in drivetrain which 
-        // averages all the drive motor positions. 
         return this.distance
-                - drivetrain.frontLeft.getDrivePositionMeters() < Constants.DriveConstants.DISTANCE_TOLERANCE;
+                - drivetrain.getDrivePositionMetersFrontLeft() < Constants.DriveConstants.DISTANCE_TOLERANCE;
     }
 
 }

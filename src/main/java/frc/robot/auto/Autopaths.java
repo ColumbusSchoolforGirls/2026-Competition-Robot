@@ -4,13 +4,12 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import frc.robot.Constants.AutoConstants;
-import frc.robot.auto.auto_states.AbstractAutoState;
-import frc.robot.auto.auto_states.AutoStateAlign;
-import frc.robot.auto.auto_states.AutoStateDrive;
-import frc.robot.auto.auto_states.AutoStateStop;
-import frc.robot.auto.auto_states.AutoTransition;
+import frc.robot.auto.states.AbstractAutoState;
+import frc.robot.auto.states.AutoStateAlign;
+import frc.robot.auto.states.AutoStateDrive;
+import frc.robot.auto.states.AutoStateStop;
+import frc.robot.auto.states.AutoTransition;
 import frc.robot.subsystems.Drivetrain;
-
 
 import java.util.HashMap;
 import java.util.function.Predicate;
@@ -22,7 +21,6 @@ public class AutoPaths {
     private Drivetrain drivetrain;
     public AbstractAutoState currentAutoState;
 
-
     public AutoPaths(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
         this.currentAutoState = null;
@@ -31,7 +29,6 @@ public class AutoPaths {
     public enum StartingPosition {
         LEFT, MIDDLE, RIGHT // from drive station persepctive
     }
-
 
     // Shuffleboard
     ShuffleboardTab tab = Shuffleboard.getTab("Auto");
@@ -70,19 +67,19 @@ public class AutoPaths {
 
         AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
         AutoStateAlign align = new AutoStateAlign();
-    
+
         AutoStateStop stop = new AutoStateStop();
 
         // Set up all your transitions
         start.addTransition(new AutoTransition(
-            driveTurnLeft, state -> positionChooser.getSelected() == StartingPosition.RIGHT));
+                driveTurnLeft, state -> positionChooser.getSelected() == StartingPosition.RIGHT));
         start.addTransition(new AutoTransition(
-            driveTurnRight, state -> positionChooser.getSelected() == StartingPosition.LEFT));
+                driveTurnRight, state -> positionChooser.getSelected() == StartingPosition.LEFT));
 
         driveTurnRight.addTransition(new AutoTransition(
-            align, driveTurnRight::atDistance));
+                align, driveTurnRight::atDistance));
         driveTurnLeft.addTransition(new AutoTransition(
-            align, driveTurnLeft::atDistance));
+                align, driveTurnLeft::atDistance));
 
         align.addTransition(new AutoTransition(stop, align::isAligned));
 
@@ -94,6 +91,7 @@ public class AutoPaths {
         AbstractAutoState nextState = currentAutoState.getNextState();
         if (nextState != null) {
             currentAutoState = nextState;
+            nextState.startState();
             return;
         }
         currentAutoState.action(periodSeconds);
