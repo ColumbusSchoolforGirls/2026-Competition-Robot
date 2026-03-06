@@ -42,7 +42,7 @@ public class Drivetrain {
       DriveConstants.TRANSLATION_2D_OFFSET);
 
   // TODO: proper encapsulation
-  public final SwerveModule frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
+  private final SwerveModule frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
       DriveConstants.FL_DIO, DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
       DriveConstants.BL_DIO, DriveConstants.BL_CHASSIS_ANGULAR_OFFSET);
@@ -74,6 +74,14 @@ public class Drivetrain {
     frontRight.resetRelativeTurnEncoder();
     backLeft.resetRelativeTurnEncoder();
     backRight.resetRelativeTurnEncoder();
+  }
+
+  public double getDrivePositionMetersFrontLeft() {
+    return frontLeft.getDrivePositionMeters();
+  }
+
+  public void resetDistance() {
+    resetEncoders();
   }
 
   /**
@@ -247,6 +255,7 @@ public class Drivetrain {
   }
 
   public void autoAlign(double periodSeconds) {
+    // TODO: Maybe move this function out of drivetrain
     final var rot_limelight = limelight.limelight_aim_proportional();
     final var forward_limelight = limelight.limelight_range_proportional();
 
@@ -254,12 +263,6 @@ public class Drivetrain {
     boolean fieldRelative = false;
 
     drive(forward_limelight, 0.0, rot_limelight, fieldRelative, periodSeconds);
-  }
-
-  public boolean alignComplete() { // TODO: THIS IS A PLACEHOLDER, UPDATE!!
-    gyroDifference = (getHeading() - targetAngle);
-
-    return Math.abs(gyroDifference) < Constants.DriveConstants.ALIGN_TOLERANCE;
   }
 
   public void startDrive(double distanceMeters) {

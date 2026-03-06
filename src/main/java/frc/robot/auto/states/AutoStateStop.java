@@ -1,4 +1,4 @@
-package frc.robot.auto.auto_states;
+package frc.robot.auto.states;
 
 public class AutoStateStop extends AbstractAutoState {
 

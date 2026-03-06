@@ -1,4 +1,4 @@
-package frc.robot.auto.auto_states;
+package frc.robot.auto.states;
 
 import java.util.ArrayList;
 
@@ -17,6 +17,9 @@ public abstract class AbstractAutoState {
 
     public void addTransition(AutoTransition transition) {
         transitions.add(transition);
+    }
+
+    public void startState() {
     }
 
     abstract public void action(double periodSeconds);
