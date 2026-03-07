@@ -15,23 +15,29 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 public class Intake {
-    private final SparkMax deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
-    private final PWMMotorController rollerMotor = new Talon(IntakeConstants.ROLLER_CHANNEL); // TODO: Update with
-                                                                                              // specific motor
-                                                                                              // controller type
-
-    private final RelativeEncoder deployEncoder = deployMotor.getEncoder();
-
-    private static DigitalInput retractedLimitSwitch = new DigitalInput(IntakeConstants.RETRACTED_LIMIT_SWITCH_CHANNEL);
+    private SparkMax deployMotor;
+    private PWMMotorController rollerMotor;
+    private RelativeEncoder deployEncoder;
+    private DigitalInput retractedLimitSwitch;
 
     private IntakeState state;
     private boolean runRoller;
 
     public Intake() {
-        deployMotor.configure(
-                Configs.Intake.deployConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+        // deployMotor.configure(
+        // Configs.Intake.deployConfig,
+        // ResetMode.kResetSafeParameters,
+        // PersistMode.kPersistParameters);
+        // init();
+    }
+
+    private void init() { // specific motor
+        deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
+        rollerMotor = new Talon(IntakeConstants.ROLLER_CHANNEL); // TODO: Update with
+                                                                 // specific motor
+                                                                 // controller type
+        deployEncoder = deployMotor.getEncoder();
+        retractedLimitSwitch = new DigitalInput(IntakeConstants.RETRACTED_LIMIT_SWITCH_CHANNEL);
     }
 
     public void setIntakeState(IntakeState state, boolean runRoller) {

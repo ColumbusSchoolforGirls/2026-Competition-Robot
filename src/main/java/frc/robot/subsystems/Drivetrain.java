@@ -298,10 +298,10 @@ public class Drivetrain {
 
   public void updateSmartDashboard() {
 
-    SmartDashboard.putNumber("FL DriveEncoder", (frontLeft.driveEncoder.getPosition() * 180) / Math.PI);
-    SmartDashboard.putNumber("FR DriveEncoder", (frontRight.driveEncoder.getPosition() * 180) / Math.PI);
-    SmartDashboard.putNumber("BL DriveEncoder", (backLeft.driveEncoder.getPosition() * 180) / Math.PI);
-    SmartDashboard.putNumber("BR DriveEncoder", (backRight.driveEncoder.getPosition() * 180) / Math.PI);
+    SmartDashboard.putNumber("FL DriveEncoder", frontLeft.getDrivePositionMeters());
+    SmartDashboard.putNumber("FR DriveEncoder", frontRight.getDrivePositionMeters());
+    SmartDashboard.putNumber("BL DriveEncoder", backLeft.getDrivePositionMeters());
+    SmartDashboard.putNumber("BR DriveEncoder", backRight.getDrivePositionMeters());
 
     SmartDashboard.putNumber("FL AbsEncoder", frontLeft.turnAbsoluteEncoder.get() * 360);
     SmartDashboard.putNumber("FR AbsEncoder", frontRight.turnAbsoluteEncoder.get() * 360);

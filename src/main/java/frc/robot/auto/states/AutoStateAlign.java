@@ -14,8 +14,13 @@ public class AutoStateAlign extends AbstractAutoState {
     }
 
     @Override
+    public void onStateExit(double periodSeconds) {
+        drivetrain.drive(0, 0, 0, false, periodSeconds);
+    }
+
+    @Override
     public void action(double periodSeconds) {
-        // TODO: If no valid target maybe pan from left to right
+        // TODO: Make a funtion where if no valid target maybe pan from left to right
         drivetrain.autoAlign(periodSeconds);
     }
 

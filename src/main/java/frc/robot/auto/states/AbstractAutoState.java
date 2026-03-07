@@ -19,7 +19,11 @@ public abstract class AbstractAutoState {
         transitions.add(transition);
     }
 
-    public void startState() {
+    public void onStateEntry(double periodSeconds) {
+    }
+
+    public void onStateExit(double periodSeconds) {
+
     }
 
     abstract public void action(double periodSeconds);
