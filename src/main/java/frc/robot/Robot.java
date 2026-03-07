@@ -5,20 +5,24 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.auto.AutoStateMachine;
+import frc.robot.auto.states.AbstractAutoState;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.ShootSystem;
+import frc.robot.subsystems.shooter.ShootSystem;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.hopper.Hopper;
 
 public class Robot extends TimedRobot {
-    private final Limelight limelight = new Limelight("limelight-coral");
+    private final Limelight limelightShoot = new Limelight("limelight-shoot");
+    private final Limelight limelightClimb = new Limelight("limelight-climb");
     private final Drivetrain drivetrain = new Drivetrain();
     private final ShootSystem shootSystem = new ShootSystem();
     private final Intake intake = new Intake();
     private final Hopper hopper = new Hopper();
-    private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelight, shootSystem, intake,
-            hopper);
+    private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
+            intake, hopper);
+    private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot);
 
     @Override
     public void robotInit() {
@@ -29,7 +33,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        limelight.updateShuffleboardLimelightValues();
+        limelightShoot.updateShuffleboardLimelightValues();
         drivetrain.updateSmartDashboard();
         drivetrain.periodic();
     }
@@ -42,6 +46,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        AbstractAutoState startState = autoStateMachine.buildPath();
+        autoStateMachine.runStateMachine(startState, getPeriod());
     }
 
     @Override

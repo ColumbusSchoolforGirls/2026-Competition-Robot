@@ -14,12 +14,12 @@ import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-public class AutoPaths {
+public class AutoStateMachine {
     private Drivetrain drivetrain;
     public AbstractAutoState currentAutoState;
     private Limelight limelight;
 
-    public AutoPaths(Drivetrain drivetrain, Limelight limelight) {
+    public AutoStateMachine(Drivetrain drivetrain, Limelight limelight) {
         this.drivetrain = drivetrain;
         this.currentAutoState = null;
         this.limelight = limelight;
@@ -31,7 +31,7 @@ public class AutoPaths {
 
     // Shuffleboard
     ShuffleboardTab tab = Shuffleboard.getTab("Auto");
-    GenericEntry leaveOnly, toHub, toDepot, toClimb, toCenterField, shoot;
+    GenericEntry leaveOnly, toHub, toClimb;
 
     private final SendableChooser<StartingPosition> positionChooser = new SendableChooser<>();
 
@@ -58,39 +58,32 @@ public class AutoPaths {
 
     public AbstractAutoState buildPath() {
         // Set up all your States
-        AutoStateStop start = new AutoStateStop();
-
-        // TODO: THESE ARE PLACEHOLDERS
-        AutoStateDrive driveTurnRight = new AutoStateDrive(0, 0, 0, drivetrain, 0);
-        AutoStateDrive driveTurnLeft = new AutoStateDrive(0, 0, 0, drivetrain, 0);
+        AutoStateStop start = new AutoStateStop(drivetrain);
 
         AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
-        AutoStateAlign align = new AutoStateAlign(limelight, drivetrain);
-
-        AutoStateStop stop = new AutoStateStop();
+        AutoStateDrive turnRight = new AutoStateDrive(0, 0, -Math.PI / 4, drivetrain, 0);
+        AutoStateStop stop = new AutoStateStop(drivetrain);
 
         // Set up all your transitions
         start.addTransition(new AutoTransition(
-                driveTurnLeft, state -> positionChooser.getSelected() == StartingPosition.RIGHT));
-        start.addTransition(new AutoTransition(
-                driveTurnRight, state -> positionChooser.getSelected() == StartingPosition.LEFT));
+                driveForward1Meter, state -> true));
 
-        driveTurnRight.addTransition(new AutoTransition(
-                align, driveTurnRight::atDistance));
-        driveTurnLeft.addTransition(new AutoTransition(
-                align, driveTurnLeft::atDistance));
+        driveForward1Meter.addTransition(new AutoTransition(turnRight, driveForward1Meter::atDistance));
+        turnRight.addTransition(new AutoTransition(stop, turnRight::atAngle));
 
-        align.addTransition(new AutoTransition(stop, align::isAligned));
-
-        return driveForward1Meter;
+        return start;
     }
 
     // Check for transitions first, otherwise run the action function.
     public void runStateMachine(AbstractAutoState startState, double periodSeconds) {
+        if (currentAutoState == null) {
+            currentAutoState = startState;
+        }
         AbstractAutoState nextState = currentAutoState.getNextState();
         if (nextState != null) {
+            currentAutoState.onStateExit(periodSeconds);
             currentAutoState = nextState;
-            nextState.startState();
+            nextState.onStateEntry(periodSeconds);
             return;
         }
         currentAutoState.action(periodSeconds);

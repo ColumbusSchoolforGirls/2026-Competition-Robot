@@ -24,13 +24,18 @@ public class AutoStateDrive extends AbstractAutoState {
     }
 
     @Override
-    public void startState() {
+    public void onStateEntry(double periodSeconds) {
         drivetrain.resetDistance();
         targetHeading = drivetrain.getHeading() + robotEndAngle;
 
-        // estimated time for driving: 
-        double estimatedTime = this.distance / this.velocity; 
+        // estimated time for driving:
+        double estimatedTime = this.distance / this.velocity;
         turnVelocity = Math.min(this.robotEndAngle / estimatedTime, DriveConstants.MAX_ANGULAR_SPEED);
+    }
+
+    @Override
+    public void onStateExit(double periodSeconds) {
+        drivetrain.drive(0, 0, 0, false, periodSeconds);
     }
 
     @Override
@@ -41,10 +46,10 @@ public class AutoStateDrive extends AbstractAutoState {
         // either include this check in atDistance or make another check which is
         // atAngle.
         if (atAngle(this)) {
-            drivetrain.drive(velocity * Math.sin(travelAngle), velocity * Math.cos(travelAngle),
+            drivetrain.drive(velocity * Math.cos(travelAngle), velocity * Math.sin(travelAngle),
                     0, false,
                     periodSeconds);
-        }  else if (atDistance(this)) {
+        } else if (atDistance(this)) {
             drivetrain.drive(0, 0,
                     turnVelocity, false,
                     periodSeconds);
@@ -60,8 +65,8 @@ public class AutoStateDrive extends AbstractAutoState {
     }
 
     public boolean atDistance(AbstractAutoState state) {
-        return Math.abs(this.distance
-                - drivetrain.getDrivePositionMetersFrontLeft()) < Constants.DriveConstants.DISTANCE_TOLERANCE;
+        return (Math.abs(this.distance)
+                - Math.abs(drivetrain.getDrivePositionMetersFrontLeft())) < Constants.DriveConstants.DISTANCE_TOLERANCE;
     }
 
 }
