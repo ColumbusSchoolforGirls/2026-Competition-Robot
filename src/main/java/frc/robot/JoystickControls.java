@@ -1,14 +1,17 @@
 package frc.robot;
 
+import frc.robot.Constants.ControllerConstants;
+
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeState;
+import frc.robot.subsystems.ShootSystem;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.ShootSystem;
-import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.Intake.IntakeState;
 
 /*
  * List all controls in this docstring.
@@ -28,6 +31,7 @@ import frc.robot.subsystems.Intake.IntakeState;
  *         - Left Trigger (Hold): Intake
  *         - X Button (Press): Deploy Intake
  *         - B Button (Press): Retract Intake
+ *     NOTE: The hopper automatically runs during intaking and shooting.
  */
 public class JoystickControls {
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
@@ -37,6 +41,7 @@ public class JoystickControls {
     private final Limelight limelight;
     private final ShootSystem shootSystem;
     private final Intake intake;
+    private final Hopper hopper;
 
     private final SlewRateLimiter xspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
@@ -45,12 +50,15 @@ public class JoystickControls {
     private boolean fieldRelative = false;
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
     private IntakeState intakeState = IntakeState.IN;
-
-    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake) {
+    private boolean runHopperForIntaking = false;
+    private boolean runHopperForShooting = false;
+    
+    public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake, Hopper hopper) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.shootSystem = shootSystem;
         this.intake = intake;
+        this.hopper = hopper;
     }
 
     public void driveWithJoystick(double periodSeconds) {
@@ -140,11 +148,14 @@ public class JoystickControls {
                 break;
             }
         }
-
+        runHopperForShooting = shootState == ShootSystem.ShooterState.SHOOT;
         shootSystem.setShooterState(shootState);
     }
 
     public void intake() {
+        boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
+        runHopperForIntaking = runRoller;
+
         switch (intakeState) {
             case IN: {
                 if (AUX.getXButtonPressed()) {
@@ -174,15 +185,10 @@ public class JoystickControls {
             default: {
             }
         }
-        intake.setIntakeState(intakeState);
+        intake.setIntakeState(intakeState, runRoller);
     }
 
     public void hopper() {
-        boolean intaking = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
-        boolean shooting = (shootState == ShootSystem.ShooterState.SHOOT)
-                && (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE);
-
-        hopper.setHopper(intaking || shooting);
+        hopper.runHopper(runHopperForIntaking || runHopperForShooting);
     }
-
 }

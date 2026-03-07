@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.hopper.Hopper;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -28,10 +27,8 @@ public class ShootSystem {
     private final SparkMax ventMotor = new SparkMax(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
     private ShooterState state;
-    private Hopper hopper;
 
-    public ShootSystem(Hopper hopper) {
-        this.hopper = hopper;
+    public ShootSystem() {
         state = ShooterState.STOPPED;
 
         ventMotor.configure(
@@ -60,7 +57,6 @@ public class ShootSystem {
         leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
         rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
         ventMotor.set(determineVentPercentageOutput());
-        setHopperState();
     }
 
     private double determineShooterRPM() {
@@ -82,10 +78,6 @@ public class ShootSystem {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         }
         return 0.0;
-    }
-
-    private void setHopperState() {
-        boolean run = (this.state == ShooterState.SHOOT);
     }
 
     private boolean isAtSpeed(ShooterModule shooter) {
