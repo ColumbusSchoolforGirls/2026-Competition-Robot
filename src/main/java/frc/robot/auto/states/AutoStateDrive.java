@@ -1,6 +1,7 @@
 package frc.robot.auto.states;
 
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 public class AutoStateDrive extends AbstractAutoState {
@@ -26,6 +27,10 @@ public class AutoStateDrive extends AbstractAutoState {
     public void startState() {
         drivetrain.resetDistance();
         targetHeading = drivetrain.getHeading() + robotEndAngle;
+
+        // estimated time for driving: 
+        double estimatedTime = this.distance / this.velocity; 
+        turnVelocity = Math.min(this.robotEndAngle / estimatedTime, DriveConstants.MAX_ANGULAR_SPEED);
     }
 
     @Override
