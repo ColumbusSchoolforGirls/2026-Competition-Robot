@@ -113,8 +113,6 @@ public class JoystickControls {
             drivetrain.resetGyro();
     }
 
-    private ShootSystem.ShooterState state = ShootSystem.ShooterState.STOPPED;
-
     public void shoot() {
         switch (shootState) {
             case STOPPED: {
@@ -147,8 +145,6 @@ public class JoystickControls {
     }
 
     public void intake() {
-        boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
-
         switch (intakeState) {
             case IN: {
                 if (AUX.getXButtonPressed()) {
@@ -178,7 +174,15 @@ public class JoystickControls {
             default: {
             }
         }
-        intake.setIntakeState(intakeState, runRoller);
+        intake.setIntakeState(intakeState);
+    }
+
+    public void hopper() {
+        boolean intaking = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
+        boolean shooting = (shootState == ShootSystem.ShooterState.SHOOT)
+                && (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE);
+
+        hopper.setHopper(intaking || shooting);
     }
 
 }

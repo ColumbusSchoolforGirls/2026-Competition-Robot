@@ -62,7 +62,6 @@ public class Intake {
     private void setMotors() {
         deployMotor.set(determineDeployPercentageOutput());
         rollerMotor.set(determineRollerPercentageOutput());
-        hopper.setHopper(false, runHopper());
     }
 
     private double determineDeployPercentageOutput() {

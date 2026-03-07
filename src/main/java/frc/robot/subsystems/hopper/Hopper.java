@@ -19,8 +19,8 @@ public class Hopper {
                 PersistMode.kPersistParameters);
     }
 
-    public void setHopper(boolean shooterRunning, boolean intakeRunning) {
-        if (shooterRunning || intakeRunning) {
+    public void runHopper(boolean running) {
+        if (running) {
             hopperMotor.set(HopperConstants.HOPPER_PERCENTAGE_OUTPUT);
         } else {
             hopperMotor.set(0);

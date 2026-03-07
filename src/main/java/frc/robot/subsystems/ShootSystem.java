@@ -86,7 +86,6 @@ public class ShootSystem {
 
     private void setHopperState() {
         boolean run = (this.state == ShooterState.SHOOT);
-        hopper.setHopper(run, false);
     }
 
     private boolean isAtSpeed(ShooterModule shooter) {
