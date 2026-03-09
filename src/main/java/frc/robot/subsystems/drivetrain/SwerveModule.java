@@ -29,7 +29,7 @@ public class SwerveModule {
     public RelativeEncoder turnRelativeEncoder;
     // CTRE SRX Mag Encoder using pulses, used at RobotInit + buttonpressed to reset
     // relative encoder
-    public DutyCycleEncoder turnAbsoluteEncoder;
+    public AbsoluteEncoderInterface turnAbsoluteEncoder;
 
     private SparkClosedLoopController driveClosedLoopController;
     private SparkClosedLoopController turnClosedLoopController;
@@ -42,13 +42,13 @@ public class SwerveModule {
      * Constructs a SwerveModule with a drive motor, turning motor, drive encoder
      * and turning encoder.
      */
-    public SwerveModule(int driveMotorID, int turnMotorID, int turnDIOPin, double chassisAngularOffset) {
+  public SwerveModule(int driveMotorID, int turnMotorID, AbsoluteEncoderInterface turnAbsoluteEncoder, double chassisAngularOffset) {
         driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
         turnMotor = new SparkMax(turnMotorID, MotorType.kBrushless);
 
         driveEncoder = driveMotor.getEncoder(); // Drive motor only has a relative encoder
         turnRelativeEncoder = turnMotor.getEncoder();
-        turnAbsoluteEncoder = new DutyCycleEncoder(turnDIOPin);
+        this.turnAbsoluteEncoder = turnAbsoluteEncoder;
         driveClosedLoopController = driveMotor.getClosedLoopController();
         turnClosedLoopController = turnMotor.getClosedLoopController();
 

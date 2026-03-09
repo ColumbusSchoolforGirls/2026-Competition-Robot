@@ -40,17 +40,22 @@ public class Drivetrain {
     private final Translation2d backRightLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
             DriveConstants.TRANSLATION_2D_OFFSET);
 
+    // Set up our absolute encoders. For now, we are going to run with BL using CAN and the rest DutyCycle. 
+    private final AbsoluteEncoderInterface frontLeftAboluteEncoder = new CANAbsoluteEncoder(DriveConstants.FL_ENCODER_CAN_ID);
+    private final AbsoluteEncoderInterface backLeftAbsoluteEncoder = new CANAbsoluteEncoder(DriveConstants.BL_ENCODER_CAN_ID);
+    private final AbsoluteEncoderInterface frontRightAbsoluteEncoder = new CANAbsoluteEncoder(DriveConstants.FR_ENCODER_CAN_ID);
+    private final AbsoluteEncoderInterface backRightAbsoluteEncoder = new CANAbsoluteEncoder(DriveConstants.BR_ENCODER_CAN_ID);
+
     // TODO: proper encapsulation
     private final SwerveModule frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
-            DriveConstants.FL_DIO, DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
+        frontLeftAboluteEncoder, DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
     private final SwerveModule backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
-            DriveConstants.BL_DIO, DriveConstants.BL_CHASSIS_ANGULAR_OFFSET);
+        backLeftAbsoluteEncoder, DriveConstants.BL_CHASSIS_ANGULAR_OFFSET);
     private final SwerveModule frontRight = new SwerveModule(DriveConstants.FR_DRIVE_ID, DriveConstants.FR_TURN_ID,
-            DriveConstants.FR_DIO, DriveConstants.FR_CHASSIS_ANGULAR_OFFSET);
+        frontRightAbsoluteEncoder, DriveConstants.FR_CHASSIS_ANGULAR_OFFSET);
     private final SwerveModule backRight = new SwerveModule(DriveConstants.BR_DRIVE_ID, DriveConstants.BR_TURN_ID,
-            DriveConstants.BR_DIO, DriveConstants.BR_CHASSIS_ANGULAR_OFFSET);
-
-    private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+        backRightAbsoluteEncoder, DriveConstants.BR_CHASSIS_ANGULAR_OFFSET);
+        private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
