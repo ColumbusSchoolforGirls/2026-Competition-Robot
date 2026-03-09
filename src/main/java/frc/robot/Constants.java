@@ -64,7 +64,9 @@ public class Constants {
 
         public static final int BL_DRIVE_ID = 6;
         public static final int BL_TURN_ID = 7;
-        public static final int BL_DIO = 9;
+        public static final int BL_DIO = 6; // UNUSED for now, we're using CAN
+        public static final int BL_ENCODER_CAN_ID = 9; // TODO
+
         public static final double BL_CHASSIS_ANGULAR_OFFSET = (278.1 * Math.PI) / 180;
 
         public static final int BR_DRIVE_ID = 8;
