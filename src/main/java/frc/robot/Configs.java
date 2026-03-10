@@ -93,16 +93,4 @@ public class Configs {
                     .smartCurrentLimit(20);
         }
     }
-
-    public static final class Hopper {
-        public static final SparkMaxConfig hopperConfig = new SparkMaxConfig();
-
-        static {
-            hopperConfig
-                    .inverted(true) // TODO: Update depending on direction of roller motors
-                    .idleMode(IdleMode.kBrake)
-                    .openLoopRampRate(0.5)
-                    .smartCurrentLimit(20);
-        }
-    }
 }
