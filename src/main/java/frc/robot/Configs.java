@@ -68,12 +68,6 @@ public class Configs {
                     .maxAcceleration(10000)
                     .allowedProfileError(1);
 
-            feederConfig
-                    .inverted(true) // TODO: Update depending on direction of feeder motors
-                    .idleMode(IdleMode.kBrake)
-                    .openLoopRampRate(1.0)
-                    .smartCurrentLimit(20);
-
             ventConfig
                     .inverted(true) // TODO: Update depending on direction of vent motor
                     .idleMode(IdleMode.kBrake)

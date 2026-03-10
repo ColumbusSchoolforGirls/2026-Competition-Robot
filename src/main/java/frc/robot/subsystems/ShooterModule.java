@@ -6,6 +6,10 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -14,13 +18,13 @@ public class ShooterModule {
 
     private final SparkMax leadMotor;
     private final SparkMax followerMotor;
-    private final SparkMax feedMotor;
+    private final PWMMotorController feedMotor;
     private SparkClosedLoopController leadPidController;
 
     public ShooterModule(int leadMotorID, int followerMotorID, int feedMotorID) {
         leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
         followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
-        feedMotor = new SparkMax(feedMotorID, MotorType.kBrushless);
+        feedMotor = new Talon(feedMotorID);
 
         leadPidController = leadMotor.getClosedLoopController();
 
@@ -36,11 +40,7 @@ public class ShooterModule {
                 Configs.Shooter.shooterFollowerConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        feedMotor.configure(
-                Configs.Shooter.feederConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-    }
+        }
 
     public RelativeEncoder getEncoder() {
         return leadMotor.getEncoder();
