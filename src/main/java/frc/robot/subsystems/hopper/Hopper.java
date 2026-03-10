@@ -2,20 +2,20 @@ package frc.robot.subsystems.hopper;
 
 import frc.robot.Constants.HopperConstants;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Hopper {
 
-    private final PWMMotorController hopperMotor = new Talon(HopperConstants.HOPPER_ID);
+    private final VictorSPX hopperMotor = new VictorSPX(HopperConstants.HOPPER_ID);
 
     public Hopper() {}
 
     public void runHopper(boolean running) {
         if (running) {
-            hopperMotor.set(HopperConstants.HOPPER_PERCENTAGE_OUTPUT);
+            hopperMotor.set(VictorSPXControlMode.PercentOutput, HopperConstants.HOPPER_PERCENTAGE_OUTPUT);
         } else {
-            hopperMotor.set(0);
+            hopperMotor.set(VictorSPXControlMode.PercentOutput,0);
         }
     }
 }
