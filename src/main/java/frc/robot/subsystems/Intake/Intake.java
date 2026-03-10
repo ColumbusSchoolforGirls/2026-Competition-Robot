@@ -16,7 +16,9 @@ import com.revrobotics.spark.SparkMax;
 
 public class Intake {
     private final SparkMax deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
-    private final PWMMotorController rollerMotor = new Talon(IntakeConstants.ROLLER_CHANNEL); // TODO: Update with specific motor controller type
+    private final PWMMotorController rollerMotor = new Talon(IntakeConstants.ROLLER_CHANNEL); // TODO: Update with
+                                                                                              // specific motor
+                                                                                              // controller type
 
     private final RelativeEncoder deployEncoder = deployMotor.getEncoder();
 
