@@ -132,7 +132,7 @@ public class Constants {
 
     public static final class HopperConstants {
         public static final int HOPPER_ID = 102; // TODO: PWM
-        public static final double HOPPER_PERCENTAGE_OUTPUT = 0.2;
+        public static final double HOPPER_PERCENTAGE_OUTPUT = 0.5;
     }
 
     public static final class ClimberConstants {

@@ -1,23 +1,15 @@
 package frc.robot.subsystems.hopper;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-
-import frc.robot.Configs;
 import frc.robot.Constants.HopperConstants;
+
+import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 public class Hopper {
 
-    private final SparkMax hopperMotor = new SparkMax(HopperConstants.HOPPER_ID, MotorType.kBrushless);
+    private final PWMMotorController hopperMotor = new Talon(HopperConstants.HOPPER_ID);
 
-    public Hopper() {
-        hopperMotor.configure(
-                Configs.Hopper.hopperConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
-    }
+    public Hopper() {}
 
     public void runHopper(boolean running) {
         if (running) {
