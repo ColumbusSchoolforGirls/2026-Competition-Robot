@@ -24,11 +24,11 @@ public class Intake {
     private boolean runRoller;
 
     public Intake() {
-        // deployMotor.configure(
-        // Configs.Intake.deployConfig,
-        // ResetMode.kResetSafeParameters,
-        // PersistMode.kPersistParameters);
-        // init();
+        deployMotor.configure(
+                Configs.Intake.deployConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
+        init();
     }
 
     private void init() { // specific motor

@@ -10,8 +10,8 @@ import frc.robot.auto.states.AbstractAutoState;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.shooter.ShootSystem;
-import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.intake.Intake;
 
 public class Robot extends TimedRobot {
     private final Limelight limelightShoot = new Limelight("limelight-shoot");
