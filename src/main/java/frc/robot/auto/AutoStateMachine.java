@@ -8,9 +8,8 @@ import frc.robot.auto.states.AutoStateAlign;
 import frc.robot.auto.states.AutoStateDrive;
 import frc.robot.auto.states.AutoStateStop;
 import frc.robot.auto.states.AutoTransition;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-
+import frc.robot.subsystems.drivetrain.Drivetrain;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
