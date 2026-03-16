@@ -54,26 +54,26 @@ public class Constants {
         // All angular offsets are in angles (radians -- *Math.PI/180).
         public static final int FL_DRIVE_ID = 2;
         public static final int FL_TURN_ID = 3;
-        public static final int FL_DIO = 8;
+        public static final int FL_DIO = 2;
         public static final double FL_CHASSIS_ANGULAR_OFFSET = (307.4 * Math.PI) / 180;
 
         public static final int FR_DRIVE_ID = 4;
         public static final int FR_TURN_ID = 5;
-        public static final int FR_DIO = 7;
+        public static final int FR_DIO = 3;
         public static final double FR_CHASSIS_ANGULAR_OFFSET = (358.3 * Math.PI) / 180;
 
         public static final int BL_DRIVE_ID = 6;
         public static final int BL_TURN_ID = 7;
-        public static final int BL_DIO = 9;
+        public static final int BL_DIO = 6;
         public static final double BL_CHASSIS_ANGULAR_OFFSET = (278.1 * Math.PI) / 180;
 
         public static final int BR_DRIVE_ID = 8;
         public static final int BR_TURN_ID = 9;
-        public static final int BR_DIO = 6;
+        public static final int BR_DIO = 1;
         public static final double BR_CHASSIS_ANGULAR_OFFSET = (177.4 * Math.PI / 180);
 
         public static final int TURN_TOLERANCE = 2;
-        public static final double DISTANCE_TOLERANCE = 0.02;
+        public static final double DISTANCE_TOLERANCE = 0.05; // meters
 
         // Gyro
         public static final boolean GYRO_REVERSED = false; // TODO: Maybe doesn't affect anything
@@ -92,6 +92,8 @@ public class Constants {
         // Limelight
         public static final double NO_TX = 0;
         public static final double NO_TY = 0;
+
+        public static final double ALIGN_TOLERANCE = 0.5; // TODO: TUNE, MADE UP VALUE
     }
 
     public static final class ControllerConstants {
@@ -102,12 +104,12 @@ public class Constants {
     public static final class ShooterConstants {
         // The lead motor is the inverted motor (right of the shooter module).
         public static final int LEFT_LEAD_ID = 12;
-        public static final int LEFT_FOLLOWER_ID = 13;
+        public static final int LEFT_FOLLOWER_ID = 16;
         public static final int RIGHT_LEAD_ID = 14;
         public static final int RIGHT_FOLLOWER_ID = 15;
 
         public static final int RIGHT_FEEDER_ID = 100; // TODO: Update with IDs - PWM
-        public static final int LEFT_FEEDER_ID = 101;
+        public static final int LEFT_FEEDER_ID = 14;
 
         public static final int VENT_ID = 11;
 
@@ -137,5 +139,9 @@ public class Constants {
 
     public static final class ClimberConstants {
         public static final int CILMBER_ID = 105;
+    }
+
+    public static final class AutoConstants {
+        public static final double LEAVE_ONLY_DISTANCE = 0.0;
     }
 }
