@@ -19,7 +19,7 @@ public class ShooterModule {
     private final SparkMax leadMotor;
     private final SparkMax followerMotor;
     private final PWMMotorController feedMotor;
-    private SparkClosedLoopController leadPidController;
+    private final SparkClosedLoopController leadPidController;
 
     public ShooterModule(int leadMotorID, int followerMotorID, int feedMotorID) {
         leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
@@ -40,7 +40,7 @@ public class ShooterModule {
                 Configs.Shooter.shooterFollowerConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
-        }
+    }
 
     public RelativeEncoder getEncoder() {
         return leadMotor.getEncoder();
