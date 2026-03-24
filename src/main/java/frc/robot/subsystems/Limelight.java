@@ -118,9 +118,10 @@ public class Limelight {
         return (tv.getDouble(0) == 1);
     }
 
-    public void updateShuffleboardLimelightValues() {
+    public void updateDashboard() {
         SmartDashboard.putNumber("LimelightTX", getTX());
         SmartDashboard.putNumber("LimelightTY", getTY());
         SmartDashboard.putNumber("LimelightTA", getTA());
+
     }
 }

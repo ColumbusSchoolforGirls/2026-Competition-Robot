@@ -26,15 +26,13 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-
-        // Record both DS control and joystick data
         drivetrain.driveInit();
     }
 
     @Override
     public void robotPeriodic() {
-        limelightShoot.updateShuffleboardLimelightValues();
-        drivetrain.updateSmartDashboard();
+        limelightShoot.updateDashboard();
+        drivetrain.updateDashboard();
         drivetrain.periodic();
     }
 

@@ -296,7 +296,7 @@ public class Drivetrain {
         }
     }
 
-    public void updateSmartDashboard() {
+    public void updateDashboard() {
 
         SmartDashboard.putNumber("FL DriveEncoder", frontLeft.getDrivePositionMeters());
         SmartDashboard.putNumber("FR DriveEncoder", frontRight.getDrivePositionMeters());
