@@ -103,15 +103,15 @@ public class Constants {
 
     public static final class ShooterConstants {
         // The lead motor is the inverted motor (right of the shooter module).
-        public static final int LEFT_LEAD_ID = 12;
-        public static final int LEFT_FOLLOWER_ID = 16;
-        public static final int RIGHT_LEAD_ID = 14;
-        public static final int RIGHT_FOLLOWER_ID = 15;
+        public static final int LEFT_LEAD_ID = 30;
+        public static final int LEFT_FOLLOWER_ID = 31;
+        public static final int RIGHT_LEAD_ID = 40;
+        public static final int RIGHT_FOLLOWER_ID = 41;
 
-        public static final int RIGHT_FEEDER_ID = 100; // TODO: Update with IDs - PWM
-        public static final int LEFT_FEEDER_ID = 14;
+        public static final int LEFT_FEEDER_ID = 6;
+        public static final int RIGHT_FEEDER_ID = 7; // TODO: Update with IDs - PWM
 
-        public static final int VENT_ID = 11;
+        public static final int VENT_ID = 21;
 
         public static final int SHOOT_RPM = 3700;
         public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
@@ -121,10 +121,10 @@ public class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int DEPLOY_ID = 10;
-        public static final int ROLLER_CHANNEL = 103; // PWM
-        public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 104; // TODO: Update with channel
-        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 1040;
+        public static final int DEPLOY_ID = 20;
+        public static final int ROLLER_ID = 22;
+        public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 7; // TODO: Update with DIO channel
+        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 8;
 
         public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.5;
         public static final double ROLLER_PERCENTAGE_OUTPUT = 0.5;
@@ -133,12 +133,12 @@ public class Constants {
     }
 
     public static final class HopperConstants {
-        public static final int HOPPER_ID = 21;
+        public static final int HOPPER_ID = 23;
         public static final double HOPPER_PERCENTAGE_OUTPUT = 0.5;
     }
 
     public static final class ClimberConstants {
-        public static final int CILMBER_ID = 105;
+        public static final int CILMBER_ID = 50;
     }
 
     public static final class AutoConstants {

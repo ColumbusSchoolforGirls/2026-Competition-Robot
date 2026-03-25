@@ -20,8 +20,7 @@ import com.studica.frc.AHRS.NavXComType;
 
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.limelight.Limelight;
 
 public class Drivetrain {
 

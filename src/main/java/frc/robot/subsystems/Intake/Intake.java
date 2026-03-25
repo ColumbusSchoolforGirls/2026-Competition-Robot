@@ -5,9 +5,9 @@ import frc.robot.Constants.IntakeConstants;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -16,7 +16,7 @@ import com.revrobotics.spark.SparkMax;
 
 public class Intake {
     private final SparkMax deployMotor;
-    private final PWMMotorController rollerMotor;
+    private final VictorSPX rollerMotor;
     private final RelativeEncoder deployEncoder;
     private final DigitalInput retractedLimitSwitch;
 
@@ -25,7 +25,7 @@ public class Intake {
 
     public Intake() {
         deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
-        rollerMotor = new Talon(IntakeConstants.ROLLER_CHANNEL);
+        rollerMotor = new VictorSPX(IntakeConstants.ROLLER_ID);
         deployEncoder = deployMotor.getEncoder();
         retractedLimitSwitch = new DigitalInput(IntakeConstants.RETRACTED_LIMIT_SWITCH_CHANNEL);
 
@@ -62,7 +62,7 @@ public class Intake {
 
     private void setMotors() {
         deployMotor.set(determineDeployPercentageOutput());
-        rollerMotor.set(determineRollerPercentageOutput());
+        rollerMotor.set(VictorSPXControlMode.PercentOutput, determineRollerPercentageOutput());
     }
 
     private double determineDeployPercentageOutput() {

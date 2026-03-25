@@ -7,11 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auto.AutoStateMachine;
 import frc.robot.auto.states.AbstractAutoState;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.shooter.ShootSystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.limelight.Limelight;
 
 public class Robot extends TimedRobot {
     private final Limelight limelightShoot = new Limelight("limelight-shoot");
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        limelightShoot.updateDashboard();
+        limelightShoot.updateLimelightDashboard();
         drivetrain.updateDashboard();
         drivetrain.periodic();
     }
@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
         joystickControls.shoot();
         joystickControls.intake();
         joystickControls.hopper();
+
     }
 
     /** This function is called once when the robot is disabled. */
