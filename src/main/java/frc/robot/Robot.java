@@ -11,6 +11,7 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.shooter.ShootSystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.limelight.Limelight;
 
 public class Robot extends TimedRobot {
@@ -20,6 +21,7 @@ public class Robot extends TimedRobot {
     private final ShootSystem shootSystem = new ShootSystem();
     private final Intake intake = new Intake();
     private final Hopper hopper = new Hopper();
+    private final Climber climber = new Climber();
     private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
             intake, hopper);
     private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot);
@@ -27,6 +29,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         drivetrain.driveInit();
+        climber.init();
     }
 
     @Override

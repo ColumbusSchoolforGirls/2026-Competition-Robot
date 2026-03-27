@@ -87,4 +87,16 @@ public class Configs {
                     .smartCurrentLimit(20);
         }
     }
+
+    public static final class Climber {
+        public static final SparkMaxConfig climberConfig = new SparkMaxConfig();
+
+        static {
+            climberConfig
+                    .inverted(true) // TODO: Update depending on direction of intake motor
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(0.5)
+                    .smartCurrentLimit(20);
+        }
+    }
 }
