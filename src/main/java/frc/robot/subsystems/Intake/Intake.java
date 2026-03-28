@@ -1,11 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import frc.robot.Configs;
-import frc.robot.Constants.IntakeConstants;
-
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.PersistMode;
@@ -14,6 +8,12 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Configs;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.JoystickControls;
+
 public class Intake {
     private final SparkMax deployMotor;
     private final VictorSPX rollerMotor;
@@ -21,7 +21,7 @@ public class Intake {
     private final DigitalInput retractedLimitSwitch;
     // TODO: check with mech about what the limit switches actually are
 
-    private IntakeState state;
+    private IntakeState state = IntakeState.OUT;
     private boolean runRoller;
 
     public Intake() {
@@ -37,10 +37,20 @@ public class Intake {
     }
 
     public void setIntakeState(IntakeState state, boolean runRoller) {
-        this.state = state;
-        this.runRoller = runRoller;
-        setMotors();
-        updateDashboard();
+        // this.state = state;
+        // this.runRoller = runRoller;
+        // setMotors();
+        // updateDashboard();
+        // System.out.println(state);
+        if (JoystickControls.AUX.getBButton()) {
+            deployMotor.set(IntakeConstants.RETRACT_PERCENTAGE_OUTPUT);
+        } else if (JoystickControls.AUX.getXButton()) {
+            deployMotor.set(IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT);
+        } else {
+            deployMotor.set(0);
+        }
+
+        System.out.println("Current" + deployMotor.getOutputCurrent());
     }
 
     public boolean isRetracted() {
