@@ -42,7 +42,7 @@ public class ShootSystem {
         updateDashboard();
     }
 
-    private void updateDashboard() {
+    public void updateDashboard() {
         SmartDashboard.putString("ShooterState", state.toString());
         SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getShooterRPM());
         SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getShooterRPM());

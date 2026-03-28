@@ -1,11 +1,12 @@
 package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeState;
+import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.subsystems.shooter.ShootSystem;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,6 +21,9 @@ import edu.wpi.first.wpilibj.XboxController;
  *     - Left Bumper (Hold): Crawl mode (reduce driving speed)
  *     - A Button (Press): Align with limelight
  *     - B Button (Press): Reset turn encoders
+ *     - X Button (Press): Climber goes up; extend
+ *     - Y Button (Press): Climber climbs/goes down; FLEX
+ *     - Right Bumper (Hold): Climber brake mode
  * 
  * AUXILIARY:
  *     * Shooter
@@ -41,6 +45,7 @@ public class JoystickControls {
     private final ShootSystem shootSystem;
     private final Intake intake;
     private final Hopper hopper;
+    private final Climber climber;
 
     private final SlewRateLimiter xspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
@@ -53,12 +58,13 @@ public class JoystickControls {
     private boolean runHopperForShooting = false;
 
     public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake,
-            Hopper hopper) {
+            Hopper hopper, Climber climber) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.shootSystem = shootSystem;
         this.intake = intake;
         this.hopper = hopper;
+        this.climber = climber;
     }
 
     public void driveWithJoystick(double periodSeconds) {
@@ -98,6 +104,7 @@ public class JoystickControls {
 
         // // Get the x speed. We are inverting this because Xbox controllers return
         // // negative values when we push forward.
+
     }
 
     public void driverResetTurnEncoders() {
@@ -180,5 +187,21 @@ public class JoystickControls {
 
     public void hopper() {
         hopper.runHopper(runHopperForIntaking || runHopperForShooting);
+    }
+
+    public void climber() {
+        if (DRIVE_CONTROLLER.getXButton()) { // raise the climber
+            climber.extendClimber();
+        }
+
+        if (DRIVE_CONTROLLER.getYButton()) { // flex the climber
+            climber.flexClimber();
+        }
+
+        if (DRIVE_CONTROLLER.getRightBumperButtonPressed()) {
+            climber.lockClimbMotor();
+        } else {
+            climber.unlockClimbMotor();
+        }
     }
 }

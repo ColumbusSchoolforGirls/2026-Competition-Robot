@@ -15,13 +15,15 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.rmi.ServerRuntimeException;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import frc.robot.Constants;
+import frc.robot.RobotSpecificConstants;
 import frc.robot.Constants.DriveConstants;
-
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.limelight.Limelight;
 
 public class Drivetrain {
 
@@ -41,22 +43,58 @@ public class Drivetrain {
     private final Translation2d backRightLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
             DriveConstants.TRANSLATION_2D_OFFSET);
 
-    // TODO: proper encapsulation
-    private final SwerveModule frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
-            DriveConstants.FL_DIO, DriveConstants.FL_CHASSIS_ANGULAR_OFFSET);
-    private final SwerveModule backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
-            DriveConstants.BL_DIO, DriveConstants.BL_CHASSIS_ANGULAR_OFFSET);
-    private final SwerveModule frontRight = new SwerveModule(DriveConstants.FR_DRIVE_ID, DriveConstants.FR_TURN_ID,
-            DriveConstants.FR_DIO, DriveConstants.FR_CHASSIS_ANGULAR_OFFSET);
-    private final SwerveModule backRight = new SwerveModule(DriveConstants.BR_DRIVE_ID, DriveConstants.BR_TURN_ID,
-            DriveConstants.BR_DIO, DriveConstants.BR_CHASSIS_ANGULAR_OFFSET);
+    // Set up our absolute encoders. 
+    // For the 2026 robot, run with all CAN encoders, and Eva runs with DutyCycleEncoders. 
+    private final AbsoluteEncoderInterface frontLeftAboluteEncoder;
+    private final AbsoluteEncoderInterface backLeftAbsoluteEncoder;
+    private final AbsoluteEncoderInterface frontRightAbsoluteEncoder;
+    private final AbsoluteEncoderInterface backRightAbsoluteEncoder;
+
+    private final SwerveModule frontLeft;
+    private final SwerveModule backLeft;
+    private final SwerveModule frontRight;
+    private final SwerveModule backRight;
 
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
 
-    private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+    private final SwerveDriveOdometry odometry;
+
+    public Drivetrain() {
+        if (RobotSpecificConstants.ROBOT_NAME == RobotSpecificConstants.RobotName.UNNAMED_2026_ROBOT) {
+            frontLeftAboluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.FL_ENCODER_CAN_ID);
+            backLeftAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.BL_ENCODER_CAN_ID);
+            frontRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.FR_ENCODER_CAN_ID);
+            backRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.BR_ENCODER_CAN_ID);
+
+            frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
+                frontLeftAboluteEncoder, RobotSpecificConstants.Unnamed2026Robot.FL_CHASSIS_ANGULAR_OFFSET);
+            backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
+                backLeftAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.BL_CHASSIS_ANGULAR_OFFSET);
+            frontRight = new SwerveModule(DriveConstants.FR_DRIVE_ID, DriveConstants.FR_TURN_ID,
+                frontRightAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.FR_CHASSIS_ANGULAR_OFFSET);
+            backRight = new SwerveModule(DriveConstants.BR_DRIVE_ID, DriveConstants.BR_TURN_ID,
+                backRightAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.BR_CHASSIS_ANGULAR_OFFSET);
+        } else {
+            frontLeftAboluteEncoder = new DutyCycleAbsoluteEncoder(RobotSpecificConstants.EvaRobot.FL_DIO);
+            backLeftAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.EvaRobot.BL_DIO);
+            frontRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.EvaRobot.FL_DIO);
+            backRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.EvaRobot.BR_DIO);
+
+            frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
+                frontLeftAboluteEncoder, RobotSpecificConstants.EvaRobot.FL_CHASSIS_ANGULAR_OFFSET);
+            backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
+                backLeftAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BL_CHASSIS_ANGULAR_OFFSET);
+            frontRight = new SwerveModule(DriveConstants.FR_DRIVE_ID, DriveConstants.FR_TURN_ID,
+                frontRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.FR_CHASSIS_ANGULAR_OFFSET);
+            backRight = new SwerveModule(DriveConstants.BR_DRIVE_ID, DriveConstants.BR_TURN_ID,
+                backRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BR_CHASSIS_ANGULAR_OFFSET);
+        }
+
+
+        odometry = new SwerveDriveOdometry(
             kinematics,
             getRotation2d(),
             new SwerveModulePosition[] {
@@ -65,9 +103,8 @@ public class Drivetrain {
                     backLeft.getPosition(),
                     backRight.getPosition()
             });
-
-    public Drivetrain() {
     }
+   
 
     public void resetRelativeTurnEncoders() {
         frontLeft.resetRelativeTurnEncoder();
@@ -296,7 +333,7 @@ public class Drivetrain {
         }
     }
 
-    public void updateSmartDashboard() {
+    public void updateDashboard() {
 
         SmartDashboard.putNumber("FL DriveEncoder", frontLeft.getDrivePositionMeters());
         SmartDashboard.putNumber("FR DriveEncoder", frontRight.getDrivePositionMeters());

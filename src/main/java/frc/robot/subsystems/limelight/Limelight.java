@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.limelight;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -118,7 +118,7 @@ public class Limelight {
         return (tv.getDouble(0) == 1);
     }
 
-    public void updateShuffleboardLimelightValues() {
+    public void updateLimelightDashboard() {
         SmartDashboard.putNumber("LimelightTX", getTX());
         SmartDashboard.putNumber("LimelightTY", getTY());
         SmartDashboard.putNumber("LimelightTA", getTA());

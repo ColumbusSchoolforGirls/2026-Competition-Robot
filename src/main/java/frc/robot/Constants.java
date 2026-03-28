@@ -54,24 +54,16 @@ public class Constants {
         // All angular offsets are in angles (radians -- *Math.PI/180).
         public static final int FL_DRIVE_ID = 2;
         public static final int FL_TURN_ID = 3;
-        public static final int FL_DIO = 2;
-        public static final double FL_CHASSIS_ANGULAR_OFFSET = (307.4 * Math.PI) / 180;
-
+      
         public static final int FR_DRIVE_ID = 4;
         public static final int FR_TURN_ID = 5;
-        public static final int FR_DIO = 3;
-        public static final double FR_CHASSIS_ANGULAR_OFFSET = (358.3 * Math.PI) / 180;
-
+      
         public static final int BL_DRIVE_ID = 6;
         public static final int BL_TURN_ID = 7;
-        public static final int BL_DIO = 6;
-        public static final double BL_CHASSIS_ANGULAR_OFFSET = (278.1 * Math.PI) / 180;
-
+       
         public static final int BR_DRIVE_ID = 8;
         public static final int BR_TURN_ID = 9;
-        public static final int BR_DIO = 1;
-        public static final double BR_CHASSIS_ANGULAR_OFFSET = (177.4 * Math.PI / 180);
-
+      
         public static final int TURN_TOLERANCE = 2;
         public static final double DISTANCE_TOLERANCE = 0.05; // meters
 
@@ -103,15 +95,15 @@ public class Constants {
 
     public static final class ShooterConstants {
         // The lead motor is the inverted motor (right of the shooter module).
-        public static final int LEFT_LEAD_ID = 12;
-        public static final int LEFT_FOLLOWER_ID = 16;
-        public static final int RIGHT_LEAD_ID = 14;
-        public static final int RIGHT_FOLLOWER_ID = 15;
+        public static final int LEFT_LEAD_ID = 30;
+        public static final int LEFT_FOLLOWER_ID = 31;
+        public static final int RIGHT_LEAD_ID = 40;
+        public static final int RIGHT_FOLLOWER_ID = 41;
 
-        public static final int RIGHT_FEEDER_ID = 100; // TODO: Update with IDs - PWM
-        public static final int LEFT_FEEDER_ID = 14;
+        public static final int LEFT_FEEDER_ID = 8;
+        public static final int RIGHT_FEEDER_ID = 9;
 
-        public static final int VENT_ID = 11;
+        public static final int VENT_ID = 21;
 
         public static final int SHOOT_RPM = 3700;
         public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
@@ -121,10 +113,10 @@ public class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int DEPLOY_ID = 10;
-        public static final int ROLLER_CHANNEL = 103; // PWM
-        public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 104; // TODO: Update with channel
-        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 1040;
+        public static final int DEPLOY_ID = 20;
+        public static final int ROLLER_ID = 22;
+        public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 7; // TODO: Update with DIO channel
+        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 8;
 
         public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.5;
         public static final double ROLLER_PERCENTAGE_OUTPUT = 0.5;
@@ -133,12 +125,25 @@ public class Constants {
     }
 
     public static final class HopperConstants {
-        public static final int HOPPER_ID = 21;
+        public static final int HOPPER_ID = 23;
         public static final double HOPPER_PERCENTAGE_OUTPUT = 0.5;
     }
 
     public static final class ClimberConstants {
-        public static final int CILMBER_ID = 105;
+        public static final int CLIMBER_ID = 7;
+
+        private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
+        private static final double MAX_HEIGHT_INCHES = 8.5;
+        private static final double CLIMB_HEIGHT_INCHES = 3.5;
+        public static final double MAX_HEIGHT_TICKS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
+        public static final double CLIMB_HEIGHT_TICKS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
+        public static final double REST_HEIGHT_TICKS = 0;
+        public static final double CLIMB_TICKS_TOLERANCE = 30; // TODO: TUNE
+
+        // 64:1 Motor:Pulley ratio
+        // 0.958 in. diameter pulley
+        // 42 ticks/rev (NEO) * 64:1 ratio = 2,688 motor ticks/rev pulley
+        // 8.5 inches up to setup, 5 inches down to climb
     }
 
     public static final class AutoConstants {

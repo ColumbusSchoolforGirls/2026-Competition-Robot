@@ -7,11 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auto.AutoStateMachine;
 import frc.robot.auto.states.AbstractAutoState;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.shooter.ShootSystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.limelight.Limelight;
 
 public class Robot extends TimedRobot {
     private final Limelight limelightShoot = new Limelight("limelight-shoot");
@@ -20,22 +21,26 @@ public class Robot extends TimedRobot {
     private final ShootSystem shootSystem = new ShootSystem();
     private final Intake intake = new Intake();
     private final Hopper hopper = new Hopper();
+    private final Climber climber = new Climber();
     private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
-            intake, hopper);
+            intake, hopper, climber);
     private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot);
 
     @Override
     public void robotInit() {
-
-        // Record both DS control and joystick data
         drivetrain.driveInit();
+        climber.init();
     }
 
     @Override
     public void robotPeriodic() {
-        limelightShoot.updateShuffleboardLimelightValues();
-        drivetrain.updateSmartDashboard();
+        limelightShoot.updateLimelightDashboard();
+        drivetrain.updateDashboard();
         drivetrain.periodic();
+        shootSystem.updateDashboard();
+        climber.updateDashboard();
+        intake.updateDashboard();
+
     }
 
     @Override
@@ -63,6 +68,7 @@ public class Robot extends TimedRobot {
         joystickControls.shoot();
         joystickControls.intake();
         joystickControls.hopper();
+        joystickControls.climber();
     }
 
     /** This function is called once when the robot is disabled. */

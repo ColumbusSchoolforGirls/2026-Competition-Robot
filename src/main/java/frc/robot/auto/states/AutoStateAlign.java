@@ -1,8 +1,8 @@
 package frc.robot.auto.states;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.limelight.Limelight;
 
 public class AutoStateAlign extends AbstractAutoState {
     Limelight limelight;
