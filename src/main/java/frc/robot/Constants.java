@@ -54,29 +54,16 @@ public class Constants {
         // All angular offsets are in angles (radians -- *Math.PI/180).
         public static final int FL_DRIVE_ID = 2;
         public static final int FL_TURN_ID = 3;
-        public static final int FL_DIO = 2;
-        public static final int FL_ENCODER_CAN_ID = 10;
-        public static final double FL_CHASSIS_ANGULAR_OFFSET = (307.4 * Math.PI) / 180;
-
+      
         public static final int FR_DRIVE_ID = 4;
         public static final int FR_TURN_ID = 5;
-        public static final int FR_DIO = 3;
-        public static final int FR_ENCODER_CAN_ID = 11;
-        public static final double FR_CHASSIS_ANGULAR_OFFSET = (358.3 * Math.PI) / 180;
-
+      
         public static final int BL_DRIVE_ID = 6;
         public static final int BL_TURN_ID = 7;
-        public static final int BL_DIO = 6; // For DIO drives
-        public static final int BL_ENCODER_CAN_ID = 12; // for Cancoder drives
-
-        public static final double BL_CHASSIS_ANGULAR_OFFSET = (278.1 * Math.PI) / 180;
-
+       
         public static final int BR_DRIVE_ID = 8;
         public static final int BR_TURN_ID = 9;
-        public static final int BR_DIO = 1;
-        public static final int BR_ENCODER_CAN_ID = 13;
-        public static final double BR_CHASSIS_ANGULAR_OFFSET = (177.4 * Math.PI / 180);
-
+      
         public static final int TURN_TOLERANCE = 2;
         public static final double DISTANCE_TOLERANCE = 0.05; // meters
 
