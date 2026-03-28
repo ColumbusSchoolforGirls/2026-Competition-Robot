@@ -142,7 +142,7 @@ public class Constants {
 
         private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
         private static final double MAX_HEIGHT_INCHES = 8.5;
-        private static final double CLIMB_HEIGHT_INCHES = 5;
+        private static final double CLIMB_HEIGHT_INCHES = 3.5;
         public static final double MAX_HEIGHT_TICKS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
         public static final double CLIMB_HEIGHT_TICKS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
         public static final double REST_HEIGHT_TICKS = 0;
@@ -150,6 +150,7 @@ public class Constants {
         // 64:1 Motor:Pulley ratio
         // 0.958 in. diameter pulley
         // 42 ticks/rev (NEO) * 64:1 ratio = 2,688 motor ticks/rev pulley
+        // 8.5 inches up to setup, 5 inches down to climb
     }
 
     public static final class AutoConstants {
