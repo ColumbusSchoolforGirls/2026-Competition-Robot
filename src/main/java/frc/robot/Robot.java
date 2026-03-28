@@ -37,6 +37,10 @@ public class Robot extends TimedRobot {
         limelightShoot.updateLimelightDashboard();
         drivetrain.updateDashboard();
         drivetrain.periodic();
+        shootSystem.updateDashboard();
+        climber.updateDashboard();
+        intake.updateDashboard();
+
     }
 
     @Override
@@ -64,7 +68,7 @@ public class Robot extends TimedRobot {
         joystickControls.shoot();
         joystickControls.intake();
         joystickControls.hopper();
-
+        joystickControls.climber();
     }
 
     /** This function is called once when the robot is disabled. */

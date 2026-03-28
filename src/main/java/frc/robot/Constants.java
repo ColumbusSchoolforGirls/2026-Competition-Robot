@@ -108,8 +108,8 @@ public class Constants {
         public static final int RIGHT_LEAD_ID = 40;
         public static final int RIGHT_FOLLOWER_ID = 41;
 
-        public static final int LEFT_FEEDER_ID = 6;
-        public static final int RIGHT_FEEDER_ID = 7; // TODO: Update with IDs - PWM
+        public static final int LEFT_FEEDER_ID = 8;
+        public static final int RIGHT_FEEDER_ID = 9;
 
         public static final int VENT_ID = 21;
 
@@ -138,7 +138,7 @@ public class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final int CLIMBER_ID = 50;
+        public static final int CLIMBER_ID = 7;
 
         private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
         private static final double MAX_HEIGHT_INCHES = 8.5;
@@ -146,6 +146,7 @@ public class Constants {
         public static final double MAX_HEIGHT_TICKS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
         public static final double CLIMB_HEIGHT_TICKS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
         public static final double REST_HEIGHT_TICKS = 0;
+        public static final double CLIMB_TICKS_TOLERANCE = 30; // TODO: TUNE
 
         // 64:1 Motor:Pulley ratio
         // 0.958 in. diameter pulley

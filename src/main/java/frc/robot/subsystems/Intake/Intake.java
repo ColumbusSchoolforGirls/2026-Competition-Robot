@@ -19,6 +19,7 @@ public class Intake {
     private final VictorSPX rollerMotor;
     private final RelativeEncoder deployEncoder;
     private final DigitalInput retractedLimitSwitch;
+    // TODO: check with mech about what the limit switches actually are
 
     private IntakeState state;
     private boolean runRoller;
@@ -55,9 +56,10 @@ public class Intake {
         return positionDifference <= 0;
     }
 
-    private void updateDashboard() {
+    public void updateDashboard() {
         SmartDashboard.putString("IntakeState", state.toString());
         SmartDashboard.putBoolean("IntakeRetracted", isRetracted());
+        SmartDashboard.putNumber("RollerMotorPercent", rollerMotor.getMotorOutputPercent());
     }
 
     private void setMotors() {

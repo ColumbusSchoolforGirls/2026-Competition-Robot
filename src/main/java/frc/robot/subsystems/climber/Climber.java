@@ -4,17 +4,24 @@ import frc.robot.Configs;
 import frc.robot.Constants.ClimberConstants;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Climber {
     private final SparkMax climberMotor;
+    private SparkMaxConfig climberMotorConfig = new SparkMaxConfig();
+
     private final RelativeEncoder climberEncoder;
 
     public Climber() {
         climberMotor = new SparkMax(ClimberConstants.CLIMBER_ID, MotorType.kBrushless);
+
         climberEncoder = climberMotor.getEncoder();
 
         climberMotor.configure(
@@ -27,10 +34,22 @@ public class Climber {
         climberEncoder.setPosition(0);
     }
 
+    public void extendClimber() {
+        climb(ClimberConstants.MAX_HEIGHT_TICKS);
+    }
+
+    public void flexClimber() {
+        climb(ClimberConstants.CLIMB_HEIGHT_TICKS);
+    }
+
+    public void retractClimber() {
+        climb(ClimberConstants.REST_HEIGHT_TICKS);
+    }
+
     public void climb(double targetHeightTicks) {
-        if (getPosition() < targetHeightTicks) {
+        if (getPosition() < targetHeightTicks - ClimberConstants.CLIMB_TICKS_TOLERANCE) {
             climberMotor.set(1);
-        } else if (getPosition() > targetHeightTicks) {
+        } else if (getPosition() > targetHeightTicks + ClimberConstants.CLIMB_TICKS_TOLERANCE) {
             climberMotor.set(-1);
         } else {
             climberMotor.set(0);
@@ -39,5 +58,19 @@ public class Climber {
 
     public double getPosition() {
         return climberEncoder.getPosition();
+    }
+
+    public void lockClimbMotor() {
+        climberMotorConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
+        climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    public void unlockClimbMotor() {
+        climberMotorConfig.idleMode(SparkBaseConfig.IdleMode.kCoast);
+        climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    public void updateDashboard() {
+        SmartDashboard.putNumber("ClimberEncoder", climberEncoder.getPosition());
     }
 }
