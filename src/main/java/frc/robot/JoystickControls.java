@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class JoystickControls {
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
-    private static final XboxController AUX = new XboxController(1);
+    public static final XboxController AUX = new XboxController(1);
 
     private final Drivetrain drivetrain;
     private final Limelight limelight;
@@ -53,7 +53,7 @@ public class JoystickControls {
 
     private boolean fieldRelative = false;
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
-    private IntakeState intakeState = IntakeState.IN;
+    private IntakeState intakeState = IntakeState.OUT;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
 
