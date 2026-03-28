@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
     private final Hopper hopper = new Hopper();
     private final Climber climber = new Climber();
     private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
-            intake, hopper);
+            intake, hopper, climber);
     private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot);
 
     @Override

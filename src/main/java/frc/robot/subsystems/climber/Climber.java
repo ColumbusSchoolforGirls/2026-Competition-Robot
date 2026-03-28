@@ -5,7 +5,6 @@ import frc.robot.Constants.ClimberConstants;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber {
     private final SparkMax climberMotor;
-    private SparkMaxConfig climberMotorConfig = new SparkMaxConfig();
 
     private final RelativeEncoder climberEncoder;
 
@@ -61,13 +59,15 @@ public class Climber {
     }
 
     public void lockClimbMotor() {
-        climberMotorConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
-        climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        Configs.Climber.climberConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
+        climberMotor.configure(Configs.Climber.climberConfig, ResetMode.kNoResetSafeParameters,
+                PersistMode.kNoPersistParameters);
     }
 
     public void unlockClimbMotor() {
-        climberMotorConfig.idleMode(SparkBaseConfig.IdleMode.kCoast);
-        climberMotor.configure(climberMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        Configs.Climber.climberConfig.idleMode(SparkBaseConfig.IdleMode.kCoast);
+        climberMotor.configure(Configs.Climber.climberConfig, ResetMode.kNoResetSafeParameters,
+                PersistMode.kNoPersistParameters);
     }
 
     public void updateDashboard() {
