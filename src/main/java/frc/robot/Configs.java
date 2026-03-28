@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.Constants.SwerveConstants;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -51,7 +52,7 @@ public class Configs {
         public static final SparkMaxConfig shooterConfig = new SparkMaxConfig();
         public static final SparkMaxConfig shooterFollowerConfig = new SparkMaxConfig();
         public static final SparkMaxConfig feederConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig ventConfig = new SparkMaxConfig();
+        public static final SparkFlexConfig ventConfig = new SparkFlexConfig();
 
         static {
             shooterConfig
@@ -81,7 +82,7 @@ public class Configs {
 
         static {
             deployConfig
-                    .inverted(true) // TODO: Update depending on direction of intake motor
+                    .inverted(false) // TODO: Update depending on direction of intake motor
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(0.5)
                     .smartCurrentLimit(20);

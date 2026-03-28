@@ -54,16 +54,16 @@ public class Constants {
         // All angular offsets are in angles (radians -- *Math.PI/180).
         public static final int FL_DRIVE_ID = 2;
         public static final int FL_TURN_ID = 3;
-      
+
         public static final int FR_DRIVE_ID = 4;
         public static final int FR_TURN_ID = 5;
-      
+
         public static final int BL_DRIVE_ID = 6;
         public static final int BL_TURN_ID = 7;
-       
+
         public static final int BR_DRIVE_ID = 8;
         public static final int BR_TURN_ID = 9;
-      
+
         public static final int TURN_TOLERANCE = 2;
         public static final double DISTANCE_TOLERANCE = 0.05; // meters
 
@@ -118,10 +118,11 @@ public class Constants {
         public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 7; // TODO: Update with DIO channel
         public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 8;
 
-        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.5;
-        public static final double ROLLER_PERCENTAGE_OUTPUT = 0.5;
+        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.1;
+        public static final double RETRACT_PERCENTAGE_OUTPUT = -1;
+        public static final double ROLLER_PERCENTAGE_OUTPUT = -0.5;
 
-        public static final double DEPLOYED_TICK_DISTANCE = 50;
+        public static final double DEPLOYED_TICK_DISTANCE = 840;
     }
 
     public static final class HopperConstants {
@@ -130,7 +131,7 @@ public class Constants {
     }
 
     public static final class ClimberConstants {
-        public static final int CLIMBER_ID = 7;
+        public static final int CLIMBER_ID = 50;
 
         private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
         private static final double MAX_HEIGHT_INCHES = 8.5;

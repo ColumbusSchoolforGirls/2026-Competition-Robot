@@ -4,7 +4,7 @@ import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -23,7 +23,7 @@ public class ShootSystem {
             ShooterConstants.RIGHT_LEAD_ID,
             ShooterConstants.RIGHT_FOLLOWER_ID,
             ShooterConstants.RIGHT_FEEDER_ID);
-    private final SparkMax ventMotor = new SparkMax(ShooterConstants.VENT_ID, MotorType.kBrushless);
+    private final SparkFlex ventMotor = new SparkFlex(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
     private ShooterState state;
 
