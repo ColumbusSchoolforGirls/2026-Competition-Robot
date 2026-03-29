@@ -53,7 +53,7 @@ public class JoystickControls {
 
     private boolean fieldRelative = false;
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
-    private IntakeState intakeState = IntakeState.OUT;
+    private IntakeState intakeState = IntakeState.IN;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
 
@@ -65,6 +65,10 @@ public class JoystickControls {
         this.intake = intake;
         this.hopper = hopper;
         this.climber = climber;
+    }
+
+    public void init() {
+        shootState = ShootSystem.ShooterState.STOPPED;
     }
 
     public void driveWithJoystick(double periodSeconds) {
@@ -128,10 +132,6 @@ public class JoystickControls {
             }
             case REV: // Fall through intended
             case SHOOT: {
-                if (AUX.getLeftBumperButtonPressed()) {
-                    shootState = ShootSystem.ShooterState.STOPPED;
-                }
-
                 if (AUX.getRightTriggerAxis() > ControllerConstants.TRIGGER_DEADZONE) {
                     shootState = ShootSystem.ShooterState.SHOOT;
                 } else {
@@ -145,6 +145,11 @@ public class JoystickControls {
                 break;
             }
         }
+
+        if (AUX.getLeftBumperButtonPressed()) {
+            shootState = ShootSystem.ShooterState.STOPPED;
+        }
+
         runHopperForShooting = shootState == ShootSystem.ShooterState.SHOOT;
         shootSystem.setShooterState(shootState);
     }
@@ -192,10 +197,12 @@ public class JoystickControls {
     public void climber() {
         if (DRIVE_CONTROLLER.getXButton()) { // raise the climber
             climber.extendClimber();
-        }
-
-        if (DRIVE_CONTROLLER.getYButton()) { // flex the climber
+        } else if (DRIVE_CONTROLLER.getYButton()) { // flex the climber
             climber.flexClimber();
+        } else if (DRIVE_CONTROLLER.getBButton()) { // lower the climber //TODO: change button
+            climber.driveDown();
+        } else {
+            climber.stopClimber();
         }
 
         if (DRIVE_CONTROLLER.getRightBumperButtonPressed()) {

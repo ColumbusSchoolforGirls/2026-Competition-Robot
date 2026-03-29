@@ -44,7 +44,7 @@ public class Constants {
 
     public static final class DriveConstants {
 
-        public static final double MAX_SPEED = 3.0; // 3 meters per second
+        public static final double MAX_SPEED = 12.0; // 3 meters per second
         public static final double MAX_ANGULAR_SPEED = Math.PI * 2; // 1 rotation per second
 
         public static final double TRANSLATION_2D_OFFSET = 0.3048; // 12 inches to meters
@@ -77,7 +77,7 @@ public class Constants {
 
         public static final double METERS_TO_INCHES = 39.37; // found by inches/meter
 
-        public static final double CRAWL_SPEED = 0.5;
+        public static final double CRAWL_SPEED = 1;
 
         public static final double MAX_DRIVE_AUTO_TIME = 3.0;
 
@@ -105,11 +105,11 @@ public class Constants {
 
         public static final int VENT_ID = 21;
 
-        public static final int SHOOT_RPM = 3700;
-        public static final double FEEDER_PERCENTAGE_OUTPUT = 0.5;
-        public static final double VENT_PERCENTAGE_OUTPUT = 0.5;
+        public static final int SHOOT_RPM = 3700; // 3700
+        public static final double FEEDER_PERCENTAGE_OUTPUT = 1;
+        public static final double VENT_PERCENTAGE_OUTPUT = 0.2;
 
-        public static final int RPM_TOLERANCE = 100; // TODO: Update, hopefully lower, after tuning the PID
+        public static final int RPM_TOLERANCE = 20; // 100 // TODO: Update, hopefully lower, after tuning the PID
     }
 
     public static final class IntakeConstants {
@@ -118,11 +118,11 @@ public class Constants {
         public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 7; // TODO: Update with DIO channel
         public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 8;
 
-        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.1;
-        public static final double RETRACT_PERCENTAGE_OUTPUT = -1;
+        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.05;
+        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.2;
         public static final double ROLLER_PERCENTAGE_OUTPUT = -0.5;
 
-        public static final double DEPLOYED_TICK_DISTANCE = 840;
+        public static final double DEPLOYED_ROTATIONS_DISTANCE = 10;
     }
 
     public static final class HopperConstants {
@@ -134,16 +134,16 @@ public class Constants {
         public static final int CLIMBER_ID = 50;
 
         private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
-        private static final double MAX_HEIGHT_INCHES = 8.5;
-        private static final double CLIMB_HEIGHT_INCHES = 3.5;
-        public static final double MAX_HEIGHT_TICKS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
-        public static final double CLIMB_HEIGHT_TICKS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 2688;
-        public static final double REST_HEIGHT_TICKS = 0;
-        public static final double CLIMB_TICKS_TOLERANCE = 30; // TODO: TUNE
+        private static final double MAX_HEIGHT_INCHES = 7.2;
+        private static final double CLIMB_HEIGHT_INCHES = 3.7;
+        public static final double MAX_HEIGHT_ROTATIONS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;
+        public static final double CLIMB_HEIGHT_ROTATIONS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;
+        public static final double REST_HEIGHT_ROTATIONS = 0;
+        public static final double CLIMB_ROTATIONS_TOLERANCE = 5; // TODO: TUNE
 
         // 64:1 Motor:Pulley ratio
         // 0.958 in. diameter pulley
-        // 42 ticks/rev (NEO) * 64:1 ratio = 2,688 motor ticks/rev pulley
+        // 64:1 ratio
         // 8.5 inches up to setup, 5 inches down to climb
     }
 
