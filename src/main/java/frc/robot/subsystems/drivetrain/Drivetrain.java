@@ -34,17 +34,18 @@ public class Drivetrain {
     private double targetDistance;
     private double startDriveTime;
 
-    private final Translation2d frontLeftLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
+    private Translation2d frontLeftLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
             -DriveConstants.TRANSLATION_2D_OFFSET);
-    private final Translation2d frontRightLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
+    private Translation2d frontRightLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
             DriveConstants.TRANSLATION_2D_OFFSET);
-    private final Translation2d backLeftLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
+    private Translation2d backLeftLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
             -DriveConstants.TRANSLATION_2D_OFFSET);
-    private final Translation2d backRightLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
+    private Translation2d backRightLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
             DriveConstants.TRANSLATION_2D_OFFSET);
 
-    // Set up our absolute encoders. 
-    // For the 2026 robot, run with all CAN encoders, and Eva runs with DutyCycleEncoders. 
+    // Set up our absolute encoders.
+    // For the 2026 robot, run with all CAN encoders, and Eva runs with
+    // DutyCycleEncoders.
     private final AbsoluteEncoderInterface frontLeftAboluteEncoder;
     private final AbsoluteEncoderInterface backLeftAbsoluteEncoder;
     private final AbsoluteEncoderInterface frontRightAbsoluteEncoder;
@@ -64,47 +65,65 @@ public class Drivetrain {
 
     public Drivetrain() {
         if (RobotSpecificConstants.ROBOT_NAME == RobotSpecificConstants.RobotName.UNNAMED_2026_ROBOT) {
+            frontLeftLocation = new Translation2d(RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
+                    -RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
+            frontRightLocation = new Translation2d(RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
+                    RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
+            backLeftLocation = new Translation2d(-RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
+                    -RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
+            backRightLocation = new Translation2d(-RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
+                    RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
+
             frontLeftAboluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.FL_ENCODER_CAN_ID);
             backLeftAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.BL_ENCODER_CAN_ID);
-            frontRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.FR_ENCODER_CAN_ID);
-            backRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.Unnamed2026Robot.BR_ENCODER_CAN_ID);
+            frontRightAbsoluteEncoder = new CANAbsoluteEncoder(
+                    RobotSpecificConstants.Unnamed2026Robot.FR_ENCODER_CAN_ID);
+            backRightAbsoluteEncoder = new CANAbsoluteEncoder(
+                    RobotSpecificConstants.Unnamed2026Robot.BR_ENCODER_CAN_ID);
 
             frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
-                frontLeftAboluteEncoder, RobotSpecificConstants.Unnamed2026Robot.FL_CHASSIS_ANGULAR_OFFSET);
+                    frontLeftAboluteEncoder, RobotSpecificConstants.Unnamed2026Robot.FL_CHASSIS_ANGULAR_OFFSET);
             backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
-                backLeftAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.BL_CHASSIS_ANGULAR_OFFSET);
+                    backLeftAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.BL_CHASSIS_ANGULAR_OFFSET);
             frontRight = new SwerveModule(DriveConstants.FR_DRIVE_ID, DriveConstants.FR_TURN_ID,
-                frontRightAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.FR_CHASSIS_ANGULAR_OFFSET);
+                    frontRightAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.FR_CHASSIS_ANGULAR_OFFSET);
             backRight = new SwerveModule(DriveConstants.BR_DRIVE_ID, DriveConstants.BR_TURN_ID,
-                backRightAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.BR_CHASSIS_ANGULAR_OFFSET);
+                    backRightAbsoluteEncoder, RobotSpecificConstants.Unnamed2026Robot.BR_CHASSIS_ANGULAR_OFFSET);
         } else {
+            frontLeftLocation = new Translation2d(RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET,
+                    -RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET);
+            frontRightLocation = new Translation2d(RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET,
+                    RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET);
+            backLeftLocation = new Translation2d(-RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET,
+                    -RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET);
+            backRightLocation = new Translation2d(-RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET,
+                    RobotSpecificConstants.EvaRobot.TRANSLATION_2D_OFFSET);
+
             frontLeftAboluteEncoder = new DutyCycleAbsoluteEncoder(RobotSpecificConstants.EvaRobot.FL_DIO);
             backLeftAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.EvaRobot.BL_DIO);
             frontRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.EvaRobot.FL_DIO);
             backRightAbsoluteEncoder = new CANAbsoluteEncoder(RobotSpecificConstants.EvaRobot.BR_DIO);
 
             frontLeft = new SwerveModule(DriveConstants.FL_DRIVE_ID, DriveConstants.FL_TURN_ID,
-                frontLeftAboluteEncoder, RobotSpecificConstants.EvaRobot.FL_CHASSIS_ANGULAR_OFFSET);
+                    frontLeftAboluteEncoder, RobotSpecificConstants.EvaRobot.FL_CHASSIS_ANGULAR_OFFSET);
             backLeft = new SwerveModule(DriveConstants.BL_DRIVE_ID, DriveConstants.BL_TURN_ID,
-                backLeftAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BL_CHASSIS_ANGULAR_OFFSET);
+                    backLeftAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BL_CHASSIS_ANGULAR_OFFSET);
             frontRight = new SwerveModule(DriveConstants.FR_DRIVE_ID, DriveConstants.FR_TURN_ID,
-                frontRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.FR_CHASSIS_ANGULAR_OFFSET);
+                    frontRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.FR_CHASSIS_ANGULAR_OFFSET);
             backRight = new SwerveModule(DriveConstants.BR_DRIVE_ID, DriveConstants.BR_TURN_ID,
-                backRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BR_CHASSIS_ANGULAR_OFFSET);
+                    backRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BR_CHASSIS_ANGULAR_OFFSET);
         }
 
-
         odometry = new SwerveDriveOdometry(
-            kinematics,
-            getRotation2d(),
-            new SwerveModulePosition[] {
-                    frontLeft.getPosition(),
-                    frontRight.getPosition(),
-                    backLeft.getPosition(),
-                    backRight.getPosition()
-            });
+                kinematics,
+                getRotation2d(),
+                new SwerveModulePosition[] {
+                        frontLeft.getPosition(),
+                        frontRight.getPosition(),
+                        backLeft.getPosition(),
+                        backRight.getPosition()
+                });
     }
-   
 
     public void resetRelativeTurnEncoders() {
         frontLeft.resetRelativeTurnEncoder();

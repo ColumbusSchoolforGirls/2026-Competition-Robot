@@ -36,6 +36,15 @@ public class ShootSystem {
                 PersistMode.kPersistParameters);
     }
 
+    public void init() {
+        state = ShooterState.STOPPED;
+        leftShooter.setShooterRPM(0);
+        leftShooter.setFeeder(0);
+        rightShooter.setShooterRPM(0);
+        rightShooter.setFeeder(0);
+        ventMotor.set(0);
+    }
+
     public void setShooterState(ShooterState state) {
         this.state = state;
         setMotors();
@@ -56,6 +65,7 @@ public class ShootSystem {
         leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
         rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
         ventMotor.set(determineVentPercentageOutput());
+        System.out.println("Setting left shooter to: " + determineShooterRPM());
     }
 
     private double determineShooterRPM() {
@@ -66,9 +76,14 @@ public class ShootSystem {
     }
 
     private double determineFeederPercentageOutput(ShooterModule shooter) {
-        if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
+        // if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
+        // return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
+        // }
+
+        if (this.state == ShooterState.SHOOT) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         }
+
         return 0.0;
     }
 

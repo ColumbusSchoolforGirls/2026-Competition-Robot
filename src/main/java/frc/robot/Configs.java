@@ -62,12 +62,12 @@ public class Configs {
             shooterConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                     // TODO: Adjust PID values for our robot
-                    .pid(0.04, 0, 0)
-                    .outputRange(-1, 1);
-            shooterConfig.closedLoop.maxMotion // TODO: Test if MaxMotion is needed
-                    .cruiseVelocity(5000)
-                    .maxAcceleration(10000)
-                    .allowedProfileError(1);
+                    .pid(0.0006, 0, 0.03)
+                    .outputRange(0, 1);
+            // shooterConfig.closedLoop.maxMotion // TODO: Test if MaxMotion is needed
+            // .cruiseVelocity(5000)
+            // .maxAcceleration(10000)
+            // .allowedProfileError(1);
 
             ventConfig
                     .inverted(true) // TODO: Update depending on direction of vent motor
@@ -94,7 +94,7 @@ public class Configs {
 
         static {
             climberConfig
-                    .inverted(true) // TODO: Update depending on direction of intake motor
+                    .inverted(false)
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(0.5)
                     .smartCurrentLimit(20);

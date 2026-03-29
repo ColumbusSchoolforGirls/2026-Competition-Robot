@@ -6,9 +6,9 @@ import frc.robot.subsystems.climber.Climber;
 public class AutoStateClimb extends AbstractAutoState {
 
     private enum ClimbingState {
-        REST(ClimberConstants.REST_HEIGHT_TICKS),
-        SETUP(ClimberConstants.MAX_HEIGHT_TICKS),
-        CLIMB(ClimberConstants.CLIMB_HEIGHT_TICKS);
+        REST(ClimberConstants.REST_HEIGHT_ROTATIONS),
+        SETUP(ClimberConstants.MAX_HEIGHT_ROTATIONS),
+        CLIMB(ClimberConstants.CLIMB_HEIGHT_ROTATIONS);
 
         private final double targetHeight;
 

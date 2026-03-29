@@ -33,22 +33,30 @@ public class Climber {
     }
 
     public void extendClimber() {
-        climb(ClimberConstants.MAX_HEIGHT_TICKS);
+        climb(ClimberConstants.MAX_HEIGHT_ROTATIONS);
     }
 
     public void flexClimber() {
-        climb(ClimberConstants.CLIMB_HEIGHT_TICKS);
+        climb(ClimberConstants.CLIMB_HEIGHT_ROTATIONS);
     }
 
     public void retractClimber() {
-        climb(ClimberConstants.REST_HEIGHT_TICKS);
+        climb(ClimberConstants.REST_HEIGHT_ROTATIONS);
+    }
+
+    public void stopClimber() {
+        climberMotor.set(0);
+    }
+
+    public void driveDown() {
+        climberMotor.set(-0.1);
     }
 
     public void climb(double targetHeightTicks) {
-        if (getPosition() < targetHeightTicks - ClimberConstants.CLIMB_TICKS_TOLERANCE) {
-            climberMotor.set(1);
-        } else if (getPosition() > targetHeightTicks + ClimberConstants.CLIMB_TICKS_TOLERANCE) {
-            climberMotor.set(-1);
+        if (getPosition() < targetHeightTicks - ClimberConstants.CLIMB_ROTATIONS_TOLERANCE) {
+            climberMotor.set(0.2);
+        } else if (getPosition() > targetHeightTicks + ClimberConstants.CLIMB_ROTATIONS_TOLERANCE) {
+            climberMotor.set(-0.2);
         } else {
             climberMotor.set(0);
         }

@@ -21,7 +21,7 @@ public class Intake {
     private final DigitalInput retractedLimitSwitch;
     // TODO: check with mech about what the limit switches actually are
 
-    private IntakeState state = IntakeState.OUT;
+    private IntakeState state = IntakeState.IN;
     private boolean runRoller;
 
     public Intake() {
@@ -37,20 +37,20 @@ public class Intake {
     }
 
     public void setIntakeState(IntakeState state, boolean runRoller) {
-        // this.state = state;
-        // this.runRoller = runRoller;
-        // setMotors();
-        // updateDashboard();
+        this.state = state;
+        this.runRoller = runRoller;
+        setMotors();
+        updateDashboard();
         // System.out.println(state);
-        if (JoystickControls.AUX.getBButton()) {
-            deployMotor.set(IntakeConstants.RETRACT_PERCENTAGE_OUTPUT);
-        } else if (JoystickControls.AUX.getXButton()) {
-            deployMotor.set(IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT);
-        } else {
-            deployMotor.set(0);
-        }
+        // if (JoystickControls.AUX.getBButton()) {
+        // deployMotor.set(IntakeConstants.RETRACT_PERCENTAGE_OUTPUT);
+        // } else if (JoystickControls.AUX.getXButton()) {
+        // deployMotor.set(IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT);
+        // } else {
+        // deployMotor.set(0);
+        // }
 
-        System.out.println("Current" + deployMotor.getOutputCurrent());
+        // System.out.println("Current" + deployMotor.getOutputCurrent());
     }
 
     public boolean isRetracted() {
@@ -62,7 +62,7 @@ public class Intake {
     }
 
     public boolean isDeployed() {
-        double positionDifference = IntakeConstants.DEPLOYED_TICK_DISTANCE - deployEncoder.getPosition();
+        double positionDifference = IntakeConstants.DEPLOYED_ROTATIONS_DISTANCE - deployEncoder.getPosition();
         return positionDifference <= 0;
     }
 
