@@ -60,8 +60,8 @@ public class AutoStateMachine {
         // Set up all your States
         AutoStateStop start = new AutoStateStop(drivetrain);
 
-        AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
-        AutoStateDrive turnRight = new AutoStateDrive(0, 0, -Math.PI / 4, drivetrain, 0);
+        AutoStateDrive driveForward1Meter = new AutoStateDrive(.2, 0, 0, drivetrain, 1);
+        AutoStateDrive turnRight = new AutoStateDrive(0, 0, 90, drivetrain, 1);
         AutoStateStop stop = new AutoStateStop(drivetrain);
 
         // Set up all your transitions

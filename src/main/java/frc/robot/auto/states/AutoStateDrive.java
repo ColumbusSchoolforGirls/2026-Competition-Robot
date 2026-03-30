@@ -29,8 +29,13 @@ public class AutoStateDrive extends AbstractAutoState {
         targetHeading = drivetrain.getHeading() + robotEndAngle;
 
         // estimated time for driving:
-        double estimatedTime = this.distance / this.velocity;
-        turnVelocity = Math.min(this.robotEndAngle / estimatedTime, DriveConstants.MAX_ANGULAR_SPEED);
+        if (this.distance != 0) {
+            double estimatedTime = this.distance / this.velocity;
+            turnVelocity = Math.min(this.robotEndAngle / estimatedTime, DriveConstants.MAX_ANGULAR_SPEED);
+        } else {
+            turnVelocity = DriveConstants.MAX_ANGULAR_SPEED / 3;
+        }
+
     }
 
     @Override
@@ -46,7 +51,7 @@ public class AutoStateDrive extends AbstractAutoState {
         // either include this check in atDistance or make another check which is
         // atAngle.
         if (atAngle(this)) {
-            drivetrain.drive(velocity * Math.cos(travelAngle), velocity * Math.sin(travelAngle),
+            drivetrain.drive(velocity * Math.sin(travelAngle), velocity * Math.cos(travelAngle),
                     0, false,
                     periodSeconds);
         } else if (atDistance(this)) {
