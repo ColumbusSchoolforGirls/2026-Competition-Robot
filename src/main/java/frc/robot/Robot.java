@@ -31,6 +31,9 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         drivetrain.driveInit();
+        climber.robotInit();
+        intake.robotInit();
+        shootSystem.init();
     }
 
     @Override
@@ -45,9 +48,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        intake.stageInit();
         drivetrain.setBrakeMode();
         drivetrain.resetRelativeTurnEncoders();
-        climber.init();
         shootSystem.init();
         joystickControls.init();
     }
@@ -60,8 +63,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        climber.init();
-        intake.init();
+        intake.stageInit();
         shootSystem.init();
         drivetrain.setBrakeMode();
         drivetrain.resetRelativeTurnEncoders();
