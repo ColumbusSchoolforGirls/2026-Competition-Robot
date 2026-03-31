@@ -41,7 +41,8 @@ public class SwerveModule {
      * Constructs a SwerveModule with a drive motor, turning motor, drive encoder
      * and turning encoder.
      */
-  public SwerveModule(int driveMotorID, int turnMotorID, AbsoluteEncoderInterface turnAbsoluteEncoder, double chassisAngularOffset) {
+    public SwerveModule(int driveMotorID, int turnMotorID, AbsoluteEncoderInterface turnAbsoluteEncoder,
+            double chassisAngularOffset) {
         driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
         turnMotor = new SparkMax(turnMotorID, MotorType.kBrushless);
 
@@ -154,5 +155,13 @@ public class SwerveModule {
         config.idleMode(SparkBaseConfig.IdleMode.kCoast);
         driveMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         turnMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    public SparkMax getDriveMotor() {
+        return driveMotor;
+    }
+
+    public SparkMax getTurnMotor() {
+        return turnMotor;
     }
 }

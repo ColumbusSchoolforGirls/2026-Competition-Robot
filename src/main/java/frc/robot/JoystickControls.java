@@ -53,7 +53,6 @@ public class JoystickControls {
 
     private boolean fieldRelative = false;
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
-    private IntakeState intakeState = IntakeState.IN;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
 
@@ -158,36 +157,14 @@ public class JoystickControls {
         boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
         runHopperForIntaking = runRoller;
 
-        switch (intakeState) {
-            case IN: {
-                if (AUX.getXButtonPressed()) {
-                    intakeState = IntakeState.DEPLOYING;
-                }
-                break;
-            }
-            case OUT: {
-                if (AUX.getBButtonPressed()) {
-                    intakeState = IntakeState.RETRACTING;
-                    break;
-                }
-                break;
-            }
-            case DEPLOYING: {
-                if (intake.isDeployed()) {
-                    intakeState = IntakeState.OUT;
-                }
-                break;
-            }
-            case RETRACTING: {
-                if (intake.isRetracted()) {
-                    intakeState = IntakeState.IN;
-                }
-                break;
-            }
-            default: {
-            }
+        if (AUX.getXButtonPressed()) {
+            intake.deploy();
+        } else if (AUX.getBButtonPressed()) {
+            intake.retract();
+        } else {
+            intake.stop();
         }
-        intake.setIntakeState(intakeState, runRoller);
+        intake.setRoller(runRoller);
     }
 
     public void hopper() {

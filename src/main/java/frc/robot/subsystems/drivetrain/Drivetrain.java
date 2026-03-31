@@ -34,14 +34,10 @@ public class Drivetrain {
     private double targetDistance;
     private double startDriveTime;
 
-    private Translation2d frontLeftLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
-            -DriveConstants.TRANSLATION_2D_OFFSET);
-    private Translation2d frontRightLocation = new Translation2d(DriveConstants.TRANSLATION_2D_OFFSET,
-            DriveConstants.TRANSLATION_2D_OFFSET);
-    private Translation2d backLeftLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
-            -DriveConstants.TRANSLATION_2D_OFFSET);
-    private Translation2d backRightLocation = new Translation2d(-DriveConstants.TRANSLATION_2D_OFFSET,
-            DriveConstants.TRANSLATION_2D_OFFSET);
+    private final Translation2d frontLeftLocation;
+    private final Translation2d frontRightLocation;
+    private final Translation2d backLeftLocation;
+    private final Translation2d backRightLocation;
 
     // Set up our absolute encoders.
     // For the 2026 robot, run with all CAN encoders, and Eva runs with
@@ -58,8 +54,7 @@ public class Drivetrain {
 
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-            frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
+    private final SwerveDriveKinematics kinematics;
 
     private final SwerveDriveOdometry odometry;
 
@@ -114,6 +109,8 @@ public class Drivetrain {
                     backRightAbsoluteEncoder, RobotSpecificConstants.EvaRobot.BR_CHASSIS_ANGULAR_OFFSET);
         }
 
+        kinematics = new SwerveDriveKinematics(
+                frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
         odometry = new SwerveDriveOdometry(
                 kinematics,
                 getRotation2d(),
@@ -371,5 +368,15 @@ public class Drivetrain {
 
         SmartDashboard.putNumber("Gyro Angle", getHeading());
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
+
+        SmartDashboard.putNumber("FL Power", frontLeft.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("FR Power", frontRight.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("BL Power", backLeft.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("BR Power", backRight.getDriveMotor().getAppliedOutput());
+
+        SmartDashboard.putNumber("FL Velocity", frontLeft.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("FR Velocity", frontRight.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("BL Velocity", backLeft.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("BR Velocity", backRight.getDriveMotor().getEncoder().getVelocity());
     }
 }
