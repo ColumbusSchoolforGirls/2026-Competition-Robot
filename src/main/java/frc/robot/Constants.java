@@ -44,10 +44,9 @@ public class Constants {
 
     public static final class DriveConstants {
 
-        public static final double MAX_SPEED = 12.0; // 3 meters per second
+        public static final double MAX_SPEED = 3.0 * 4.3; // 3 meters per second, approximate increase due to unknown
+                                                          // scaling issue
         public static final double MAX_ANGULAR_SPEED = Math.PI * 2; // 1 rotation per second
-
-        public static final double TRANSLATION_2D_OFFSET = 0.3048; // 12 inches to meters
 
         // NOTE: All angles must be thought of as clockwise negative (-) because of the
         // gear-pulley system.
@@ -77,7 +76,7 @@ public class Constants {
 
         public static final double METERS_TO_INCHES = 39.37; // found by inches/meter
 
-        public static final double CRAWL_SPEED = 1;
+        public static final double CRAWL_SPEED = 0.2;
 
         public static final double MAX_DRIVE_AUTO_TIME = 3.0;
 
@@ -119,10 +118,10 @@ public class Constants {
         public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 8;
 
         public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.05;
-        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.2;
+        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.15;
         public static final double ROLLER_PERCENTAGE_OUTPUT = -0.5;
 
-        public static final double DEPLOYED_ROTATIONS_DISTANCE = 10;
+        public static final double DEPLOYED_ROTATIONS_DISTANCE = 0.01;
     }
 
     public static final class HopperConstants {

@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         climber.init();
+        intake.init();
         shootSystem.init();
         drivetrain.setBrakeMode();
         drivetrain.resetRelativeTurnEncoders();
@@ -74,6 +75,7 @@ public class Robot extends TimedRobot {
         joystickControls.intake();
         joystickControls.hopper();
         joystickControls.climber();
+        intake.periodic();
     }
 
     /** This function is called once when the robot is disabled. */
