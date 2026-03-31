@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.ShooterConstants;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -24,8 +25,10 @@ public class Configs {
                         drivingConfig.closedLoop
                                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                         // TODO: Adjust PID values for our robot
-                                        .pid(0.15, 0, 0)
-                                        .outputRange(-1, 1);
+                                        .pid(0, 0, 0)
+                                        .outputRange(-1, 1).feedForward
+                                        .kS(SwerveConstants.FEED_FORWARD_DRIVE_STATIC)
+                                        .kV(SwerveConstants.FEED_FORWARD_DRIVE_VELOCITY);
 
                         turningConfig
                                         .idleMode(IdleMode.kBrake)
@@ -62,8 +65,10 @@ public class Configs {
                         shooterConfig.closedLoop
                                         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                                         // TODO: Adjust PID values for our robot
-                                        .pid(0.0005, 0, 0.6)
-                                        .outputRange(0, 1);
+                                        .pid(0.00001, 0, 0)
+                                        .outputRange(0, 1).feedForward
+                                        .kS(ShooterConstants.FEED_FORWARD_SHOOT_STATIC)
+                                        .kV(ShooterConstants.FEED_FORWARD_SHOOT_VELOCITY);
                         // shooterConfig.closedLoop.maxMotion // TODO: Test if MaxMotion is needed
                         // .cruiseVelocity(5000)
                         // .maxAcceleration(10000)

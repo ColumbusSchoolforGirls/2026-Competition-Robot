@@ -57,6 +57,11 @@ public class ShootSystem {
         SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getShooterRPM());
         SmartDashboard.putBoolean("Left Shooter At Speed", isAtSpeed(leftShooter));
         SmartDashboard.putBoolean("Right Shooter At Speed", isAtSpeed(rightShooter));
+
+        SmartDashboard.putNumber("Right Lead Shoot Velocity", rightShooter.getLeadMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("Right Lead Shoot Voltage",
+                rightShooter.getLeadMotor().getAppliedOutput() * rightShooter.getLeadMotor().getBusVoltage());
+
     }
 
     private void setMotors() {

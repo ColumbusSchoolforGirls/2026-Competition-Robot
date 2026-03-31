@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.PersistMode;
@@ -44,6 +45,10 @@ public class ShooterModule {
 
     public RelativeEncoder getEncoder() {
         return leadMotor.getEncoder();
+    }
+
+    public SparkMax getLeadMotor() {
+        return leadMotor;
     }
 
     public double getShooterRPM() {
