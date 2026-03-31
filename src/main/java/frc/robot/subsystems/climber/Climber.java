@@ -28,7 +28,7 @@ public class Climber {
                 PersistMode.kPersistParameters);
     }
 
-    public void init() {
+    public void robotInit() {
         climberEncoder.setPosition(0);
     }
 
@@ -48,8 +48,12 @@ public class Climber {
         climberMotor.set(0);
     }
 
-    public void driveDown() {
+    public void driveDownForReset() {
         climberMotor.set(-0.1);
+    }
+
+    public void driveUpForReset() {
+        climberMotor.set(0.1);
     }
 
     public void climb(double targetHeightTicks) {
