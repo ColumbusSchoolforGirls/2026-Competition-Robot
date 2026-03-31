@@ -8,6 +8,9 @@ public class Constants {
         public static final int STATIC_GAIN_TURN = 1;
         public static final double VELOCITY_GAIN_TURN = 0.5;
 
+        public static final double FEED_FORWARD_DRIVE_VELOCITY = 2.25;
+        public static final double FEED_FORWARD_DRIVE_STATIC = .15;
+
         // The MAXSwerve module can be configured with one of three pinion gears: 12T,
         // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
         // more teeth will result in a robot that drives faster).
@@ -44,8 +47,8 @@ public class Constants {
 
     public static final class DriveConstants {
 
-        public static final double MAX_SPEED = 3.0 * 4.3; // 3 meters per second, approximate increase due to unknown
-                                                          // scaling issue
+        public static final double MAX_SPEED = 3.0; // 3 meters per second, approximate increase due to unknown
+                                                    // scaling issue
         public static final double MAX_ANGULAR_SPEED = Math.PI * 2; // 1 rotation per second
 
         // NOTE: All angles must be thought of as clockwise negative (-) because of the
@@ -109,6 +112,9 @@ public class Constants {
         public static final double VENT_PERCENTAGE_OUTPUT = 0.2;
 
         public static final int RPM_TOLERANCE = 20; // 100 // TODO: Update, hopefully lower, after tuning the PID
+
+        public static final double FEED_FORWARD_SHOOT_VELOCITY = 0.002;
+        public static final double FEED_FORWARD_SHOOT_STATIC = 0.02;
     }
 
     public static final class IntakeConstants {

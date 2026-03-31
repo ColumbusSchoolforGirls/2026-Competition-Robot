@@ -351,32 +351,64 @@ public class Drivetrain {
 
     public void updateDashboard() {
 
-        SmartDashboard.putNumber("FL DriveEncoder", frontLeft.getDrivePositionMeters());
-        SmartDashboard.putNumber("FR DriveEncoder", frontRight.getDrivePositionMeters());
-        SmartDashboard.putNumber("BL DriveEncoder", backLeft.getDrivePositionMeters());
-        SmartDashboard.putNumber("BR DriveEncoder", backRight.getDrivePositionMeters());
+        SmartDashboard.putNumber("FL DriveEncoder",
+                frontLeft.getDrivePositionMeters());
+        SmartDashboard.putNumber("FR DriveEncoder",
+                frontRight.getDrivePositionMeters());
+        SmartDashboard.putNumber("BL DriveEncoder",
+                backLeft.getDrivePositionMeters());
+        SmartDashboard.putNumber("BR DriveEncoder",
+                backRight.getDrivePositionMeters());
 
-        SmartDashboard.putNumber("FL AbsEncoder", frontLeft.turnAbsoluteEncoder.get() * 360);
-        SmartDashboard.putNumber("FR AbsEncoder", frontRight.turnAbsoluteEncoder.get() * 360);
-        SmartDashboard.putNumber("BL AbsEncoder", backLeft.turnAbsoluteEncoder.get() * 360);
-        SmartDashboard.putNumber("BR AbsEncoder", backRight.turnAbsoluteEncoder.get() * 360);
+        SmartDashboard.putNumber("FL AbsEncoder", frontLeft.turnAbsoluteEncoder.get()
+                * 360);
+        SmartDashboard.putNumber("FR AbsEncoder",
+                frontRight.turnAbsoluteEncoder.get() * 360);
+        SmartDashboard.putNumber("BL AbsEncoder", backLeft.turnAbsoluteEncoder.get()
+                * 360);
+        SmartDashboard.putNumber("BR AbsEncoder", backRight.turnAbsoluteEncoder.get()
+                * 360);
 
-        SmartDashboard.putNumber("FL RelEncoder", (frontLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
-        SmartDashboard.putNumber("FR RelEncoder", (frontRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
-        SmartDashboard.putNumber("BL RelEncoder", (backLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
-        SmartDashboard.putNumber("BR RelEncoder", (backRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+        SmartDashboard.putNumber("FL RelEncoder",
+                (frontLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+        SmartDashboard.putNumber("FR RelEncoder",
+                (frontRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+        SmartDashboard.putNumber("BL RelEncoder",
+                (backLeft.turnRelativeEncoder.getPosition() * 180) / Math.PI);
+        SmartDashboard.putNumber("BR RelEncoder",
+                (backRight.turnRelativeEncoder.getPosition() * 180) / Math.PI);
 
         SmartDashboard.putNumber("Gyro Angle", getHeading());
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
 
-        SmartDashboard.putNumber("FL Power", frontLeft.getDriveMotor().getAppliedOutput());
-        SmartDashboard.putNumber("FR Power", frontRight.getDriveMotor().getAppliedOutput());
-        SmartDashboard.putNumber("BL Power", backLeft.getDriveMotor().getAppliedOutput());
-        SmartDashboard.putNumber("BR Power", backRight.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("FL Power",
+                frontLeft.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("FR Power",
+                frontRight.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("BL Power",
+                backLeft.getDriveMotor().getAppliedOutput());
+        SmartDashboard.putNumber("BR Power",
+                backRight.getDriveMotor().getAppliedOutput());
 
-        SmartDashboard.putNumber("FL Velocity", frontLeft.getDriveMotor().getEncoder().getVelocity());
-        SmartDashboard.putNumber("FR Velocity", frontRight.getDriveMotor().getEncoder().getVelocity());
-        SmartDashboard.putNumber("BL Velocity", backLeft.getDriveMotor().getEncoder().getVelocity());
-        SmartDashboard.putNumber("BR Velocity", backRight.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("FL Velocity",
+                frontLeft.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("FR Velocity",
+                frontRight.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("BL Velocity",
+                backLeft.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("BR Velocity",
+                backRight.getDriveMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("FL Voltage",
+                frontLeft.getDriveMotor().getAppliedOutput() *
+                        frontLeft.getDriveMotor().getBusVoltage());
+        SmartDashboard.putNumber("FR Voltage",
+                frontRight.getDriveMotor().getAppliedOutput() *
+                        frontRight.getDriveMotor().getBusVoltage());
+        SmartDashboard.putNumber("BL Voltage",
+                backLeft.getDriveMotor().getAppliedOutput() *
+                        backLeft.getDriveMotor().getBusVoltage());
+        SmartDashboard.putNumber("BR Voltage",
+                backRight.getDriveMotor().getAppliedOutput() *
+                        backRight.getDriveMotor().getBusVoltage());
     }
 }

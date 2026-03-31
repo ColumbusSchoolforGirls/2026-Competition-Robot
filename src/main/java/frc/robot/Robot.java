@@ -5,10 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.Configs.Shooter;
 import frc.robot.auto.AutoStateMachine;
 import frc.robot.auto.states.AbstractAutoState;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.shooter.ShootSystem;
+import frc.robot.subsystems.shooter.ShooterModule;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.climber.Climber;
@@ -34,7 +36,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         limelightShoot.updateLimelightDashboard();
-        drivetrain.updateDashboard();
         drivetrain.periodic();
         shootSystem.updateDashboard();
         climber.updateDashboard();
