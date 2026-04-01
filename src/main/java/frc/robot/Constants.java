@@ -120,19 +120,18 @@ public class Constants {
     public static final class IntakeConstants {
         public static final int DEPLOY_ID = 20;
         public static final int ROLLER_ID = 22;
-        public static final int DEPLOYED_LIMIT_SWITCH_CHANNEL = 7; // TODO: Update with DIO channel
-        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 8;
+        public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 9;
 
-        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.05;
-        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.15;
+        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.04;
+        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.12;
         public static final double ROLLER_PERCENTAGE_OUTPUT = -0.5;
 
-        public static final double DEPLOYED_ROTATIONS_DISTANCE = 0.01;
+        public static final double DEPLOYED_ROTATIONS_DISTANCE = 1.5;
     }
 
     public static final class HopperConstants {
         public static final int HOPPER_ID = 23;
-        public static final double HOPPER_PERCENTAGE_OUTPUT = 0.5;
+        public static final double HOPPER_PERCENTAGE_OUTPUT = -0.5;
     }
 
     public static final class ClimberConstants {
@@ -141,9 +140,10 @@ public class Constants {
         private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
         private static final double MAX_HEIGHT_INCHES = 7.2;
         private static final double CLIMB_HEIGHT_INCHES = 3.7;
+        private static final double REST_HEIGHT_INCHES = 0.1;
         public static final double MAX_HEIGHT_ROTATIONS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;
         public static final double CLIMB_HEIGHT_ROTATIONS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;
-        public static final double REST_HEIGHT_ROTATIONS = 0;
+        public static final double REST_HEIGHT_ROTATIONS = REST_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;
         public static final double CLIMB_ROTATIONS_TOLERANCE = 5; // TODO: TUNE
 
         // 64:1 Motor:Pulley ratio

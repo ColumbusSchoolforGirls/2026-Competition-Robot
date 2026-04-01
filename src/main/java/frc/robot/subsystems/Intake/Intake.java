@@ -18,10 +18,8 @@ public class Intake {
     private final VictorSPX rollerMotor;
     private final RelativeEncoder deployEncoder;
     private final DigitalInput retractedLimitSwitch;
-    // TODO: check with mech about what the limit switches actually are
 
-    private IntakeState state = IntakeState.IN;
-    private boolean runRoller;
+    private boolean driving;
 
     public Intake() {
         deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
@@ -35,11 +33,13 @@ public class Intake {
                 PersistMode.kPersistParameters);
     }
 
-    public void init() {
+    public void robotInit() {
         deployEncoder.setPosition(0);
-        state = IntakeState.IN;
-        runRoller = false;
-        setMotors();
+        stop();
+    }
+
+    public void stageInit() {
+        stop();
     }
 
     public void periodic() {
@@ -47,29 +47,30 @@ public class Intake {
     }
 
     public void updateDashboard() {
-        SmartDashboard.putString("IntakeState", state.toString());
         SmartDashboard.putBoolean("IntakeRetracted", isRetracted());
         SmartDashboard.putNumber("RollerMotorPercent", rollerMotor.getMotorOutputPercent());
         SmartDashboard.putNumber("Intake Rotations", deployEncoder.getPosition());
+        SmartDashboard.putBoolean("Intake Running", driving);
+
     }
 
     public void deploy() {
         if (!isDeployed()) {
-            state = IntakeState.DEPLOYING;
-            setMotors();
+            deployMotor.set(IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT);
+            driving = true;
         } else {
-            state = IntakeState.OUT;
-            setMotors();
+            deployMotor.set(0);
+            driving = false;
         }
     }
 
     public void retract() {
         if (!isRetracted()) {
-            state = IntakeState.RETRACTING;
-            setMotors();
+            deployMotor.set(IntakeConstants.RETRACT_PERCENTAGE_OUTPUT);
+            driving = true;
         } else {
-            state = IntakeState.IN;
-            setMotors();
+            deployMotor.set(0);
+            driving = false;
         }
     }
 
@@ -78,42 +79,24 @@ public class Intake {
         rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
     }
 
-    public void setRoller(boolean runRoller) {
-        this.runRoller = runRoller;
-        setMotors();
-        updateDashboard();
-    }
-
-    private boolean isRetracted() {
-        if (retractedLimitSwitch.get()) {
-            deployEncoder.setPosition(0);
-            return true;
+    public void runRoller(boolean runRoller) {
+        if (runRoller) {
+            rollerMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.ROLLER_PERCENTAGE_OUTPUT);
+        } else {
+            rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
         }
-        return false;
     }
 
     private boolean isDeployed() {
         return deployEncoder.getPosition() >= IntakeConstants.DEPLOYED_ROTATIONS_DISTANCE;
     }
 
-    private void setMotors() {
-        deployMotor.set(determineDeployPercentageOutput());
-        rollerMotor.set(VictorSPXControlMode.PercentOutput, determineRollerPercentageOutput());
-    }
-
-    private double determineDeployPercentageOutput() {
-        if (state == IntakeState.DEPLOYING) {
-            return IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT;
-        } else if (state == IntakeState.RETRACTING) {
-            return IntakeConstants.RETRACT_PERCENTAGE_OUTPUT;
+    private boolean isRetracted() {
+        boolean isRetracted = !retractedLimitSwitch.get();
+        if (isRetracted) {
+            deployEncoder.setPosition(0);
+            return true;
         }
-        return 0;
-    }
-
-    private double determineRollerPercentageOutput() {
-        if (runRoller) {
-            return IntakeConstants.ROLLER_PERCENTAGE_OUTPUT;
-        }
-        return 0;
+        return false;
     }
 }

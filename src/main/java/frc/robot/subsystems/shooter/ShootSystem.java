@@ -38,17 +38,19 @@ public class ShootSystem {
 
     public void init() {
         state = ShooterState.STOPPED;
-        leftShooter.setShooterRPM(0);
-        leftShooter.setFeeder(0);
-        rightShooter.setShooterRPM(0);
-        rightShooter.setFeeder(0);
-        ventMotor.set(0);
+        cutPower();
     }
 
     public void setShooterState(ShooterState state) {
         this.state = state;
         setMotors();
         updateDashboard();
+    }
+
+    private void cutPower() {
+        leftShooter.cutPower();
+        rightShooter.cutPower();
+        ventMotor.set(0);
     }
 
     public void updateDashboard() {

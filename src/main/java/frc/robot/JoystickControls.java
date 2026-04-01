@@ -5,7 +5,6 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeState;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.subsystems.shooter.ShootSystem;
 
@@ -16,14 +15,15 @@ import edu.wpi.first.wpilibj.XboxController;
 /*
  * List all controls in this docstring.
  * DRIVER:
- *     - Left Joystick: Linear driving movement (omnidirectional)
- *     - Right Joystick: Rotational movement
- *     - Left Bumper (Hold): Crawl mode (reduce driving speed)
- *     - A Button (Press): Align with limelight
- *     - B Button (Press): Reset turn encoders
- *     - X Button (Press): Climber goes up; extend
- *     - Y Button (Press): Climber climbs/goes down; FLEX
- *     - Right Bumper (Hold): Climber brake mode
+ *     * Driving
+ *         - Left Joystick: Linear driving movement (omnidirectional)
+ *         - Right Joystick: Rotational movement
+ *         - Left Bumper (Hold): Crawl mode (reduce driving speed)
+ *         - A Button (Press): Align with limelight
+ *         - B Button (Press): Reset turn encoders and gyro
+ *     * Climber
+ *         - Y Button (Hold): Climber goes up; extend
+ *         - X Button (Hold): Climber climbs/goes down; flex
  * 
  * AUXILIARY:
  *     * Shooter
@@ -35,10 +35,16 @@ import edu.wpi.first.wpilibj.XboxController;
  *         - X Button (Press): Deploy Intake
  *         - B Button (Press): Retract Intake
  *     NOTE: The hopper automatically runs during intaking and shooting.
+ * 
+ * RESET CONTROLLER:
+ *     - Right Bumper (Press): Toggle climber brake/coast mode
+ *     - B Button (Hold): Drive climber down
+ *     - Y Button (Hold): Drive climber up
  */
 public class JoystickControls {
     private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
     public static final XboxController AUX = new XboxController(1);
+    public static final XboxController RESET_CONTROLLER = new XboxController(2);
 
     private final Drivetrain drivetrain;
     private final Limelight limelight;
@@ -76,22 +82,20 @@ public class JoystickControls {
 
         // Get the y speed or sideways/strafe speed. We are inverting this because
         // we want a positive value when we pull to the left. Most controllers
-        // return positive values when you pull to the right by default. // nah positive
-        // now
+        // return positive values when you pull to the right by default.
         double ySpeed = yspeedLimiter.calculate(MathUtil.applyDeadband(DRIVE_CONTROLLER.getLeftX(), 0.1))
                 * Constants.DriveConstants.MAX_SPEED;
 
         // Get the rate of angular rotation. We are inverting this because we want a
         // positive value when we pull to the left (remember, CCW is positive in
         // mathematics). Xbox controllers return positive values when you pull to
-        // the right by default. // uh no, positive now
+        // the right by default.
         double rot = rotLimiter
                 .calculate(MathUtil.applyDeadband(DRIVE_CONTROLLER.getRightX(), ControllerConstants.JOYSTICK_DEADZONE))
                 * Constants.DriveConstants.MAX_ANGULAR_SPEED;
 
         if (DRIVE_CONTROLLER.getLeftBumperButton()) {
-            xSpeed *= Constants.DriveConstants.CRAWL_SPEED; // if you hold the left bumper you go at a slow scaled
-                                                            // speed
+            xSpeed *= Constants.DriveConstants.CRAWL_SPEED;
             ySpeed *= Constants.DriveConstants.CRAWL_SPEED;
             rot *= Constants.DriveConstants.CRAWL_SPEED;
         }
@@ -111,11 +115,12 @@ public class JoystickControls {
     }
 
     public void driverResetTurnEncoders() {
-        if (DRIVE_CONTROLLER.getAButtonPressed()) {
+        if (DRIVE_CONTROLLER.getBButtonPressed()) {
             drivetrain.resetRelativeTurnEncoders();
         }
     }
 
+    // TODO: Change the button if needed (overlaps with encoder reset)
     public void driverResetGyro() {
         if (DRIVE_CONTROLLER.getBButton())
             drivetrain.resetGyro();
@@ -136,7 +141,6 @@ public class JoystickControls {
                 } else {
                     shootState = ShootSystem.ShooterState.REV;
                 }
-
                 break;
             }
             default: {
@@ -157,14 +161,14 @@ public class JoystickControls {
         boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
         runHopperForIntaking = runRoller;
 
-        if (AUX.getXButtonPressed()) {
+        if (AUX.getXButton()) {
             intake.deploy();
-        } else if (AUX.getBButtonPressed()) {
+        } else if (AUX.getBButton()) {
             intake.retract();
         } else {
             intake.stop();
         }
-        intake.setRoller(runRoller);
+        intake.runRoller(runRoller);
     }
 
     public void hopper() {
@@ -172,17 +176,21 @@ public class JoystickControls {
     }
 
     public void climber() {
-        if (DRIVE_CONTROLLER.getXButton()) { // raise the climber
+        if (DRIVE_CONTROLLER.getYButton()) { // raise the climber
             climber.extendClimber();
-        } else if (DRIVE_CONTROLLER.getYButton()) { // flex the climber
+        } else if (DRIVE_CONTROLLER.getXButton()) { // flex the climber (climb)
             climber.flexClimber();
-        } else if (DRIVE_CONTROLLER.getBButton()) { // lower the climber //TODO: change button
-            climber.driveDown();
+        } else if (DRIVE_CONTROLLER.getBButton()) { // lower the climber
+            climber.retractClimber();
+        } else if (RESET_CONTROLLER.getYButton()) {
+            climber.driveUpForReset();
+        } else if (RESET_CONTROLLER.getBButton()) {
+            climber.driveDownForReset();
         } else {
             climber.stopClimber();
         }
 
-        if (DRIVE_CONTROLLER.getRightBumperButtonPressed()) {
+        if (RESET_CONTROLLER.getRightBumperButtonPressed()) {
             climber.lockClimbMotor();
         } else {
             climber.unlockClimbMotor();
