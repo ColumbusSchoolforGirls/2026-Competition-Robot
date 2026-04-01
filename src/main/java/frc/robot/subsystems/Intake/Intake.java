@@ -19,6 +19,8 @@ public class Intake {
     private final RelativeEncoder deployEncoder;
     private final DigitalInput retractedLimitSwitch;
 
+    private boolean driving;
+
     public Intake() {
         deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
         rollerMotor = new VictorSPX(IntakeConstants.ROLLER_ID);
@@ -48,21 +50,27 @@ public class Intake {
         SmartDashboard.putBoolean("IntakeRetracted", isRetracted());
         SmartDashboard.putNumber("RollerMotorPercent", rollerMotor.getMotorOutputPercent());
         SmartDashboard.putNumber("Intake Rotations", deployEncoder.getPosition());
+        SmartDashboard.putBoolean("Intake Running", driving);
+
     }
 
     public void deploy() {
         if (!isDeployed()) {
             deployMotor.set(IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT);
+            driving = true;
         } else {
             deployMotor.set(0);
+            driving = false;
         }
     }
 
     public void retract() {
         if (!isRetracted()) {
             deployMotor.set(IntakeConstants.RETRACT_PERCENTAGE_OUTPUT);
+            driving = true;
         } else {
             deployMotor.set(0);
+            driving = false;
         }
     }
 
@@ -80,11 +88,12 @@ public class Intake {
     }
 
     private boolean isDeployed() {
-        return deployEncoder.getPosition() * 42 >= IntakeConstants.DEPLOYED_TICKS_DISTANCE;
+        return deployEncoder.getPosition() >= IntakeConstants.DEPLOYED_ROTATIONS_DISTANCE;
     }
 
     private boolean isRetracted() {
-        if (retractedLimitSwitch.get()) {
+        boolean isRetracted = !retractedLimitSwitch.get();
+        if (isRetracted) {
             deployEncoder.setPosition(0);
             return true;
         }
