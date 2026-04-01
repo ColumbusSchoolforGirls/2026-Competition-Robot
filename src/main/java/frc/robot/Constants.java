@@ -122,16 +122,16 @@ public class Constants {
         public static final int ROLLER_ID = 22;
         public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 9;
 
-        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.05;
-        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.15;
+        public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.04;
+        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.12;
         public static final double ROLLER_PERCENTAGE_OUTPUT = -0.5;
 
-        public static final double DEPLOYED_TICKS_DISTANCE = 0.05;
+        public static final double DEPLOYED_ROTATIONS_DISTANCE = 1.5;
     }
 
     public static final class HopperConstants {
         public static final int HOPPER_ID = 23;
-        public static final double HOPPER_PERCENTAGE_OUTPUT = 0.5;
+        public static final double HOPPER_PERCENTAGE_OUTPUT = -0.5;
     }
 
     public static final class ClimberConstants {
