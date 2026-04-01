@@ -18,7 +18,7 @@ public class AutoStateClimb extends AbstractAutoState {
     }
 
     private final Climber climber;
-    private ClimbingState state;
+    private ClimbingState climbState;
 
     public AutoStateClimb(Climber climber, ClimbingState state) {
         this.climber = climber;
@@ -26,8 +26,8 @@ public class AutoStateClimb extends AbstractAutoState {
 
     @Override // TODO: Fix to drive to target height
     public void action(double periodSeconds) {
-        if (!atHeight(state.targetHeight)) {
-            climber.climb(state.targetHeight);
+        if (!atHeight(climbState.targetHeight)) {
+            climber.climb(climbState.targetHeight);
         }
     }
 
