@@ -10,7 +10,7 @@ public class AutoStateDrive extends AbstractAutoState {
     private Drivetrain drivetrain;
     private double distance;
     private double velocity = 1; // meters / second
-    private double turnVelocity = Math.PI / 2; // rad / second
+    private double turnVelocity = 0; // rad / second
 
     private double targetHeading = 0;
 
@@ -40,21 +40,17 @@ public class AutoStateDrive extends AbstractAutoState {
 
     @Override
     public void action(double periodSeconds) {
-        // TODO: the rotation rate limelight.getTV() == 1is not correct, we'd probably
+        // TODO: the rotation rate limelight.getTV() == 1 is not correct, we'd probably
         // rotate at a fixed
         // speed, and we should
         // either include this check in atDistance or make another check which is
         // atAngle.
-        if (atAngle(this)) {
-            drivetrain.drive(velocity * Math.cos(travelAngle), velocity * Math.sin(travelAngle),
-                    0, false,
-                    periodSeconds);
-        } else if (atDistance(this)) {
+        if (atDistance(this)) {
             drivetrain.drive(0, 0,
                     turnVelocity, false,
                     periodSeconds);
         } else {
-            drivetrain.drive(velocity * Math.sin(travelAngle), velocity * Math.cos(travelAngle),
+            drivetrain.drive(velocity * Math.cos(travelAngle), velocity * Math.sin(travelAngle),
                     turnVelocity, false,
                     periodSeconds);
         }

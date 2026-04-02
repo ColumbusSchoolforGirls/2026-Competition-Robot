@@ -63,7 +63,7 @@ public class AutoStateMachine {
         // Set up all your States
         AutoStateStop start = new AutoStateStop(drivetrain);
 
-        AutoStateDrive drive = new AutoStateDrive(-1.5, 0, 0, drivetrain, 0.8);
+        AutoStateDrive drive = new AutoStateDrive(1.5, 0, 0, drivetrain, 0.8);
         AutoStateShoot shoot = new AutoStateShoot(shootSystem, 10);
         AutoStateStop stop = new AutoStateStop(drivetrain);
 
