@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         limelightShoot.updateLimelightDashboard();
         drivetrain.periodic();
+        drivetrain.updateDashboard();
         shootSystem.updateDashboard();
         climber.updateDashboard();
         intake.updateDashboard();
