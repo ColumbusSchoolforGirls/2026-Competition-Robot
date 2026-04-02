@@ -57,7 +57,7 @@ public class JoystickControls {
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
-    private boolean fieldRelative = false;
+    private boolean fieldRelative = true;
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
@@ -153,13 +153,26 @@ public class JoystickControls {
             shootState = ShootSystem.ShooterState.STOPPED;
         }
 
+        // if (AUX.getYButton()) {
+        // shootSystem.ventOut();
+        // } else if (AUX.getAButton()) {
+        // shootSystem.ventIn();
+        // } else {
+        // shootSystem.setShooterState(ShootSystem.ShooterState.STOPPED);
+        // }
+
         runHopperForShooting = shootState == ShootSystem.ShooterState.SHOOT;
         shootSystem.setShooterState(shootState);
+
+        if (AUX.getYButton()) {
+            shootSystem.ventOut(); // expel balls from vent
+        }
     }
 
     public void intake() {
         boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
-        runHopperForIntaking = runRoller;
+        runHopperForIntaking = false;
+        shootSystem.runVentAgainstIntake(runRoller);
 
         if (AUX.getXButton()) {
             intake.deploy();

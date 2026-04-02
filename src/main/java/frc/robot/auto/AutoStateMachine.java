@@ -6,10 +6,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.auto.states.AbstractAutoState;
 import frc.robot.auto.states.AutoStateAlign;
 import frc.robot.auto.states.AutoStateDrive;
+import frc.robot.auto.states.AutoStateShoot;
 import frc.robot.auto.states.AutoStateStop;
 import frc.robot.auto.states.AutoTransition;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.limelight.Limelight;
+import frc.robot.subsystems.shooter.ShootSystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -17,11 +19,13 @@ public class AutoStateMachine {
     private Drivetrain drivetrain;
     public AbstractAutoState currentAutoState;
     private Limelight limelight;
+    private ShootSystem shootSystem;
 
-    public AutoStateMachine(Drivetrain drivetrain, Limelight limelight) {
+    public AutoStateMachine(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem) {
         this.drivetrain = drivetrain;
         this.currentAutoState = null;
         this.limelight = limelight;
+        this.shootSystem = shootSystem;
     }
 
     public enum StartingPosition {
@@ -59,16 +63,15 @@ public class AutoStateMachine {
         // Set up all your States
         AutoStateStop start = new AutoStateStop(drivetrain);
 
-        AutoStateDrive driveForward1Meter = new AutoStateDrive(1, 0, 0, drivetrain, 1);
-        AutoStateDrive turnRight = new AutoStateDrive(0, 0, -Math.PI / 4, drivetrain, 0);
+        AutoStateDrive drive = new AutoStateDrive(-1.5, 0, 0, drivetrain, 0.8);
+        AutoStateShoot shoot = new AutoStateShoot(shootSystem, 10);
         AutoStateStop stop = new AutoStateStop(drivetrain);
 
         // Set up all your transitions
-        start.addTransition(new AutoTransition(
-                driveForward1Meter, state -> true));
-
-        driveForward1Meter.addTransition(new AutoTransition(turnRight, driveForward1Meter::atDistance));
-        turnRight.addTransition(new AutoTransition(stop, turnRight::atAngle));
+        start.addTransition(new AutoTransition(drive, state -> true));
+        drive.addTransition(new AutoTransition(
+                shoot, drive::atDistance));
+        shoot.addTransition(new AutoTransition(stop, shoot::atTime));
 
         return start;
     }

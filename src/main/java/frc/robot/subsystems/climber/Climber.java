@@ -49,18 +49,18 @@ public class Climber {
     }
 
     public void driveDownForReset() {
-        climberMotor.set(-0.1);
+        climberMotor.set(-0.3);
     }
 
     public void driveUpForReset() {
-        climberMotor.set(0.1);
+        climberMotor.set(0.3);
     }
 
     public void climb(double targetHeightTicks) {
         if (getPosition() < targetHeightTicks - ClimberConstants.CLIMB_ROTATIONS_TOLERANCE) {
-            climberMotor.set(0.2);
+            climberMotor.set(0.4);
         } else if (getPosition() > targetHeightTicks + ClimberConstants.CLIMB_ROTATIONS_TOLERANCE) {
-            climberMotor.set(-0.2);
+            climberMotor.set(-1);
         } else {
             climberMotor.set(0);
         }

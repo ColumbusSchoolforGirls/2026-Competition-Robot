@@ -2,14 +2,14 @@ package frc.robot;
 
 public class Constants {
 
-    public static final class SwerveConstants { // TODO: Update all chassis related constants for new chassis
+    public static final class SwerveConstants {
         public static final int STATIC_GAIN_DRIVE = 1;
         public static final int VELOCITY_GAIN_DRIVE = 3;
         public static final int STATIC_GAIN_TURN = 1;
         public static final double VELOCITY_GAIN_TURN = 0.5;
 
         public static final double FEED_FORWARD_DRIVE_VELOCITY = 2.25;
-        public static final double FEED_FORWARD_DRIVE_STATIC = .15;
+        public static final double FEED_FORWARD_DRIVE_STATIC = .1;
 
         // The MAXSwerve module can be configured with one of three pinion gears: 12T,
         // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
@@ -70,7 +70,7 @@ public class Constants {
         public static final double DISTANCE_TOLERANCE = 0.05; // meters
 
         // Gyro
-        public static final boolean GYRO_REVERSED = false; // TODO: Maybe doesn't affect anything
+        public static final boolean GYRO_REVERSED = false;
         public static final double STALL_SPEED = 0.1;
 
         public static final double TX_TOLERANCE = 2.0;
@@ -87,7 +87,7 @@ public class Constants {
         public static final double NO_TX = 0;
         public static final double NO_TY = 0;
 
-        public static final double ALIGN_TOLERANCE = 0.5; // TODO: TUNE, MADE UP VALUE
+        public static final double ALIGN_TOLERANCE = 0.5;
     }
 
     public static final class ControllerConstants {
@@ -109,9 +109,10 @@ public class Constants {
 
         public static final int SHOOT_RPM = 3700; // 3700
         public static final double FEEDER_PERCENTAGE_OUTPUT = 1;
-        public static final double VENT_PERCENTAGE_OUTPUT = 0.2;
+        public static final double VENT_PERCENTAGE_OUTPUT = 0.8;
+        public static final double VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT = -0.05;
 
-        public static final int RPM_TOLERANCE = 20; // 100 // TODO: Update, hopefully lower, after tuning the PID
+        public static final int RPM_TOLERANCE = 100;
 
         public static final double FEED_FORWARD_SHOOT_VELOCITY = 0.002;
         public static final double FEED_FORWARD_SHOOT_STATIC = 0.02;
@@ -131,7 +132,7 @@ public class Constants {
 
     public static final class HopperConstants {
         public static final int HOPPER_ID = 23;
-        public static final double HOPPER_PERCENTAGE_OUTPUT = -0.5;
+        public static final double HOPPER_PERCENTAGE_OUTPUT = -0.35;
     }
 
     public static final class ClimberConstants {
@@ -139,7 +140,7 @@ public class Constants {
 
         private static final double PULLEY_CIRCUMFERENCE_INCHES = 0.958 * Math.PI;
         private static final double MAX_HEIGHT_INCHES = 7.2;
-        private static final double CLIMB_HEIGHT_INCHES = 3.7;
+        private static final double CLIMB_HEIGHT_INCHES = 3.1;
         private static final double REST_HEIGHT_INCHES = 0.1;
         public static final double MAX_HEIGHT_ROTATIONS = MAX_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;
         public static final double CLIMB_HEIGHT_ROTATIONS = CLIMB_HEIGHT_INCHES / PULLEY_CIRCUMFERENCE_INCHES * 64;

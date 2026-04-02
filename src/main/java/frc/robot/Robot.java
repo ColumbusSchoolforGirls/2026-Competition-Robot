@@ -5,12 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.robot.Configs.Shooter;
 import frc.robot.auto.AutoStateMachine;
 import frc.robot.auto.states.AbstractAutoState;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.shooter.ShootSystem;
-import frc.robot.subsystems.shooter.ShooterModule;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.climber.Climber;
@@ -18,7 +16,6 @@ import frc.robot.subsystems.limelight.Limelight;
 
 public class Robot extends TimedRobot {
     private final Limelight limelightShoot = new Limelight("limelight-shoot");
-    private final Limelight limelightClimb = new Limelight("limelight-climb");
     private final Drivetrain drivetrain = new Drivetrain();
     private final ShootSystem shootSystem = new ShootSystem();
     private final Intake intake = new Intake();
@@ -26,7 +23,7 @@ public class Robot extends TimedRobot {
     private final Climber climber = new Climber();
     private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
             intake, hopper, climber);
-    private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot);
+    private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot, shootSystem);
 
     @Override
     public void robotInit() {
