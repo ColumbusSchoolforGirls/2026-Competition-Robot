@@ -21,6 +21,11 @@ public class AutoStateShoot extends AbstractAutoState {
     }
 
     @Override
+    public void onStateExit(double periodSeconds) {
+        shootSystem.setShooterState(ShooterState.STOPPED);
+    }
+
+    @Override
     public void action(double periodSeconds) {
         shootSystem.setShooterState(ShooterState.SHOOT);
     }

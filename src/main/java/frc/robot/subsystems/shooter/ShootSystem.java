@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import frc.robot.Configs;
 import frc.robot.Constants.ShooterConstants;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkFlex;
@@ -14,6 +15,10 @@ public class ShootSystem {
     public enum ShooterState {
         STOPPED, REV, SHOOT
     }
+
+    private final SlewRateLimiter shootSpeedLimiter = new SlewRateLimiter(750);
+
+    private boolean runVentAgainstIntake;
 
     private final ShooterModule leftShooter = new ShooterModule(
             ShooterConstants.LEFT_LEAD_ID,
@@ -29,6 +34,7 @@ public class ShootSystem {
 
     public ShootSystem() {
         state = ShooterState.STOPPED;
+        runVentAgainstIntake = false;
 
         ventMotor.configure(
                 Configs.Shooter.ventConfig,
@@ -38,7 +44,6 @@ public class ShootSystem {
 
     public void init() {
         state = ShooterState.STOPPED;
-        cutPower();
     }
 
     public void setShooterState(ShooterState state) {
@@ -47,10 +52,22 @@ public class ShootSystem {
         updateDashboard();
     }
 
-    private void cutPower() {
-        leftShooter.cutPower();
-        rightShooter.cutPower();
-        ventMotor.set(0);
+    // private void cutPower() {
+    // leftShooter.cutPower();
+    // rightShooter.cutPower();
+    // ventMotor.set(0);
+    // }
+
+    public void runVentAgainstIntake(boolean runVentAgainstIntake) {
+        this.runVentAgainstIntake = runVentAgainstIntake;
+    }
+
+    public void ventIn() {
+        ventMotor.set(ShooterConstants.VENT_PERCENTAGE_OUTPUT);
+    }
+
+    public void ventOut() {
+        ventMotor.set(-ShooterConstants.VENT_PERCENTAGE_OUTPUT);
     }
 
     public void updateDashboard() {
@@ -67,12 +84,11 @@ public class ShootSystem {
     }
 
     private void setMotors() {
-        leftShooter.setShooterRPM(determineShooterRPM());
-        rightShooter.setShooterRPM(determineShooterRPM());
+        leftShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM()));
+        rightShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM()));
         leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
         rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
         ventMotor.set(determineVentPercentageOutput());
-        System.out.println("Setting left shooter to: " + determineShooterRPM());
     }
 
     private double determineShooterRPM() {
@@ -83,11 +99,7 @@ public class ShootSystem {
     }
 
     private double determineFeederPercentageOutput(ShooterModule shooter) {
-        // if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
-        // return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
-        // }
-
-        if (this.state == ShooterState.SHOOT) {
+        if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         }
 
@@ -97,6 +109,8 @@ public class ShootSystem {
     private double determineVentPercentageOutput() {
         if (this.state == ShooterState.SHOOT) {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
+        } else if (runVentAgainstIntake) {
+            return ShooterConstants.VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT;
         }
         return 0.0;
     }
