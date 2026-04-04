@@ -12,6 +12,7 @@ import frc.robot.auto.states.AutoTransition;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.subsystems.shooter.ShootSystem;
+import frc.robot.subsystems.hopper.Hopper;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -19,13 +20,15 @@ public class AutoStateMachine {
     private Drivetrain drivetrain;
     public AbstractAutoState currentAutoState;
     private Limelight limelight;
+    private Hopper hopper;
     private ShootSystem shootSystem;
 
-    public AutoStateMachine(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem) {
+    public AutoStateMachine(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Hopper hopper) {
         this.drivetrain = drivetrain;
         this.currentAutoState = null;
         this.limelight = limelight;
         this.shootSystem = shootSystem;
+        this.hopper = hopper;
     }
 
     public enum StartingPosition {
@@ -47,9 +50,9 @@ public class AutoStateMachine {
         tab.add(chooserName, chooser).withSize(w, h).withPosition(x, y);
     }
 
-    private boolean getIfSelected(GenericEntry entry) {
-        return entry.getBoolean(false);
-    }
+    // private boolean getIfSelected(GenericEntry entry) {
+    // return entry.getBoolean(false);
+    // }
 
     public void autoShuffleboardStartup() {
         createChooser(positionChooser, StartingPosition.values(), "Start Position", 2, 1, 0, 0);
@@ -63,8 +66,8 @@ public class AutoStateMachine {
         // Set up all your States
         AutoStateStop start = new AutoStateStop(drivetrain);
 
-        AutoStateDrive drive = new AutoStateDrive(1.5, 0, 0, drivetrain, 0.8);
-        AutoStateShoot shoot = new AutoStateShoot(shootSystem, 10);
+        AutoStateDrive drive = new AutoStateDrive(1.17, 0, 0, drivetrain, -0.7);
+        AutoStateShoot shoot = new AutoStateShoot(shootSystem, hopper, 5);
         AutoStateStop stop = new AutoStateStop(drivetrain);
 
         // Set up all your transitions

@@ -16,14 +16,15 @@ import frc.robot.subsystems.limelight.Limelight;
 
 public class Robot extends TimedRobot {
     private final Limelight limelightShoot = new Limelight("limelight-shoot");
-    private final Drivetrain drivetrain = new Drivetrain();
+    private final Drivetrain drivetrain = new Drivetrain(limelightShoot);
     private final ShootSystem shootSystem = new ShootSystem();
     private final Intake intake = new Intake();
     private final Hopper hopper = new Hopper();
     private final Climber climber = new Climber();
     private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
             intake, hopper, climber);
-    private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot, shootSystem);
+    private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot, shootSystem,
+            hopper);
 
     @Override
     public void robotInit() {

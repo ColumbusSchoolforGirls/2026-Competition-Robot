@@ -58,7 +58,8 @@ public class Drivetrain {
 
     private final SwerveDriveOdometry odometry;
 
-    public Drivetrain() {
+    public Drivetrain(Limelight limelight) {
+        this.limelight = limelight;
         if (RobotSpecificConstants.ROBOT_NAME == RobotSpecificConstants.RobotName.UNNAMED_2026_ROBOT) {
             frontLeftLocation = new Translation2d(RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
                     -RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
