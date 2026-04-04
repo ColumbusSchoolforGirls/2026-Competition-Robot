@@ -19,6 +19,7 @@ public class ShootSystem {
     private final SlewRateLimiter shootSpeedLimiter = new SlewRateLimiter(750);
 
     private boolean runVentAgainstIntake;
+    private boolean runVentToExpelIntake;
 
     private final ShooterModule leftShooter = new ShooterModule(
             ShooterConstants.LEFT_LEAD_ID,
@@ -35,6 +36,7 @@ public class ShootSystem {
     public ShootSystem() {
         state = ShooterState.STOPPED;
         runVentAgainstIntake = false;
+        runVentToExpelIntake = false;
 
         ventMotor.configure(
                 Configs.Shooter.ventConfig,
@@ -52,22 +54,12 @@ public class ShootSystem {
         updateDashboard();
     }
 
-    // private void cutPower() {
-    // leftShooter.cutPower();
-    // rightShooter.cutPower();
-    // ventMotor.set(0);
-    // }
-
     public void runVentAgainstIntake(boolean runVentAgainstIntake) {
         this.runVentAgainstIntake = runVentAgainstIntake;
     }
 
-    public void ventIn() {
-        ventMotor.set(ShooterConstants.VENT_PERCENTAGE_OUTPUT);
-    }
-
-    public void ventOut() {
-        ventMotor.set(-ShooterConstants.VENT_PERCENTAGE_OUTPUT);
+    public void runVentToExpelIntake(boolean runVentToExpelIntake) {
+        this.runVentToExpelIntake = runVentToExpelIntake;
     }
 
     public void updateDashboard() {
@@ -85,10 +77,14 @@ public class ShootSystem {
 
     private void setMotors() {
         leftShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM()));
-        rightShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM()));
+        rightShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM() - 100));
         leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
         rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
         ventMotor.set(determineVentPercentageOutput());
+    }
+
+    public void autoSetVent() {
+        ventMotor.set(ShooterConstants.VENT_PERCENTAGE_OUTPUT);
     }
 
     private double determineShooterRPM() {
@@ -111,6 +107,8 @@ public class ShootSystem {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         } else if (runVentAgainstIntake) {
             return ShooterConstants.VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT;
+        } else if (runVentToExpelIntake) {
+            return ShooterConstants.VENT_EXPEL_INTAKE_PERCENTAGE_OUTPUT;
         }
         return 0.0;
     }

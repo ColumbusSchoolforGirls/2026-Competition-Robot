@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.XboxController;
  *         - Right Trigger (Hold): Shoot
  *     * Intake
  *         - Left Trigger (Hold): Intake
+ *         - Y Button (Hold): Empty Intake
  *         - X Button (Press): Deploy Intake
  *         - B Button (Press): Retract Intake
  *     NOTE: The hopper automatically runs during intaking and shooting.
@@ -61,6 +62,7 @@ public class JoystickControls {
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
+    private boolean runHopperToExpel = false;
 
     public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake,
             Hopper hopper, Climber climber) {
@@ -105,6 +107,10 @@ public class JoystickControls {
 
         if (DRIVE_CONTROLLER.getAButton()) {
             drivetrain.autoAlign(periodSeconds);
+        }
+
+        if (DRIVE_CONTROLLER.getLeftStickButtonPressed()) {
+            fieldRelative = !fieldRelative;
         }
 
         drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
@@ -165,27 +171,45 @@ public class JoystickControls {
         shootSystem.setShooterState(shootState);
 
         if (AUX.getYButton()) {
-            shootSystem.ventOut(); // expel balls from vent
+            shootSystem.runVentToExpelIntake(true); // expel balls from vent
+        } else {
+            shootSystem.runVentToExpelIntake(false);
+            shootSystem.setShooterState(shootState);
         }
     }
 
     public void intake() {
         boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
+        runHopperToExpel = AUX.getYButton();
         runHopperForIntaking = false;
-        shootSystem.runVentAgainstIntake(runRoller);
 
         if (AUX.getXButton()) {
             intake.deploy();
         } else if (AUX.getBButton()) {
             intake.retract();
+            runRoller = true;
         } else {
             intake.stop();
         }
-        intake.runRoller(runRoller);
+        if (runRoller) {
+            intake.runRoller(runRoller);
+            shootSystem.runVentAgainstIntake(runRoller);
+        } else if (runHopperToExpel) {
+            intake.emptyRoller(runHopperToExpel);
+            hopper.expelHopper(runHopperToExpel);
+            shootSystem.runVentToExpelIntake(true);
+        } else {
+            shootSystem.runVentAgainstIntake(false);
+            shootSystem.runVentToExpelIntake(false);
+            intake.stopRoller();
+        }
+
     }
 
     public void hopper() {
-        hopper.runHopper(runHopperForIntaking || runHopperForShooting);
+        if (!runHopperToExpel) {
+            hopper.runHopper(runHopperForIntaking || runHopperForShooting);
+        }
     }
 
     public void climber() {

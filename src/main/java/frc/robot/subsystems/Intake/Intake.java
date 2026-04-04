@@ -79,9 +79,21 @@ public class Intake {
         rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
     }
 
+    public void stopRoller() {
+        rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
+    }
+
     public void runRoller(boolean runRoller) {
         if (runRoller) {
             rollerMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.ROLLER_PERCENTAGE_OUTPUT);
+        } else {
+            rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
+        }
+    }
+
+    public void emptyRoller(boolean emptyRoller) {
+        if (emptyRoller) {
+            rollerMotor.set(VictorSPXControlMode.PercentOutput, -IntakeConstants.ROLLER_PERCENTAGE_OUTPUT);
         } else {
             rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
         }

@@ -9,13 +9,22 @@ public class Hopper {
 
     private final VictorSPX hopperMotor = new VictorSPX(HopperConstants.HOPPER_ID);
 
-    public Hopper() {}
+    public Hopper() {
+    }
 
     public void runHopper(boolean running) {
         if (running) {
             hopperMotor.set(VictorSPXControlMode.PercentOutput, HopperConstants.HOPPER_PERCENTAGE_OUTPUT);
         } else {
-            hopperMotor.set(VictorSPXControlMode.PercentOutput,0);
+            hopperMotor.set(VictorSPXControlMode.PercentOutput, 0);
+        }
+    }
+
+    public void expelHopper(boolean expel) {
+        if (expel) {
+            hopperMotor.set(VictorSPXControlMode.PercentOutput, HopperConstants.HOPPER_PERCENTAGE_EXPEL_OUTPUT);
+        } else {
+            hopperMotor.set(VictorSPXControlMode.PercentOutput, 0);
         }
     }
 }

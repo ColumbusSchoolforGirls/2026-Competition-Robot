@@ -109,8 +109,9 @@ public class Constants {
 
         public static final int SHOOT_RPM = 3700; // 3700
         public static final double FEEDER_PERCENTAGE_OUTPUT = 1;
-        public static final double VENT_PERCENTAGE_OUTPUT = 0.8;
+        public static final double VENT_PERCENTAGE_OUTPUT = 1;
         public static final double VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT = -0.05;
+        public static final double VENT_EXPEL_INTAKE_PERCENTAGE_OUTPUT = -1;
 
         public static final int RPM_TOLERANCE = 100;
 
@@ -124,15 +125,16 @@ public class Constants {
         public static final int RETRACTED_LIMIT_SWITCH_CHANNEL = 9;
 
         public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.04;
-        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.12;
-        public static final double ROLLER_PERCENTAGE_OUTPUT = -0.5;
+        public static final double RETRACT_PERCENTAGE_OUTPUT = -0.13;
+        public static final double ROLLER_PERCENTAGE_OUTPUT = -0.85;
 
-        public static final double DEPLOYED_ROTATIONS_DISTANCE = 1.5;
+        public static final double DEPLOYED_ROTATIONS_DISTANCE = 1.6;
     }
 
     public static final class HopperConstants {
         public static final int HOPPER_ID = 23;
-        public static final double HOPPER_PERCENTAGE_OUTPUT = -0.35;
+        public static final double HOPPER_PERCENTAGE_OUTPUT = -0.6;
+        public static final double HOPPER_PERCENTAGE_EXPEL_OUTPUT = 0.8;
     }
 
     public static final class ClimberConstants {
