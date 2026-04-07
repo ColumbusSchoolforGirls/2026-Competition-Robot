@@ -41,11 +41,15 @@ import edu.wpi.first.wpilibj.XboxController;
  *     - Right Bumper (Press): Toggle climber brake/coast mode
  *     - B Button (Hold): Drive climber down
  *     - Y Button (Hold): Drive climber up
+ * 
+ * SYSTEM TEST CONTROLLER:
+ * 
  */
 public class JoystickControls {
-    private static final XboxController DRIVE_CONTROLLER = new XboxController(0);
-    public static final XboxController AUX = new XboxController(1);
-    public static final XboxController RESET_CONTROLLER = new XboxController(2);
+    private final XboxController DRIVE_CONTROLLER = new XboxController(0); // TODO: Is static needed here?
+    private final XboxController AUX = new XboxController(1);
+    private final XboxController RESET_CONTROLLER = new XboxController(2);
+    private final XboxController SYSTEM_TEST_CONTROLLER = new XboxController(3);
 
     private final Drivetrain drivetrain;
     private final Limelight limelight;
@@ -54,12 +58,13 @@ public class JoystickControls {
     private final Hopper hopper;
     private final Climber climber;
 
+    // TODO: Tune the limits (probably higher to prevent burnout)
     private final SlewRateLimiter xspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
-    private boolean fieldRelative = true;
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
+    private boolean fieldRelative = true;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
     private boolean runHopperToExpel = false;
