@@ -53,7 +53,8 @@ public class Configs {
     public static final class Shooter {
         public static final SparkMaxConfig shooterConfig = new SparkMaxConfig();
         public static final SparkMaxConfig shooterFollowerConfig = new SparkMaxConfig();
-        public static final SparkMaxConfig feederConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig leftFeedConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig rightFeedConfig = new SparkMaxConfig();
         public static final SparkFlexConfig ventConfig = new SparkFlexConfig();
 
         static {
@@ -72,8 +73,18 @@ public class Configs {
             // .maxAcceleration(10000)
             // .allowedProfileError(1);
 
-            ventConfig
+            leftFeedConfig
+                    .inverted(false)
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(1.0)
+                    .smartCurrentLimit(20);
+            rightFeedConfig
                     .inverted(true)
+                    .idleMode(IdleMode.kBrake)
+                    .openLoopRampRate(1.0)
+                    .smartCurrentLimit(20);
+            ventConfig
+                    .inverted(false)
                     .idleMode(IdleMode.kBrake)
                     .openLoopRampRate(1.0)
                     .smartCurrentLimit(20);

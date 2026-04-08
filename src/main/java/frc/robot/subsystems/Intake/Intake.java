@@ -91,7 +91,7 @@ public class Intake {
         }
     }
 
-    public void emptyRoller(boolean emptyRoller) {
+    public void expelSystem(boolean emptyRoller) {
         if (emptyRoller) {
             rollerMotor.set(VictorSPXControlMode.PercentOutput, -IntakeConstants.ROLLER_PERCENTAGE_OUTPUT);
         } else {

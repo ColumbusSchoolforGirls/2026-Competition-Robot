@@ -6,6 +6,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
@@ -19,16 +20,16 @@ public class ShootSystem {
     private final SlewRateLimiter shootSpeedLimiter = new SlewRateLimiter(750);
 
     private boolean runVentAgainstIntake;
-    private boolean runVentToExpelIntake;
+    private boolean expelSystem;
 
     private final ShooterModule leftShooter = new ShooterModule(
             ShooterConstants.LEFT_LEAD_ID,
-            ShooterConstants.LEFT_FOLLOWER_ID,
-            ShooterConstants.LEFT_FEEDER_ID);
+            ShooterConstants.LEFT_FOLLOWER_ID);
     private final ShooterModule rightShooter = new ShooterModule(
             ShooterConstants.RIGHT_LEAD_ID,
-            ShooterConstants.RIGHT_FOLLOWER_ID,
-            ShooterConstants.RIGHT_FEEDER_ID);
+            ShooterConstants.RIGHT_FOLLOWER_ID);
+    private final SparkMax leftFeedMotor = new SparkMax(ShooterConstants.LEFT_FEEDER_ID, MotorType.kBrushless);
+    private final SparkMax rightFeedMotor = new SparkMax(ShooterConstants.RIGHT_FEEDER_ID, MotorType.kBrushless);
     private final SparkFlex ventMotor = new SparkFlex(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
     private ShooterState state;
@@ -36,10 +37,16 @@ public class ShootSystem {
     public ShootSystem() {
         state = ShooterState.STOPPED;
         runVentAgainstIntake = false;
-        runVentToExpelIntake = false;
+        expelSystem = false;
 
         ventMotor.configure(
                 Configs.Shooter.ventConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
+        leftFeedMotor.configure(Configs.Shooter.leftFeedConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters);
+        rightFeedMotor.configure(Configs.Shooter.rightFeedConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
     }
@@ -58,8 +65,8 @@ public class ShootSystem {
         this.runVentAgainstIntake = runVentAgainstIntake;
     }
 
-    public void runVentToExpelIntake(boolean runVentToExpelIntake) {
-        this.runVentToExpelIntake = runVentToExpelIntake;
+    public void expelSystem(boolean runVentToExpelIntake) {
+        this.expelSystem = runVentToExpelIntake;
     }
 
     public void updateDashboard() {
@@ -78,8 +85,8 @@ public class ShootSystem {
     private void setMotors() {
         leftShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM()));
         rightShooter.setShooterRPM(shootSpeedLimiter.calculate(determineShooterRPM() - 100));
-        leftShooter.setFeeder(determineFeederPercentageOutput(leftShooter));
-        rightShooter.setFeeder(determineFeederPercentageOutput(rightShooter));
+        leftFeedMotor.set(determineFeederPercentageOutput(leftShooter));
+        rightFeedMotor.set(determineFeederPercentageOutput(rightShooter));
         ventMotor.set(determineVentPercentageOutput());
     }
 
@@ -97,6 +104,8 @@ public class ShootSystem {
     private double determineFeederPercentageOutput(ShooterModule shooter) {
         if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
+        } else if (expelSystem) {
+            return -ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         }
 
         return 0.0;
@@ -107,7 +116,7 @@ public class ShootSystem {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         } else if (runVentAgainstIntake) {
             return ShooterConstants.VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT;
-        } else if (runVentToExpelIntake) {
+        } else if (expelSystem) {
             return ShooterConstants.VENT_EXPEL_INTAKE_PERCENTAGE_OUTPUT;
         }
         return 0.0;
