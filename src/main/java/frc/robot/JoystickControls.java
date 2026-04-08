@@ -67,7 +67,7 @@ public class JoystickControls {
     private boolean fieldRelative = true;
     private boolean runHopperForIntaking = false;
     private boolean runHopperForShooting = false;
-    private boolean runHopperToExpel = false;
+    private boolean expelSystem = false;
 
     public JoystickControls(Drivetrain drivetrain, Limelight limelight, ShootSystem shootSystem, Intake intake,
             Hopper hopper, Climber climber) {
@@ -173,19 +173,18 @@ public class JoystickControls {
         // }
 
         runHopperForShooting = shootState == ShootSystem.ShooterState.SHOOT;
-        shootSystem.setShooterState(shootState);
 
         if (AUX.getYButton()) {
-            shootSystem.runVentToExpelIntake(true); // expel balls from vent
+            shootSystem.expelSystem(true); // expel balls from vent
         } else {
-            shootSystem.runVentToExpelIntake(false);
+            shootSystem.expelSystem(false);
             shootSystem.setShooterState(shootState);
         }
     }
 
     public void intake() {
         boolean runRoller = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
-        runHopperToExpel = AUX.getYButton();
+        expelSystem = AUX.getYButton();
         runHopperForIntaking = false;
 
         if (AUX.getXButton()) {
@@ -199,20 +198,18 @@ public class JoystickControls {
         if (runRoller) {
             intake.runRoller(runRoller);
             shootSystem.runVentAgainstIntake(runRoller);
-        } else if (runHopperToExpel) {
-            intake.emptyRoller(runHopperToExpel);
-            hopper.expelHopper(runHopperToExpel);
-            shootSystem.runVentToExpelIntake(true);
+        } else if (expelSystem) {
+            intake.expelSystem(expelSystem);
         } else {
-            shootSystem.runVentAgainstIntake(false);
-            shootSystem.runVentToExpelIntake(false);
             intake.stopRoller();
         }
 
     }
 
     public void hopper() {
-        if (!runHopperToExpel) {
+        if (expelSystem) {
+            hopper.expelHopper(expelSystem);
+        } else {
             hopper.runHopper(runHopperForIntaking || runHopperForShooting);
         }
     }

@@ -7,8 +7,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.RelativeEncoder;
@@ -19,13 +17,11 @@ public class ShooterModule {
 
     private final SparkMax leadMotor;
     private final SparkMax followerMotor;
-    private final PWMMotorController feedMotor;
     private final SparkClosedLoopController leadPidController;
 
-    public ShooterModule(int leadMotorID, int followerMotorID, int feedMotorID) {
+    public ShooterModule(int leadMotorID, int followerMotorID) {
         leadMotor = new SparkMax(leadMotorID, MotorType.kBrushless);
         followerMotor = new SparkMax(followerMotorID, MotorType.kBrushless);
-        feedMotor = new Talon(feedMotorID);
 
         leadPidController = leadMotor.getClosedLoopController();
 
@@ -57,14 +53,5 @@ public class ShooterModule {
 
     public void setShooterRPM(double speed) {
         leadPidController.setSetpoint(speed, ControlType.kVelocity);
-    }
-
-    public void cutPower() {
-        leadMotor.set(0);
-        feedMotor.set(0);
-    }
-
-    public void setFeeder(double percentageOutput) {
-        feedMotor.set(percentageOutput);
     }
 }
