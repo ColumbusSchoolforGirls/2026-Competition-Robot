@@ -1,10 +1,7 @@
 package frc.robot.auto;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
 import frc.robot.auto.states.AbstractAutoState;
-import frc.robot.auto.states.AutoStateAlign;
 import frc.robot.auto.states.AutoStateDrive;
 import frc.robot.auto.states.AutoStateShoot;
 import frc.robot.auto.states.AutoStateStop;
@@ -13,8 +10,8 @@ import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.limelight.Limelight;
 import frc.robot.subsystems.shooter.ShootSystem;
 import frc.robot.subsystems.hopper.Hopper;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoStateMachine {
     private Drivetrain drivetrain;
@@ -35,31 +32,18 @@ public class AutoStateMachine {
         LEFT, MIDDLE, RIGHT // from drive station persepctive
     }
 
-    // Shuffleboard
-    ShuffleboardTab tab = Shuffleboard.getTab("Auto");
-    GenericEntry leaveOnly, toHub, toClimb;
+    // SmartDashboard Choosers (theoretically)
+    // SmartDashboard.putData("Button Name", new Command());
+    // //TODO: I WANT THIS FOR SHOOTING BUT WILL RUIN A LOT OF THINGS
 
     private final SendableChooser<StartingPosition> positionChooser = new SendableChooser<>();
 
-    private <K extends Enum<K>> void createChooser(SendableChooser<K> chooser, K[] values, String chooserName, int w,
-            int h, int x, int y) {
-        for (K value : values) {
-            chooser.addOption(value.name(), value);
-        }
-        // SmartDashboard.putData(chooserName, chooser);
-        tab.add(chooserName, chooser).withSize(w, h).withPosition(x, y);
-    }
+    public void autoDashboardStartup() {
+        positionChooser.setDefaultOption("Middle", StartingPosition.MIDDLE);
+        positionChooser.addOption("Left", StartingPosition.LEFT);
+        positionChooser.addOption("Right", StartingPosition.RIGHT);
 
-    // private boolean getIfSelected(GenericEntry entry) {
-    // return entry.getBoolean(false);
-    // }
-
-    public void autoShuffleboardStartup() {
-        createChooser(positionChooser, StartingPosition.values(), "Start Position", 2, 1, 0, 0);
-
-        leaveOnly = tab.add("LEAVE ONLY", false).withWidget("Toggle Button").withSize(2, 1).withPosition(2, 0)
-                .getEntry();
-
+        SmartDashboard.putData("Starting Position", positionChooser);
     }
 
     public AbstractAutoState buildPath() {
@@ -93,5 +77,4 @@ public class AutoStateMachine {
         }
         currentAutoState.action(periodSeconds);
     }
-
 }

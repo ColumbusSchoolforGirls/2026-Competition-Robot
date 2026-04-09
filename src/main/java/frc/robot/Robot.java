@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        autoStateMachine.autoDashboardStartup();
         drivetrain.driveInit();
         climber.robotInit();
         intake.robotInit();
