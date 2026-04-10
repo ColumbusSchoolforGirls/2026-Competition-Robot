@@ -1,15 +1,15 @@
 package frc.robot.subsystems.shooter;
 
-import frc.robot.Configs;
-import frc.robot.Constants.ShooterConstants;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Configs;
+import frc.robot.Constants.ShooterConstants;
 
 public class ShootSystem {
 
@@ -17,7 +17,7 @@ public class ShootSystem {
         STOPPED, REV, SHOOT
     }
 
-    private final SlewRateLimiter shootSpeedLimiter = new SlewRateLimiter(750);
+    private final SlewRateLimiter shootSpeedLimiter = new SlewRateLimiter(900);
 
     private boolean runVentAgainstIntake;
     private boolean expelSystem;
@@ -28,9 +28,9 @@ public class ShootSystem {
     private final ShooterModule rightShooter = new ShooterModule(
             ShooterConstants.RIGHT_LEAD_ID,
             ShooterConstants.RIGHT_FOLLOWER_ID);
-    private final SparkMax leftFeedMotor = new SparkMax(ShooterConstants.LEFT_FEEDER_ID, MotorType.kBrushless);
-    private final SparkMax rightFeedMotor = new SparkMax(ShooterConstants.RIGHT_FEEDER_ID, MotorType.kBrushless);
-    private final SparkFlex ventMotor = new SparkFlex(ShooterConstants.VENT_ID, MotorType.kBrushless);
+    private final SparkMax leftFeedMotor;
+    private final SparkMax rightFeedMotor;
+    private final SparkFlex ventMotor;
 
     private ShooterState state;
 
@@ -38,6 +38,10 @@ public class ShootSystem {
         state = ShooterState.STOPPED;
         runVentAgainstIntake = false;
         expelSystem = false;
+
+        leftFeedMotor = new SparkMax(ShooterConstants.LEFT_FEEDER_ID, MotorType.kBrushless);
+        rightFeedMotor = new SparkMax(ShooterConstants.RIGHT_FEEDER_ID, MotorType.kBrushless);
+        ventMotor = new SparkFlex(ShooterConstants.VENT_ID, MotorType.kBrushless);
 
         ventMotor.configure(
                 Configs.Shooter.ventConfig,
@@ -55,6 +59,10 @@ public class ShootSystem {
         state = ShooterState.STOPPED;
     }
 
+    public void periodic() {
+        updateDashboard();
+    }
+
     public void setShooterState(ShooterState state) {
         this.state = state;
         setMotors();
@@ -65,21 +73,8 @@ public class ShootSystem {
         this.runVentAgainstIntake = runVentAgainstIntake;
     }
 
-    public void expelSystem(boolean runVentToExpelIntake) {
-        this.expelSystem = runVentToExpelIntake;
-    }
-
-    public void updateDashboard() {
-        SmartDashboard.putString("ShooterState", state.toString());
-        SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getShooterRPM());
-        SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getShooterRPM());
-        SmartDashboard.putBoolean("Left Shooter At Speed", isAtSpeed(leftShooter));
-        SmartDashboard.putBoolean("Right Shooter At Speed", isAtSpeed(rightShooter));
-
-        SmartDashboard.putNumber("Right Lead Shoot Velocity", rightShooter.getLeadMotor().getEncoder().getVelocity());
-        SmartDashboard.putNumber("Right Lead Shoot Voltage",
-                rightShooter.getLeadMotor().getAppliedOutput() * rightShooter.getLeadMotor().getBusVoltage());
-
+    public void expelSystem(boolean expelSystem) {
+        this.expelSystem = expelSystem;
     }
 
     private void setMotors() {
@@ -107,12 +102,11 @@ public class ShootSystem {
         } else if (expelSystem) {
             return -ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         }
-
         return 0.0;
     }
 
     private double determineVentPercentageOutput() {
-        if (this.state == ShooterState.SHOOT) {
+        if (this.state == ShooterState.SHOOT && (isAtSpeed(leftShooter) || isAtSpeed(rightShooter))) {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         } else if (runVentAgainstIntake) {
             return ShooterConstants.VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT;
@@ -125,5 +119,21 @@ public class ShootSystem {
     private boolean isAtSpeed(ShooterModule shooter) {
         return shooter.getShooterRPM() >= ShooterConstants.SHOOT_RPM - ShooterConstants.RPM_TOLERANCE
                 && shooter.getShooterRPM() <= ShooterConstants.SHOOT_RPM + ShooterConstants.RPM_TOLERANCE;
+    }
+
+    private void updateDashboard() {
+        SmartDashboard.putString("ShooterState", state.toString());
+        SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getShooterRPM());
+        SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getShooterRPM());
+        SmartDashboard.putBoolean("Left Shooter At Speed", isAtSpeed(leftShooter));
+        SmartDashboard.putBoolean("Right Shooter At Speed", isAtSpeed(rightShooter));
+
+        SmartDashboard.putNumber("Right Lead Shoot Velocity", rightShooter.getLeadMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("Right Lead Shoot Voltage",
+                rightShooter.getLeadMotor().getAppliedOutput() * rightShooter.getLeadMotor().getBusVoltage());
+
+        SmartDashboard.putNumber("Right Feeder Output", rightFeedMotor.get());
+        SmartDashboard.putNumber("Left Feeder Output", leftFeedMotor.get());
+        SmartDashboard.putBoolean("EXPELING", expelSystem);
     }
 }

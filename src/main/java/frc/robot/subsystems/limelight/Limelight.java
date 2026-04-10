@@ -29,7 +29,10 @@ public class Limelight {
         pos = table.getEntry("camera-pose_targetspace"); // 3D translation and rotations?
         pos1 = table.getEntry("target-pose_cameraspace");
         pos2 = table.getEntry("target-pose_robotspace");
+    }
 
+    public void periodic() {
+        updateLimelightDashboard();
     }
 
     // simple proportional turning control with Limelight.
@@ -118,7 +121,7 @@ public class Limelight {
         return (tv.getDouble(0) == 1);
     }
 
-    public void updateLimelightDashboard() {
+    private void updateLimelightDashboard() {
         SmartDashboard.putNumber("LimelightTX", getTX());
         SmartDashboard.putNumber("LimelightTY", getTY());
         SmartDashboard.putNumber("LimelightTA", getTA());

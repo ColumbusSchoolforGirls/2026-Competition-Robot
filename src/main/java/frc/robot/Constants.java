@@ -107,9 +107,9 @@ public class Constants {
 
         public static final int VENT_ID = 21;
 
-        public static final int SHOOT_RPM = 3700; // 3700
-        public static final double FEEDER_PERCENTAGE_OUTPUT = 0.7;
-        public static final double VENT_PERCENTAGE_OUTPUT = 1;
+        public static final int SHOOT_RPM = 3700;
+        public static final double FEEDER_PERCENTAGE_OUTPUT = 1;
+        public static final double VENT_PERCENTAGE_OUTPUT = 0.9;
         public static final double VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT = -0.05;
         public static final double VENT_EXPEL_INTAKE_PERCENTAGE_OUTPUT = -1;
 

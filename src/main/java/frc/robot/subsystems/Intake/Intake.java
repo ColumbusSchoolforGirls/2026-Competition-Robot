@@ -19,7 +19,8 @@ public class Intake {
     private final RelativeEncoder deployEncoder;
     private final DigitalInput retractedLimitSwitch;
 
-    private boolean driving;
+    private boolean rollersRunning;
+    private boolean expelSystem;
 
     public Intake() {
         deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
@@ -46,57 +47,52 @@ public class Intake {
         updateDashboard();
     }
 
-    public void updateDashboard() {
-        SmartDashboard.putBoolean("IntakeRetracted", isRetracted());
-        SmartDashboard.putNumber("RollerMotorPercent", rollerMotor.getMotorOutputPercent());
-        SmartDashboard.putNumber("Intake Rotations", deployEncoder.getPosition());
-        SmartDashboard.putBoolean("Intake Running", driving);
+    public void setIntakeRollers() {
+        rollerMotor.set(VictorSPXControlMode.PercentOutput, determineRollerOutput());
+    }
 
+    public void stopDeploy() {
+        deployMotor.set(0);
+    }
+
+    public void runRollers(boolean rollersRunning) {
+        this.rollersRunning = rollersRunning;
+    }
+
+    public void expelSystem(boolean expelSystem) {
+        this.expelSystem = expelSystem;
     }
 
     public void deploy() {
         if (!isDeployed()) {
             deployMotor.set(IntakeConstants.DEPLOY_PERCENTAGE_OUTPUT);
-            driving = true;
+            rollersRunning = true;
         } else {
             deployMotor.set(0);
-            driving = false;
+            rollersRunning = false;
         }
     }
 
     public void retract() {
         if (!isRetracted()) {
             deployMotor.set(IntakeConstants.RETRACT_PERCENTAGE_OUTPUT);
-            driving = true;
+            rollersRunning = true;
         } else {
             deployMotor.set(0);
-            driving = false;
+            rollersRunning = false;
         }
     }
 
-    public void stop() {
+    private void updateDashboard() {
+        SmartDashboard.putBoolean("IntakeRetracted", isRetracted());
+        SmartDashboard.putNumber("RollerMotorPercent", rollerMotor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Intake Rotations", deployEncoder.getPosition());
+        SmartDashboard.putBoolean("Intake Running", rollersRunning);
+    }
+
+    private void stop() {
         deployMotor.set(0);
         rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
-    }
-
-    public void stopRoller() {
-        rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
-    }
-
-    public void runRoller(boolean runRoller) {
-        if (runRoller) {
-            rollerMotor.set(VictorSPXControlMode.PercentOutput, IntakeConstants.ROLLER_PERCENTAGE_OUTPUT);
-        } else {
-            rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
-        }
-    }
-
-    public void expelSystem(boolean emptyRoller) {
-        if (emptyRoller) {
-            rollerMotor.set(VictorSPXControlMode.PercentOutput, -IntakeConstants.ROLLER_PERCENTAGE_OUTPUT);
-        } else {
-            rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
-        }
     }
 
     private boolean isDeployed() {
@@ -110,5 +106,14 @@ public class Intake {
             return true;
         }
         return false;
+    }
+
+    private double determineRollerOutput() {
+        if (rollersRunning) {
+            return IntakeConstants.ROLLER_PERCENTAGE_OUTPUT;
+        } else if (expelSystem) {
+            return -IntakeConstants.ROLLER_PERCENTAGE_OUTPUT;
+        }
+        return 0;
     }
 }
