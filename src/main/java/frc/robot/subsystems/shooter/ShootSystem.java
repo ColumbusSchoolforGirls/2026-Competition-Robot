@@ -90,14 +90,19 @@ public class ShootSystem {
     }
 
     private double determineShooterRPM() {
-        if (this.state == ShooterState.SHOOT || this.state == ShooterState.REV) {
-            return ShooterConstants.SHOOT_RPM;
-        }
+        // if (this.state == ShooterState.SHOOT || this.state == ShooterState.REV) {
+        // return ShooterConstants.SHOOT_RPM;
+        // }
         return 0.0;
     }
 
     private double determineFeederPercentageOutput(ShooterModule shooter) {
-        if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
+        // if (this.state == ShooterState.SHOOT && isAtSpeed(shooter)) {
+        // return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
+        // } else if (expelSystem) {
+        // return -ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
+        // }
+        if (this.state == ShooterState.SHOOT) {
             return ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
         } else if (expelSystem) {
             return -ShooterConstants.FEEDER_PERCENTAGE_OUTPUT;
@@ -106,7 +111,15 @@ public class ShootSystem {
     }
 
     private double determineVentPercentageOutput() {
-        if (this.state == ShooterState.SHOOT && (isAtSpeed(leftShooter) || isAtSpeed(rightShooter))) {
+        // if (this.state == ShooterState.SHOOT && (isAtSpeed(leftShooter) ||
+        // isAtSpeed(rightShooter))) {
+        // return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
+        // } else if (runVentAgainstIntake) {
+        // return ShooterConstants.VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT;
+        // } else if (expelSystem) {
+        // return ShooterConstants.VENT_EXPEL_INTAKE_PERCENTAGE_OUTPUT;
+        // }
+        if (this.state == ShooterState.SHOOT) {
             return ShooterConstants.VENT_PERCENTAGE_OUTPUT;
         } else if (runVentAgainstIntake) {
             return ShooterConstants.VENT_AGAINST_INTAKE_PRECENTAGE_OUTPUT;
