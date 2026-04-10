@@ -21,14 +21,14 @@ public class Robot extends TimedRobot {
     private final Intake intake = new Intake();
     private final Hopper hopper = new Hopper();
     private final Climber climber = new Climber();
-    private final JoystickControls joystickControls = new JoystickControls(drivetrain, limelightShoot, shootSystem,
+    private final JoystickControls joystickControls = new JoystickControls(drivetrain, shootSystem,
             intake, hopper, climber);
     private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot, shootSystem,
             hopper);
 
     @Override
     public void robotInit() {
-        drivetrain.driveInit();
+        drivetrain.robotInit();
         climber.robotInit();
         intake.robotInit();
         shootSystem.init();
@@ -36,20 +36,18 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        limelightShoot.updateLimelightDashboard();
+        limelightShoot.periodic();
         drivetrain.periodic();
-        drivetrain.updateDashboard();
-        shootSystem.updateDashboard();
-        climber.updateDashboard();
-        intake.updateDashboard();
+        shootSystem.periodic();
+        climber.periodic();
+        intake.periodic();
 
     }
 
     @Override
     public void autonomousInit() {
         intake.stageInit();
-        drivetrain.setBrakeMode();
-        drivetrain.resetRelativeTurnEncoders();
+        drivetrain.stageInit();
         shootSystem.init();
         joystickControls.init();
     }
@@ -64,26 +62,23 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         intake.stageInit();
         shootSystem.init();
-        drivetrain.setBrakeMode();
-        drivetrain.resetRelativeTurnEncoders();
+        drivetrain.stageInit();
         joystickControls.init();
     }
 
     @Override
     public void teleopPeriodic() {
         joystickControls.driveWithJoystick(getPeriod());
-        joystickControls.driverResetTurnEncoders();
         joystickControls.shoot();
         joystickControls.intake();
         joystickControls.hopper();
         joystickControls.climber();
-        intake.periodic();
     }
 
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
-        drivetrain.setCoastMode();
+        drivetrain.disabledInit();
     }
 
     /** This function is called periodically when disabled. */
@@ -99,15 +94,5 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
-    }
-
-    /** This function is called once when the robot is first started up. */
-    @Override
-    public void simulationInit() {
-    }
-
-    /** This function is called periodically whilst in simulation. */
-    @Override
-    public void simulationPeriodic() {
     }
 }

@@ -15,8 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.rmi.ServerRuntimeException;
-
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -52,7 +50,7 @@ public class Drivetrain {
     private final SwerveModule frontRight;
     private final SwerveModule backRight;
 
-    private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+    private final AHRS gyro;
 
     private final SwerveDriveKinematics kinematics;
 
@@ -60,6 +58,7 @@ public class Drivetrain {
 
     public Drivetrain(Limelight limelight) {
         this.limelight = limelight;
+
         if (RobotSpecificConstants.ROBOT_NAME == RobotSpecificConstants.RobotName.UNNAMED_2026_ROBOT) {
             frontLeftLocation = new Translation2d(RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
                     -RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
@@ -121,13 +120,23 @@ public class Drivetrain {
                         backLeft.getPosition(),
                         backRight.getPosition()
                 });
+        gyro = new AHRS(NavXComType.kMXP_SPI);
     }
 
-    public void resetRelativeTurnEncoders() {
-        frontLeft.resetRelativeTurnEncoder();
-        frontRight.resetRelativeTurnEncoder();
-        backLeft.resetRelativeTurnEncoder();
-        backRight.resetRelativeTurnEncoder();
+    public void robotInit() {
+        zeroHeading();
+        resetEncoders();
+        resetRelativeTurnEncoders();
+        setBrakeMode();
+    }
+
+    public void stageInit() {
+        setBrakeMode();
+        resetRelativeTurnEncoders();
+    }
+
+    public void disabledInit() {
+        setCoastMode();
     }
 
     public double getDrivePositionMetersFrontLeft() {
@@ -208,6 +217,7 @@ public class Drivetrain {
                         backLeft.getPosition(),
                         backRight.getPosition()
                 });
+        updateDashboard();
     }
 
     public void resetEncoders() {
@@ -217,18 +227,11 @@ public class Drivetrain {
         backRight.resetEncoder();
     }
 
-    public void setBrakeMode() {
-        frontLeft.setBrakeMode();
-        frontRight.setBrakeMode();
-        backLeft.setBrakeMode();
-        backRight.setBrakeMode();
-    }
-
-    public void setCoastMode() {
-        frontLeft.setCoastMode();
-        frontRight.setCoastMode();
-        backLeft.setCoastMode();
-        backRight.setCoastMode();
+    public void resetRelativeTurnEncoders() {
+        frontLeft.resetRelativeTurnEncoder();
+        frontRight.resetRelativeTurnEncoder();
+        backLeft.resetRelativeTurnEncoder();
+        backRight.resetRelativeTurnEncoder();
     }
 
     public void zeroHeading() {
@@ -251,13 +254,6 @@ public class Drivetrain {
             deg = -deg;
         }
         return Rotation2d.fromDegrees(deg);
-    }
-
-    public void driveInit() {
-        zeroHeading();
-        resetEncoders();
-        resetRelativeTurnEncoders();
-        setBrakeMode();
     }
 
     // This is for auto turning
@@ -309,7 +305,6 @@ public class Drivetrain {
     }
 
     public void autoAlign(double periodSeconds) {
-        // TODO: Maybe move this function out of drivetrain
         final var rot_limelight = limelight.limelight_aim_proportional();
         final var forward_limelight = limelight.limelight_range_proportional();
 
@@ -350,8 +345,7 @@ public class Drivetrain {
         }
     }
 
-    public void updateDashboard() {
-
+    private void updateDashboard() {
         SmartDashboard.putNumber("FL DriveEncoder",
                 frontLeft.getDrivePositionMeters());
         SmartDashboard.putNumber("FR DriveEncoder",
@@ -412,4 +406,19 @@ public class Drivetrain {
                 backRight.getDriveMotor().getAppliedOutput() *
                         backRight.getDriveMotor().getBusVoltage());
     }
+
+    private void setBrakeMode() {
+        frontLeft.setBrakeMode();
+        frontRight.setBrakeMode();
+        backLeft.setBrakeMode();
+        backRight.setBrakeMode();
+    }
+
+    private void setCoastMode() {
+        frontLeft.setCoastMode();
+        frontRight.setCoastMode();
+        backLeft.setCoastMode();
+        backRight.setCoastMode();
+    }
+
 }

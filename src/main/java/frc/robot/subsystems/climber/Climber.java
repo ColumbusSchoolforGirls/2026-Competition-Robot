@@ -14,12 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber {
     private final SparkMax climberMotor;
-
     private final RelativeEncoder climberEncoder;
 
     public Climber() {
         climberMotor = new SparkMax(ClimberConstants.CLIMBER_ID, MotorType.kBrushless);
-
         climberEncoder = climberMotor.getEncoder();
 
         climberMotor.configure(
@@ -30,6 +28,14 @@ public class Climber {
 
     public void robotInit() {
         climberEncoder.setPosition(0);
+    }
+
+    public void stageInit() {
+        stopClimber();
+    }
+
+    public void periodic() {
+        updateDashboard();
     }
 
     public void extendClimber() {
@@ -82,7 +88,7 @@ public class Climber {
                 PersistMode.kNoPersistParameters);
     }
 
-    public void updateDashboard() {
+    private void updateDashboard() {
         SmartDashboard.putNumber("ClimberEncoder", climberEncoder.getPosition());
     }
 }
