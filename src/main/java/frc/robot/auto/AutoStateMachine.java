@@ -50,14 +50,17 @@ public class AutoStateMachine {
         // Set up all your States
         AutoStateStop start = new AutoStateStop(drivetrain);
 
-        AutoStateDrive drive = new AutoStateDrive(1.17, 0, 0, drivetrain, -0.7);
+        AutoStateDrive driveBack = new AutoStateDrive(1.17, 0, 0, drivetrain, -0.7);
         AutoStateShoot shoot = new AutoStateShoot(shootSystem, hopper, 5);
+
+        AutoStateDrive driveSide = new AutoStateDrive(0, 0, 0, drivetrain, 0);
+
         AutoStateStop stop = new AutoStateStop(drivetrain);
 
         // Set up all your transitions
-        start.addTransition(new AutoTransition(drive, state -> true));
-        drive.addTransition(new AutoTransition(
-                shoot, drive::atDistance));
+        start.addTransition(new AutoTransition(driveBack, state -> true));
+        driveBack.addTransition(new AutoTransition(
+                shoot, driveBack::atDistance));
         shoot.addTransition(new AutoTransition(stop, shoot::atTime));
 
         return start;
