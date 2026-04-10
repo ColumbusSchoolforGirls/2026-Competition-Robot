@@ -8,14 +8,12 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -28,9 +26,7 @@ public class SwerveModule {
 
     public RelativeEncoder driveEncoder;
     public RelativeEncoder turnRelativeEncoder;
-    // CTRE SRX Mag Encoder using pulses, used at RobotInit + buttonpressed to reset
-    // relative encoder
-    public AbsoluteEncoderInterface turnAbsoluteEncoder;
+    public AbsoluteEncoderInterface turnAbsoluteEncoder; // CTRE SRX Mag Encoder using pulses
 
     private SparkClosedLoopController driveClosedLoopController;
     private SparkClosedLoopController turnClosedLoopController;

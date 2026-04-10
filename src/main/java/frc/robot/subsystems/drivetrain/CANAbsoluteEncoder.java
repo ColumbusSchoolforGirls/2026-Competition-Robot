@@ -5,8 +5,8 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 
 public class CANAbsoluteEncoder implements AbsoluteEncoderInterface {
-
     private CANcoder canEncoder;
+
     public CANAbsoluteEncoder(int canID) {
         this.canEncoder = new CANcoder(canID);
     }
@@ -16,7 +16,7 @@ public class CANAbsoluteEncoder implements AbsoluteEncoderInterface {
         // TODO: figure out the correct configs
         CANcoderConfiguration configs = new CANcoderConfiguration();
         configs.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        canEncoder.getConfigurator().apply(configs);    
+        canEncoder.getConfigurator().apply(configs);
     }
 
     @Override
