@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
         joystickControls.shoot();
         joystickControls.intake();
         joystickControls.hopper();
-        joystickControls.climber();
+        // joystickControls.climber(); // TODO: Re-enable for competition
     }
 
     /** This function is called once when the robot is disabled. */
@@ -94,5 +94,6 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
+        // joystickControls.testTurn(getPeriod());
     }
 }

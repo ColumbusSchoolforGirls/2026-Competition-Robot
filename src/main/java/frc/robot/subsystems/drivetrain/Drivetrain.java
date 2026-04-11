@@ -56,6 +56,8 @@ public class Drivetrain {
 
     private final SwerveDriveOdometry odometry;
 
+    private double lastEncoderSyncTime = Timer.getFPGATimestamp();
+
     public Drivetrain(Limelight limelight) {
         this.limelight = limelight;
         gyro = new AHRS(NavXComType.kMXP_SPI);
@@ -171,6 +173,10 @@ public class Drivetrain {
         setModuleStates(swerveModuleStates);
     }
 
+    public void runTurn() {
+        backLeft.getTurnMotor().set(0.3);
+    }
+
     /**
      * Sets the swerve ModuleStates.
      *
@@ -218,6 +224,7 @@ public class Drivetrain {
                         backRight.getPosition()
                 });
         updateDashboard();
+        timedResetRelativeTurnEncoders();
     }
 
     public void resetEncoders() {
@@ -227,11 +234,19 @@ public class Drivetrain {
         backRight.resetEncoder();
     }
 
-    public void resetRelativeTurnEncoders() {
+    private void resetRelativeTurnEncoders() {
         frontLeft.resetRelativeTurnEncoder();
         frontRight.resetRelativeTurnEncoder();
         backLeft.resetRelativeTurnEncoder();
         backRight.resetRelativeTurnEncoder();
+    }
+
+    public void timedResetRelativeTurnEncoders() {
+        double currentTime = Timer.getFPGATimestamp();
+        if (currentTime - lastEncoderSyncTime > 5.0) {
+            lastEncoderSyncTime = currentTime;
+            resetRelativeTurnEncoders();
+        }
     }
 
     public void zeroHeading() {
@@ -385,6 +400,15 @@ public class Drivetrain {
         SmartDashboard.putNumber("BR Power",
                 backRight.getDriveMotor().getAppliedOutput());
 
+        SmartDashboard.putNumber("FL Turn Power",
+                frontLeft.getTurnMotor().getAppliedOutput());
+        SmartDashboard.putNumber("FR Turn Power",
+                frontRight.getTurnMotor().getAppliedOutput());
+        SmartDashboard.putNumber("BL Turn Power",
+                backLeft.getTurnMotor().getAppliedOutput());
+        SmartDashboard.putNumber("BR Turn Power",
+                backRight.getTurnMotor().getAppliedOutput());
+
         SmartDashboard.putNumber("FL Velocity",
                 frontLeft.getDriveMotor().getEncoder().getVelocity());
         SmartDashboard.putNumber("FR Velocity",
@@ -405,6 +429,23 @@ public class Drivetrain {
         SmartDashboard.putNumber("BR Voltage",
                 backRight.getDriveMotor().getAppliedOutput() *
                         backRight.getDriveMotor().getBusVoltage());
+
+        SmartDashboard.putNumber("FL Turn Voltage",
+                frontLeft.getTurnMotor().getAppliedOutput() * frontLeft.getTurnMotor().getBusVoltage());
+        SmartDashboard.putNumber("FR Turn Voltage",
+                frontRight.getTurnMotor().getAppliedOutput() * frontRight.getTurnMotor().getBusVoltage());
+        SmartDashboard.putNumber("BL Turn Voltage",
+                backLeft.getTurnMotor().getAppliedOutput() * backLeft.getTurnMotor().getBusVoltage());
+        SmartDashboard.putNumber("BR Turn Voltage",
+                backRight.getTurnMotor().getAppliedOutput() * backRight.getTurnMotor().getBusVoltage());
+        SmartDashboard.putNumber("FL Turn Velocity",
+                frontLeft.getTurnMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("FR Turn Velocity",
+                frontRight.getTurnMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("BL Turn Velocity",
+                backLeft.getTurnMotor().getEncoder().getVelocity());
+        SmartDashboard.putNumber("BR Turn Velocity",
+                backRight.getTurnMotor().getEncoder().getVelocity());
     }
 
     private void setBrakeMode() {
