@@ -62,7 +62,9 @@ public class AutoStateDrive extends AbstractAutoState {
 
     public boolean atDistance(AbstractAutoState state) {
         return (Math.abs(this.distance)
-                - Math.abs(drivetrain.getDrivePositionMetersFrontLeft())) < Constants.DriveConstants.DISTANCE_TOLERANCE;
+                - Math.abs(drivetrain.getDrivePositionMeters())) < Constants.DriveConstants.DISTANCE_TOLERANCE;
     }
+
+    // TODO: should we add stall detetion?
 
 }

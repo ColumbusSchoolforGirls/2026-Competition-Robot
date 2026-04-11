@@ -115,6 +115,7 @@ public class JoystickControls {
         // Overwrite drive with limelight alignment.
         if (DRIVE_CONTROLLER.getAButton()) {
             drivetrain.autoAlign(periodSeconds);
+            return;
         }
 
         drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);

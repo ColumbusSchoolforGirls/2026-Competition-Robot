@@ -141,8 +141,9 @@ public class Drivetrain {
         setCoastMode();
     }
 
-    public double getDrivePositionMetersFrontLeft() {
-        return frontLeft.getDrivePositionMeters();
+    public double getDrivePositionMeters() {
+        return (frontLeft.getDrivePositionMeters() + frontRight.getDrivePositionMeters() + backLeft.getDrivePositionMeters()
+                + backRight.getDrivePositionMeters()) / 4.0;
     }
 
     public void resetDistance() {
@@ -282,42 +283,6 @@ public class Drivetrain {
         return Math.abs(gyroDifference) < Constants.DriveConstants.TURN_TOLERANCE;
     }
 
-    double stallStart = 0.0;
-
-    public boolean driveComplete() {
-        driveDifference = targetDistance - Math.abs(frontLeft.getDrivePositionMeters());
-        if ((Math.abs(driveDifference) < Constants.DriveConstants.DISTANCE_TOLERANCE)
-                || (Timer.getFPGATimestamp() - startDriveTime > DriveConstants.MAX_DRIVE_AUTO_TIME)) {
-            stallStart = 0.0;
-            System.out.println("Reached drive target");
-            return true;
-        }
-
-        // Supposed to prevent robot from burning out driving continuously into a wall
-        // TODO: Make better stall detection/might not even need
-        if (gyro.getVelocityY() < 0.01) {
-            if (stallStart != 0.0) {
-                if (Timer.getFPGATimestamp() - stallStart > 0.5) {
-                    System.out.println("STALL");
-                    return true;
-                }
-            } else {
-                System.out.println("Start stall");
-                stallStart = Timer.getFPGATimestamp();
-            }
-        } else {
-            stallStart = 0.0;
-        }
-        return false;
-    }
-
-    public void autoDrive(double periodSeconds) {
-
-        driveDifference = targetDistance - Math.abs(frontLeft.getDrivePositionMeters());
-        if (Math.abs(driveDifference) > Constants.DriveConstants.DISTANCE_TOLERANCE) {
-            drive(0.8, 0, 0, false, periodSeconds);
-        }
-    }
 
     public void autoAlign(double periodSeconds) {
         final var rot_limelight = limelight.limelight_aim_proportional();
