@@ -81,6 +81,10 @@ public class JoystickControls {
         shootState = ShootSystem.ShooterState.STOPPED;
     }
 
+    public void testTurn(double periodSeconds) {
+        drivetrain.runTurn();
+    }
+
     public void driveWithJoystick(double periodSeconds) {
         double xSpeed = -xspeedLimiter.calculate(MathUtil.applyDeadband(DRIVE_CONTROLLER.getLeftY(), 0.1))
                 * Constants.DriveConstants.MAX_SPEED;
@@ -105,15 +109,15 @@ public class JoystickControls {
         }
 
         if (DRIVE_CONTROLLER.getBButtonPressed()) {
-            drivetrain.resetRelativeTurnEncoders();
+            drivetrain.timedResetRelativeTurnEncoders();
         }
 
         // Overwrite drive with limelight alignment.
         if (DRIVE_CONTROLLER.getAButton()) {
             drivetrain.autoAlign(periodSeconds);
-        } else {
-            drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
         }
+
+        drivetrain.drive(xSpeed, ySpeed, rot, fieldRelative, periodSeconds);
     }
 
     public void shoot() {
@@ -145,7 +149,7 @@ public class JoystickControls {
             shootState = ShootSystem.ShooterState.STOPPED;
         }
 
-        runHopperForShooting = shootState == ShootSystem.ShooterState.SHOOT;
+        runHopperForShooting = shootSystem.runHopper();
         shootSystem.expelSystem(expelSystem);
         shootSystem.setShooterState(shootState);
     }
