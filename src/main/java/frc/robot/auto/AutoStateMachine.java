@@ -77,9 +77,9 @@ public class AutoStateMachine {
 
         driveBack.addTransition(new AutoTransition(
                 shoot, driveBack::atDistance));
-        shoot.addTransition(new AutoTransition(spin180, shoot::atTime));
+        shoot.addTransition(new AutoTransition(spin, shoot::atTime));
 
-        spin180.addTransition(new AutoTransition(intaking, state -> spin180.atAngle(state)));
+        spin.addTransition(new AutoTransition(intaking, state -> spin.atAngle(state)));
         intaking.addTransition(new AutoTransition(drive, state -> true));
         drive.addTransition(new AutoTransition(stopIntake, drive::atDistance));
         stopIntake.addTransition(new AutoTransition(driveReturn, state -> true));
