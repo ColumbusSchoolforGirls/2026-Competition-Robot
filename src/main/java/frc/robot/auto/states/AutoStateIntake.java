@@ -1,7 +1,5 @@
 package frc.robot.auto.states;
 
-import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.intake.Intake;
 
 public class AutoStateIntake extends AbstractAutoState {

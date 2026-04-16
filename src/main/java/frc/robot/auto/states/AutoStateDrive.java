@@ -1,8 +1,6 @@
 package frc.robot.auto.states;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 
 public class AutoStateDrive extends AbstractAutoState {
@@ -50,9 +48,6 @@ public class AutoStateDrive extends AbstractAutoState {
 
         System.out.printf("Distance: %.1f, Pos: %.1f\n", this.distance,
                 drivetrain.getDrivePositionMeters());
-
-        System.out.printf("target: %.1f, Heading: %.1f\n", targetHeading,
-                drivetrain.getHeading());
 
         if (atDistance(this)) {
             drivetrain.drive(0, 0,
