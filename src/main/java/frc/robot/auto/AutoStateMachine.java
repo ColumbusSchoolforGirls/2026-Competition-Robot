@@ -60,14 +60,14 @@ public class AutoStateMachine {
         AutoStateRev rev = new AutoStateRev(shootSystem);
         AutoStateIntake intaking = new AutoStateIntake(intake, true);
         AutoStateIntake stopIntake = new AutoStateIntake(intake, false);
-        AutoStateDrive driveBack = new AutoStateDrive(1.3, 0, 0, drivetrain, -2);
+        AutoStateDrive driveBack = new AutoStateDrive(1.17, 0, 0, drivetrain, -2);
         AutoStateShoot shoot = new AutoStateShoot(shootSystem, hopper, 3);
 
-        AutoStateDrive spin180 = new AutoStateDrive(0, 0, 205, drivetrain, 2.6);
-        AutoStateDrive drive = new AutoStateDrive(4, 0, 0, drivetrain, 2);
+        AutoStateDrive spin = new AutoStateDrive(0, 0, 215, drivetrain, 2.6);
+        AutoStateDrive drive = new AutoStateDrive(4, 0, 0, drivetrain, 2.5);
 
-        AutoStateDrive driveReturn = new AutoStateDrive(4, 0, 0, drivetrain, -2);
-        AutoStateDrive turnReturn = new AutoStateDrive(0, 0, 155, drivetrain, 2);
+        AutoStateDrive driveReturn = new AutoStateDrive(3.6, 0, 0, drivetrain, -2.6);
+        AutoStateDrive turnReturn = new AutoStateDrive(0, 0, 165, drivetrain, 2.5);
 
         AutoStateStop stop = new AutoStateStop(drivetrain);
 
