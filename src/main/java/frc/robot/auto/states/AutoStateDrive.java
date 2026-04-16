@@ -1,24 +1,26 @@
 package frc.robot.auto.states;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 
 public class AutoStateDrive extends AbstractAutoState {
-    private double travelAngle;
-    private double robotEndAngle;
+    private double travelAngleRad;
+    private double robotEndAngleDegrees;
     private Drivetrain drivetrain;
     private double distance;
     private double velocity = 1; // meters / second
-    private double turnVelocity = 0; // rad / second
+    private double turnVelocity;
 
     private double targetHeading = 0;
 
-    public AutoStateDrive(double distance, double travelAngle, double robotEndAngle, Drivetrain drivetrain,
+    public AutoStateDrive(double distance, double travelAngleDegrees, double robotEndAngleDegrees,
+            Drivetrain drivetrain,
             double velocity) {
         this.distance = distance;
-        this.travelAngle = travelAngle;
-        this.robotEndAngle = robotEndAngle;
+        this.travelAngleRad = travelAngleDegrees * Math.PI / 180.0;
+        this.robotEndAngleDegrees = robotEndAngleDegrees;
         this.drivetrain = drivetrain;
         this.velocity = velocity;
     }
@@ -26,11 +28,11 @@ public class AutoStateDrive extends AbstractAutoState {
     @Override
     public void onStateEntry(double periodSeconds) {
         drivetrain.resetDistance();
-        targetHeading = drivetrain.getHeading() + robotEndAngle;
+        targetHeading = drivetrain.getRotation2d().getDegrees() + robotEndAngleDegrees;
 
-        // estimated time for driving:
-        double estimatedTime = this.distance / this.velocity;
-        turnVelocity = Math.min(this.robotEndAngle / estimatedTime, DriveConstants.MAX_ANGULAR_SPEED);
+        if (robotEndAngleDegrees != 0.0) {
+            turnVelocity = 1.0;
+        }
     }
 
     @Override
@@ -45,26 +47,38 @@ public class AutoStateDrive extends AbstractAutoState {
         // speed, and we should
         // either include this check in atDistance or make another check which is
         // atAngle.
+
+        System.out.printf("Distance: %.1f, Pos: %.1f\n", this.distance,
+                drivetrain.getDrivePositionMeters());
+
+        System.out.printf("target: %.1f, Heading: %.1f\n", targetHeading,
+                drivetrain.getHeading());
+
         if (atDistance(this)) {
             drivetrain.drive(0, 0,
                     turnVelocity, false,
                     periodSeconds);
+        } else if (atAngle(this)) {
+            drivetrain.drive(velocity * Math.cos(travelAngleRad),
+                    velocity * Math.sin(travelAngleRad),
+                    0, false,
+                    periodSeconds);
         } else {
-            drivetrain.drive(velocity * Math.cos(travelAngle), velocity * Math.sin(travelAngle),
+            drivetrain.drive(velocity * Math.cos(travelAngleRad),
+                    velocity * Math.sin(travelAngleRad),
                     turnVelocity, false,
                     periodSeconds);
         }
     }
 
     public boolean atAngle(AbstractAutoState state) {
-        return Math.abs(drivetrain.getHeading() - targetHeading) < Constants.DriveConstants.ALIGN_TOLERANCE;
+        return Math.abs(
+                drivetrain.getRotation2d().getDegrees() - targetHeading) < Constants.DriveConstants.ALIGN_TOLERANCE;
     }
 
     public boolean atDistance(AbstractAutoState state) {
         return (Math.abs(this.distance)
                 - Math.abs(drivetrain.getDrivePositionMeters())) < Constants.DriveConstants.DISTANCE_TOLERANCE;
     }
-
-    // TODO: should we add stall detetion?
 
 }

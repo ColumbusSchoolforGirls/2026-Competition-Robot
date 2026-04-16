@@ -15,6 +15,11 @@ public abstract class AbstractAutoState {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().descriptorString();
+    }
+
     public void addTransition(AutoTransition transition) {
         transitions.add(transition);
     }

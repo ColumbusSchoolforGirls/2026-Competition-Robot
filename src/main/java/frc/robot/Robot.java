@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auto.AutoStateMachine;
 import frc.robot.auto.states.AbstractAutoState;
@@ -24,7 +26,7 @@ public class Robot extends TimedRobot {
     private final JoystickControls joystickControls = new JoystickControls(drivetrain, shootSystem,
             intake, hopper, climber);
     private final AutoStateMachine autoStateMachine = new AutoStateMachine(drivetrain, limelightShoot, shootSystem,
-            hopper);
+            hopper, intake);
 
     @Override
     public void robotInit() {
@@ -33,6 +35,9 @@ public class Robot extends TimedRobot {
         climber.robotInit();
         intake.robotInit();
         shootSystem.init();
+
+        // DataLogManager.start();
+        // DriverStation.startDataLog(DataLogManager.getLog());
     }
 
     @Override
@@ -51,12 +56,14 @@ public class Robot extends TimedRobot {
         drivetrain.stageInit();
         shootSystem.init();
         joystickControls.init();
+        autoStateMachine.currentAutoState = null;
     }
 
     @Override
     public void autonomousPeriodic() {
         AbstractAutoState startState = autoStateMachine.buildPath();
         autoStateMachine.runStateMachine(startState, getPeriod());
+        autoStateMachine.updateDashboard();
     }
 
     @Override

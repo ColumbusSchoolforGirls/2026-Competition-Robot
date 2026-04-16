@@ -21,18 +21,20 @@ public class AutoStateShoot extends AbstractAutoState {
     @Override
     public void onStateEntry(double periodSeconds) {
         this.startTime = Timer.getFPGATimestamp();
+        hopper.runHopper(true);
     }
 
     @Override
     public void onStateExit(double periodSeconds) {
         shootSystem.setShooterState(ShooterState.STOPPED);
         hopper.runHopper(false);
+        hopper.setHopper();
     }
 
     @Override
     public void action(double periodSeconds) {
         shootSystem.setShooterState(ShooterState.SHOOT);
-        hopper.runHopper(true);
+        hopper.setHopper();
     }
 
     public boolean atTime(AbstractAutoState state) {

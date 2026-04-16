@@ -62,7 +62,7 @@ public class Drivetrain {
         this.limelight = limelight;
         gyro = new AHRS(NavXComType.kMXP_SPI);
 
-        if (RobotSpecificConstants.ROBOT_NAME == RobotSpecificConstants.RobotName.UNNAMED_2026_ROBOT) {
+        if (RobotSpecificConstants.ROBOT_NAME == RobotSpecificConstants.RobotName.BUBBLES) {
             frontLeftLocation = new Translation2d(RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
                     -RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET);
             frontRightLocation = new Translation2d(RobotSpecificConstants.Unnamed2026Robot.TRANSLATION_2D_OFFSET,
@@ -142,8 +142,7 @@ public class Drivetrain {
     }
 
     public double getDrivePositionMeters() {
-        return (frontLeft.getDrivePositionMeters() + frontRight.getDrivePositionMeters() + backLeft.getDrivePositionMeters()
-                + backRight.getDrivePositionMeters()) / 4.0;
+        return frontLeft.getDrivePositionMeters();
     }
 
     public void resetDistance() {
@@ -282,7 +281,6 @@ public class Drivetrain {
 
         return Math.abs(gyroDifference) < Constants.DriveConstants.TURN_TOLERANCE;
     }
-
 
     public void autoAlign(double periodSeconds) {
         final var rot_limelight = limelight.limelight_aim_proportional();

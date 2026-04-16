@@ -3,13 +3,10 @@ package frc.robot;
 public class Constants {
 
     public static final class SwerveConstants {
-        public static final int STATIC_GAIN_DRIVE = 1;
-        public static final int VELOCITY_GAIN_DRIVE = 3;
-        public static final int STATIC_GAIN_TURN = 1;
-        public static final double VELOCITY_GAIN_TURN = 0.5;
-
         public static final double FEED_FORWARD_DRIVE_VELOCITY = 2.25;
         public static final double FEED_FORWARD_DRIVE_STATIC = .1;
+        // public static final double FEED_FORWARD_TURN_VELOCITY = 0.275;
+        // public static final double FEED_FORWARD_TURN_STATIC = 0.1;
 
         // The MAXSwerve module can be configured with one of three pinion gears: 12T,
         // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
@@ -87,7 +84,7 @@ public class Constants {
         public static final double NO_TX = 0;
         public static final double NO_TY = 0;
 
-        public static final double ALIGN_TOLERANCE = 0.5;
+        public static final double ALIGN_TOLERANCE = 2;
     }
 
     public static final class ControllerConstants {
@@ -126,7 +123,7 @@ public class Constants {
 
         public static final double DEPLOY_PERCENTAGE_OUTPUT = 0.04;
         public static final double RETRACT_PERCENTAGE_OUTPUT = -0.13;
-        public static final double ROLLER_PERCENTAGE_OUTPUT = -0.85;
+        public static final double ROLLER_PERCENTAGE_OUTPUT = -1;
 
         public static final double DEPLOYED_ROTATIONS_DISTANCE = 1.6;
     }

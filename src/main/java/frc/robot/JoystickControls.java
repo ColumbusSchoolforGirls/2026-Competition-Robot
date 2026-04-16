@@ -66,6 +66,7 @@ public class JoystickControls {
     private ShootSystem.ShooterState shootState = ShootSystem.ShooterState.STOPPED;
     private boolean fieldRelative = true;
     private boolean runHopperForShooting = false;
+    private boolean runHopperForIntaking = false;
     private boolean expelSystem = false;
 
     public JoystickControls(Drivetrain drivetrain, ShootSystem shootSystem, Intake intake,
@@ -157,6 +158,7 @@ public class JoystickControls {
 
     public void intake() {
         boolean runRollers = AUX.getLeftTriggerAxis() > ControllerConstants.JOYSTICK_DEADZONE;
+        runHopperForIntaking = runRollers;
         expelSystem = AUX.getYButton();
 
         if (AUX.getXButton()) {
@@ -175,7 +177,7 @@ public class JoystickControls {
 
     public void hopper() {
         hopper.expelHopper(expelSystem);
-        hopper.runHopper(runHopperForShooting);
+        hopper.runHopper(runHopperForShooting || runHopperForIntaking);
         hopper.setHopper();
     }
 
