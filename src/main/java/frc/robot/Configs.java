@@ -33,8 +33,8 @@ public class Configs {
                     .idleMode(IdleMode.kBrake)
                     .smartCurrentLimit(20);
             turningConfig.encoder
-                    .positionConversionFactor(SwerveConstants.ENCODER_TO_METERS_TURN_RATIO) // radians
-                    .velocityConversionFactor(SwerveConstants.ENCODER_TO_METERS_TURN_RATIO / 60.0); // radians/second
+                    .positionConversionFactor(SwerveConstants.ENCODER_TO_RADIANS_TURN_RATIO) // radians
+                    .velocityConversionFactor(SwerveConstants.ENCODER_TO_RADIANS_TURN_RATIO / 60.0); // radians/second
             turningConfig.closedLoop
                     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                     .positionWrappingEnabled(true)

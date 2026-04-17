@@ -3,50 +3,34 @@ package frc.robot;
 public class Constants {
 
     public static final class SwerveConstants {
-        public static final double FEED_FORWARD_DRIVE_VELOCITY = 2.25;
+        public static final double FEED_FORWARD_DRIVE_VELOCITY = 3.08; // 2.25;
         public static final double FEED_FORWARD_DRIVE_STATIC = .1;
         // public static final double FEED_FORWARD_TURN_VELOCITY = 0.275;
         // public static final double FEED_FORWARD_TURN_STATIC = 0.1;
 
-        // The MAXSwerve module can be configured with one of three pinion gears: 12T,
-        // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
-        // more teeth will result in a robot that drives faster).
-        public static final int DRIVING_MOTOR_PINION_TEETH = 14;
-
+        // Basic values
+        public static final double GEAR_RATIO = 8.14; // This is the driving motor reduction
         public static final double FREE_SPEED_RPM = 5676;
-
-        // Calculations required for driving motor conversion factors and feed forward
         public static final double DRIVING_MOTOR_FREE_SPEED_RPS = FREE_SPEED_RPM / 60;
-        public static final double WHEEL_DIAMETER_METERS = 0.0762;
+        public static final double WHEEL_DIAMETER_METERS = 0.1016;
         public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
-        // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
-        // teeth on the bevel pinion
-        public static final double DRIVING_MOTOR_REDUCTION = (45.0 * 22) / (DRIVING_MOTOR_PINION_TEETH * 15);
-        public static final double DRIVE_WHEEL_FREE_SPEED_RPS = (DRIVING_MOTOR_FREE_SPEED_RPS
-                * WHEEL_CIRCUMFERENCE_METERS)
-                / DRIVING_MOTOR_REDUCTION;
 
         // Encoder calculations
-        public static final double GEAR_RATIO = 8.14;
-        public static final double WHEEL_DIAMETER = 4 / Math.PI; // in inches
+        public static final double ENCODER_TO_METERS_DRIVE_RATIO = WHEEL_CIRCUMFERENCE_METERS
+                / Constants.SwerveConstants.GEAR_RATIO;
+        public static final double STEERING_FACTOR = 150 / 7;// 12.8; // Originally 150 / 7
 
-        public static final double ENCODER_TO_METERS_DRIVE_RATIO = Constants.SwerveConstants.WHEEL_DIAMETER_METERS
-                * Math.PI
-                / Constants.SwerveConstants.DRIVING_MOTOR_REDUCTION;
-        public static final double STEERING_FACTOR = 150 / 7;
         // Converts encoder to radians,
-        public static final double ENCODER_TO_METERS_TURN_RATIO = (2 * Math.PI) / STEERING_FACTOR;
-        public static final double DRIVING_VELOCITY_FEED_FORWARD = 1
-                / Constants.SwerveConstants.DRIVE_WHEEL_FREE_SPEED_RPS;
+        public static final double ENCODER_TO_RADIANS_TURN_RATIO = (2 * Math.PI) / STEERING_FACTOR;
 
         public static final double TURN_RESET_VELOCITY = 1;
     }
 
     public static final class DriveConstants {
 
-        public static final double MAX_SPEED = 3.0; // 3 meters per second, approximate increase due to unknown
-                                                    // scaling issue
-        public static final double MAX_ANGULAR_SPEED = Math.PI * 2; // 1 rotation per second
+        public static final double MAX_SPEED = 3.8; // 3.7; // The maximum speed in m/s of MK4i swerve modules with NEO
+                                                    // 2.0s
+        public static final double MAX_ANGULAR_SPEED = Math.PI * 2; // 2 rotations per second
 
         // NOTE: All angles must be thought of as clockwise negative (-) because of the
         // gear-pulley system.
