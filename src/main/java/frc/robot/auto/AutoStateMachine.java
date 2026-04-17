@@ -60,13 +60,15 @@ public class AutoStateMachine {
         AutoStateRev rev = new AutoStateRev(shootSystem);
         AutoStateIntake intaking = new AutoStateIntake(intake, true);
         AutoStateIntake stopIntake = new AutoStateIntake(intake, false);
-        AutoStateDrive driveBack = new AutoStateDrive(1.17, 0, 0, drivetrain, -2);
-        AutoStateShoot shoot = new AutoStateShoot(shootSystem, hopper, 3);
+        // AutoStateDrive driveBack = new AutoStateDrive(1.13, 0, 0, drivetrain, -2);
+        AutoStateDrive driveBack = new AutoStateDrive(1, 0, 0, drivetrain, -1);
+        // AutoStateShoot shoot = new AutoStateShoot(shootSystem, hopper, 3);
+        AutoStateShoot shoot = new AutoStateShoot(shootSystem, hopper, 6);
 
         AutoStateDrive spin = new AutoStateDrive(0, 0, 215, drivetrain, 2.6);
-        AutoStateDrive drive = new AutoStateDrive(4, 0, 0, drivetrain, 2.5);
+        AutoStateDrive drive = new AutoStateDrive(2.5, 0, 0, drivetrain, 2.5);
 
-        AutoStateDrive driveReturn = new AutoStateDrive(3.6, 0, 0, drivetrain, -2.6);
+        AutoStateDrive driveReturn = new AutoStateDrive(1, 0, 0, drivetrain, -2.6);
         AutoStateDrive turnReturn = new AutoStateDrive(0, 0, 165, drivetrain, 2.5);
 
         AutoStateStop stop = new AutoStateStop(drivetrain);
@@ -77,15 +79,19 @@ public class AutoStateMachine {
 
         driveBack.addTransition(new AutoTransition(
                 shoot, driveBack::atDistance));
-        shoot.addTransition(new AutoTransition(spin, shoot::atTime));
-
-        spin.addTransition(new AutoTransition(intaking, state -> spin.atAngle(state)));
-        intaking.addTransition(new AutoTransition(drive, state -> true));
-        drive.addTransition(new AutoTransition(stopIntake, drive::atDistance));
-        stopIntake.addTransition(new AutoTransition(driveReturn, state -> true));
-        driveReturn.addTransition(new AutoTransition(turnReturn, driveReturn::atDistance));
-        turnReturn.addTransition(new AutoTransition(shoot, turnReturn::atAngle));
         shoot.addTransition(new AutoTransition(stop, shoot::atTime));
+
+        // shoot.addTransition(new AutoTransition(spin, shoot::atTime));
+
+        // spin.addTransition(new AutoTransition(intaking, state ->
+        // spin.atAngle(state)));
+        // intaking.addTransition(new AutoTransition(drive, state -> true));
+        // drive.addTransition(new AutoTransition(stopIntake, drive::atDistance));
+        // stopIntake.addTransition(new AutoTransition(driveReturn, state -> true));
+        // driveReturn.addTransition(new AutoTransition(turnReturn,
+        // driveReturn::atDistance));
+        // turnReturn.addTransition(new AutoTransition(shoot, turnReturn::atAngle));
+        // shoot.addTransition(new AutoTransition(stop, shoot::atTime));
         return start;
     }
 
