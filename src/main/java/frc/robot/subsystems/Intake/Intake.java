@@ -1,6 +1,8 @@
 package frc.robot.subsystems.intake;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
@@ -15,7 +17,7 @@ import frc.robot.Constants.IntakeConstants;
 
 public class Intake {
     private final SparkMax deployMotor;
-    private final VictorSPX rollerMotor;
+    private final TalonSRX rollerMotor;
     private final RelativeEncoder deployEncoder;
     private final DigitalInput retractedLimitSwitch;
 
@@ -24,7 +26,7 @@ public class Intake {
 
     public Intake() {
         deployMotor = new SparkMax(IntakeConstants.DEPLOY_ID, MotorType.kBrushless);
-        rollerMotor = new VictorSPX(IntakeConstants.ROLLER_ID);
+        rollerMotor = new TalonSRX(IntakeConstants.ROLLER_ID);
         deployEncoder = deployMotor.getEncoder();
         retractedLimitSwitch = new DigitalInput(IntakeConstants.RETRACTED_LIMIT_SWITCH_CHANNEL);
 
@@ -48,7 +50,7 @@ public class Intake {
     }
 
     public void setIntakeRollers() {
-        rollerMotor.set(VictorSPXControlMode.PercentOutput, determineRollerOutput());
+        rollerMotor.set(TalonSRXControlMode.PercentOutput, determineRollerOutput());
     }
 
     public void stopDeploy() {
@@ -92,7 +94,7 @@ public class Intake {
 
     private void stop() {
         deployMotor.set(0);
-        rollerMotor.set(VictorSPXControlMode.PercentOutput, 0);
+        rollerMotor.set(TalonSRXControlMode.PercentOutput, 0);
     }
 
     private boolean isDeployed() {
