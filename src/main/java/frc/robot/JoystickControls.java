@@ -110,7 +110,7 @@ public class JoystickControls {
         }
 
         if (DRIVE_CONTROLLER.getBButtonPressed()) {
-            drivetrain.timedResetRelativeTurnEncoders();
+            drivetrain.resetRelativeTurnEncoders();
         }
 
         // Overwrite drive with limelight alignment.

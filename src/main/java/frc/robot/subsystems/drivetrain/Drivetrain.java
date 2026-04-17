@@ -142,7 +142,7 @@ public class Drivetrain {
     }
 
     public double getDrivePositionMeters() {
-        return frontLeft.getDrivePositionMeters();
+        return frontRight.getDrivePositionMeters();
     }
 
     public void resetDistance() {
@@ -224,7 +224,7 @@ public class Drivetrain {
                         backRight.getPosition()
                 });
         updateDashboard();
-        timedResetRelativeTurnEncoders();
+        // timedResetRelativeTurnEncoders();
     }
 
     public void resetEncoders() {
@@ -234,7 +234,7 @@ public class Drivetrain {
         backRight.resetEncoder();
     }
 
-    private void resetRelativeTurnEncoders() {
+    public void resetRelativeTurnEncoders() {
         frontLeft.resetRelativeTurnEncoder();
         frontRight.resetRelativeTurnEncoder();
         backLeft.resetRelativeTurnEncoder();
